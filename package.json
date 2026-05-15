@@ -1,0 +1,26 @@
+{
+  "name": "marketing-skills",
+  "version": "1.0.0",
+  "description": "40 marketing and growth skills for Claude Code and AI agents. SEO, copywriting, CRO, ads, email, analytics, launches, and more.",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "skills",
+    "agent-skills",
+    "marketing",
+    "growth",
+    "seo",
+    "copywriting",
+    "cro",
+    "ads",
+    "email",
+    "analytics"
+  ],
+  "author": "ScayverGraphix",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ScayverGraphix/marketing-skills.git"
+  },
+  "homepage": "https://github.com/ScayverGraphix/marketing-skills#readme"
+}
