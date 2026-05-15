@@ -1,14 +1,28 @@
 # marketing-skills
 
-Most AI agents know how to write code. Very few know how to market software.
+Most AI agents know how to write code. Very few know how to market software, build a brand, or turn a landing page into a revenue engine.
 
-This library fixes that. It gives your coding agent 40 specialized marketing skills, each one built around a real framework, a real process, and a real output format. You stop getting generic advice. You start getting structured work.
+This library fixes that. It gives your agent 57 specialized marketing and growth skills, each one built around a real framework, a real process, and a real output format. You stop getting generic advice. You start getting structured, professional-grade marketing work on demand.
 
-Built by [ScayverGraphix](https://github.com/ScayverGraphix).
+---
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](VERSIONS.md)
+> **Support this work**
+>
+> This library was researched, designed, and built by one person. If it saves you time, helps you ship better marketing, or gives your agent capabilities it did not have before, consider supporting the work that made it possible.
+>
+> ☕ [Buy me a coffee](https://buymeacoffee.com/dorcelusalain) — buymeacoffee.com/dorcelusalain
+>
+> 💸 CashApp — **$AlainDorcelus**
+>
+> Every contribution directly funds new skills, improved frameworks, and continued maintenance of this library.
+
+---
+
+Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)** · [ScayverGraphix](https://github.com/ScayverGraphix)
+
+[![Version](https://img.shields.io/badge/version-1.1.0-blue)](VERSIONS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-40-orange)](skills/)
+[![Skills](https://img.shields.io/badge/skills-57-orange)](skills/)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
 
 ---
@@ -17,11 +31,13 @@ Built by [ScayverGraphix](https://github.com/ScayverGraphix).
 
 You ask your agent to "write copy for this landing page." It produces something that sounds reasonable, hits no specific framework, and could apply to any product in any industry.
 
-You ask it to "reduce churn." It lists five generic tactics you already knew.
+You ask it to "write a press release." It returns a generic document that no journalist would open.
+
+You ask it to "plan a LinkedIn content strategy." It lists five tactics you already knew.
 
 The problem is not the agent. The problem is that the agent has no domain depth. It has broad knowledge but no structured process for marketing work specifically.
 
-Skills give the agent that process. Each skill is a markdown file that tells the agent exactly how to approach a specific marketing task: what questions to ask first, what framework to apply, how to structure the output, and what a good result actually looks like. The agent reads the skill and works from it. You get consistent, structured, professional-grade marketing output instead of freeform responses that vary by session.
+Skills give the agent that process. Each skill is a markdown file that tells the agent exactly how to approach a specific marketing task: what questions to ask first, what framework to apply, how to structure the output, and what a good result actually looks like. The agent reads the skill and works from it. You get consistent, structured, professional-grade marketing output every time.
 
 ---
 
@@ -33,9 +49,9 @@ When you describe a marketing task, the agent matches your request to the right 
 
 Every skill includes three things.
 
-**A trigger definition.** The skill tells the agent exactly which requests it handles, including the specific phrases and task descriptions that activate it. When you say "I want to A/B test this headline," the agent activates `ab-testing` without any instruction from you.
+**A trigger definition.** The skill tells the agent exactly which requests it handles, including the specific phrases and task descriptions that activate it. When you say "respond to this Google review," the agent activates `customer-service` without any instruction from you.
 
-**A process.** Each skill defines a step-by-step approach to the task. The `cro` skill tells the agent to define the conversion metric first, map the full funnel, identify friction by stage, score issues with ICE, write a testable hypothesis, and design the experiment. It does not let the agent skip to recommendations.
+**A process.** Each skill defines a step-by-step approach to the task. The `pr-communications` skill tells the agent to identify the media angle before writing a single line of the press release, produce the output table, then deliver the full press release with a wire summary and a social version. It does not let the agent skip steps.
 
 **An output standard.** Every skill in this library enforces the same content rules. Active voice. Short sentences. Direct address. No buzzwords. Between 1,500 and 10,000 words of actual instructional output per session. The agent delivers structured, readable work that you can act on immediately.
 
@@ -45,7 +61,7 @@ Every skill includes three things.
 
 Before using any other skill, run `product-marketing` once in your project.
 
-It creates a context document that every other skill reads before doing any work. Your product name, target audience, positioning, value proposition, and competitive differentiation live there. You enter it once. Every skill uses it automatically. The `copywriting` skill does not ask you to re-explain your product. The `cro` skill does not ask who your users are. The `cold-email` skill does not ask what you sell.
+It creates a context document that every other skill reads before doing any work. Your product name, target audience, positioning, value proposition, and competitive differentiation live there. You enter it once. Every skill uses it automatically. The `copywriting` skill does not ask you to re-explain your product. The `cro` skill does not ask who your users are. The `email-marketing` skill does not ask what you sell.
 
 This is the dependency that makes the whole library coherent.
 
@@ -53,37 +69,49 @@ This is the dependency that makes the whole library coherent.
 
 ## Skill map
 
-Every skill connects to others. This map shows the full structure.
-
 ```
                         ┌──────────────────────────────────────┐
                         │          product-marketing           │
                         │    (read by all other skills first)  │
                         └──────────────────┬───────────────────┘
                                            │
-  ┌──────────────┬─────────────┬───────────┼──────────┬──────────────┬──────────────┐
-  ▼              ▼             ▼           ▼          ▼              ▼              ▼
-┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐ ┌──────────┐ ┌─────────────┐ ┌───────────┐
-│  SEO &   │ │   CRO    │ │Content & │ │ Paid & │ │ Growth & │ │  Sales &    │ │ Strategy  │
-│ Discovery│ │          │ │   Copy   │ │Measure │ │Retention │ │    GTM      │ │           │
-├──────────┤ ├──────────┤ ├──────────┤ ├────────┤ ├──────────┤ ├─────────────┤ ├───────────┤
-│seo-audit │ │cro       │ │copywritng│ │ads     │ │referrals │ │revops       │ │mktg-ideas │
-│ai-seo    │ │signup    │ │copy-edit │ │ad-creat│ │free-tools│ │sales-enable │ │mktg-psych │
-│site-arch │ │onboarding│ │cold-email│ │ab-test │ │churn-prev│ │launch       │ │customer-  │
-│programm  │ │popups    │ │emails    │ │analyts │ │community │ │pricing      │ │  research │
-│schema    │ │paywalls  │ │social    │ │        │ │lead-magnt│ │competitors  │ │           │
-│content   │ │          │ │video     │ │        │ │co-mktg   │ │comp-profile │ │           │
-│aso       │ │          │ │image     │ │        │ │directory │ │             │ │           │
-└──────────┘ └──────────┘ └──────────┘ └────────┘ └──────────┘ └─────────────┘ └───────────┘
+  ┌──────────────┬─────────────┬───────────┼──────────┬──────────────┬──────────────┬──────────────┐
+  ▼              ▼             ▼           ▼          ▼              ▼              ▼              ▼
+┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐ ┌──────────┐ ┌─────────────┐ ┌───────────┐ ┌───────────┐
+│  SEO &   │ │   CRO    │ │Content & │ │ Paid & │ │ Growth & │ │  Sales &    │ │ Strategy  │ │ Creator & │
+│ Discovery│ │          │ │   Copy   │ │Measure │ │Retention │ │    GTM      │ │           │ │  Brand    │
+├──────────┤ ├──────────┤ ├──────────┤ ├────────┤ ├──────────┤ ├─────────────┤ ├───────────┤ ├───────────┤
+│seo-audit │ │cro       │ │copywritng│ │ads     │ │referrals │ │revops       │ │mktg-ideas │ │brand-     │
+│ai-seo    │ │signup    │ │copy-edit │ │ad-creat│ │free-tools│ │sales-enable │ │mktg-psych │ │ storytell │
+│site-arch │ │onboarding│ │cold-email│ │ab-test │ │churn-prev│ │launch       │ │customer-  │ │business-  │
+│programm  │ │popups    │ │emails    │ │analyts │ │community │ │pricing      │ │  research │ │ strategy  │
+│schema    │ │paywalls  │ │social    │ │        │ │lead-magnt│ │competitors  │ │           │ │linkedin-  │
+│content   │ │landing-  │ │video     │ │        │ │co-mktg   │ │comp-profile │ │           │ │ strategy  │
+│aso       │ │ page-cro │ │sales-copy│ │        │ │directory │ │             │ │           │ │pr-comms   │
+│seo-blog  │ │          │ │email-mkt │ │        │ │          │ │             │ │           │ │ai-image   │
+│seo-strat │ │          │ │local-seo │ │        │ │          │ │             │ │           │ │education  │
+│          │ │          │ │ecommerce │ │        │ │          │ │             │ │           │ │           │
+│          │ │          │ │instagram │ │        │ │          │ │             │ │           │ │           │
+│          │ │          │ │social-   │ │        │ │          │ │             │ │           │ │           │
+│          │ │          │ │ planner  │ │        │ │          │ │             │ │           │ │           │
+│          │ │          │ │content-  │ │        │ │          │ │             │ │           │ │           │
+│          │ │          │ │ repurpose│ │        │ │          │ │             │ │           │ │           │
+│          │ │          │ │customer- │ │        │ │          │ │             │ │           │ │           │
+│          │ │          │ │ service  │ │        │ │          │ │             │ │           │ │           │
+└──────────┘ └──────────┘ └──────────┘ └────────┘ └──────────┘ └─────────────┘ └───────────┘ └───────────┘
 
 Cross-skill dependencies:
-  copywriting  <->  cro  <->  ab-testing
-  revops       <->  sales-enablement  <->  cold-email
-  seo-audit    <->  schema  <->  ai-seo
-  customer-research  ->  copywriting, cro, competitors
+  copywriting      <->  cro           <->  ab-testing
+  revops           <->  sales-enable  <->  cold-email
+  seo-audit        <->  schema        <->  ai-seo
+  seo-blog-writer  <->  seo-content-strategy
+  customer-research ->  copywriting, cro, competitors
+  brand-storytelling -> linkedin-strategy, pr-communications
+  email-marketing  <->  landing-page-cro  <->  sales-copywriting
+  local-seo        <->  seo-audit     <->  seo-content-strategy
+  education-content -> content-repurposing, email-marketing
+  ai-image-creator  -> instagram-carousel, social-content-planner
 ```
-
-Each skill's **Related Skills** section lists every dependency and cross-reference for that specific skill.
 
 ---
 
@@ -105,34 +133,34 @@ Skills install to `.agents/skills/` by default. Claude Code also reads from `.cl
 
 ## Install
 
-**All 40 skills at once:**
+**All 57 skills at once:**
 
 ```bash
-npx skills add ScayverGraphix/marketing-skills
+npx skills add scayver/marketing-skills
 ```
 
 **Specific skills only:**
 
 ```bash
-npx skills add ScayverGraphix/marketing-skills --skill copywriting cro cold-email
+npx skills add scayver/marketing-skills --skill email-marketing linkedin-strategy pr-communications
 ```
 
 **See what is available before you install:**
 
 ```bash
-npx skills add ScayverGraphix/marketing-skills --list
+npx skills add scayver/marketing-skills --list
 ```
 
 **Install globally (available in every project on your machine):**
 
 ```bash
-npx skills add ScayverGraphix/marketing-skills --global
+npx skills add scayver/marketing-skills --global
 ```
 
 **Install across multiple agents at once with SkillKit:**
 
 ```bash
-npx skillkit install ScayverGraphix/marketing-skills
+npx skillkit install scayver/marketing-skills
 ```
 
 **Add as a git submodule (pulls updates with your repo):**
@@ -159,7 +187,7 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 
 ---
 
-## All 40 skills
+## All 57 skills
 
 ### SEO and discovery
 
@@ -172,6 +200,9 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 | [`schema`](skills/schema/SKILL.md) | JSON-LD schema markup for rich snippets and AI search citation |
 | [`content-strategy`](skills/content-strategy/SKILL.md) | Topic clusters, content pillars, editorial calendar, and distribution plan |
 | [`aso`](skills/aso/SKILL.md) | App Store and Google Play listing optimization: keywords, screenshots, reviews |
+| [`seo-blog-writer`](skills/seo-blog-writer/SKILL.md) | Long-form SEO blog production with keyword planning, outline approval, and multi-platform repurposing |
+| [`seo-content-strategy`](skills/seo-content-strategy/SKILL.md) | Keyword strategy, SERP analysis, content briefs, meta optimization, and blog-to-social repurposing |
+| [`local-seo`](skills/local-seo/SKILL.md) | City pages, service area content, Google Business Profile descriptions, and local review responses |
 
 ### Conversion rate optimization
 
@@ -182,6 +213,7 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 | [`onboarding`](skills/onboarding/SKILL.md) | Post-signup activation: aha moment, onboarding checklist, and time-to-value |
 | [`popups`](skills/popups/SKILL.md) | Exit intent, scroll triggers, lead capture, and announcement banners |
 | [`paywalls`](skills/paywalls/SKILL.md) | In-app upgrade screens, feature gates, and freemium-to-paid conversion |
+| [`landing-page-cro`](skills/landing-page-cro/SKILL.md) | Landing page audits, hero rewrites, CTA optimization, FAQ schema, and feature-to-benefit conversion |
 
 ### Content and copy
 
@@ -194,6 +226,12 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 | [`social`](skills/social/SKILL.md) | LinkedIn, X, Instagram, TikTok: posts, threads, carousels, and short-form video scripts |
 | [`image`](skills/image/SKILL.md) | AI image generation, prompt writing, product mockups, OG images, and compression |
 | [`video`](skills/video/SKILL.md) | AI video production, explainer scripts, demo structure, and distribution |
+| [`sales-copywriting`](skills/sales-copywriting/SKILL.md) | Long-form sales letters, VSLs, direct response copy, and value proposition writing across 10 formats |
+| [`content-repurposing`](skills/content-repurposing/SKILL.md) | Transform one piece of content into six platform-native formats with humanization and topic generation |
+| [`instagram-carousel`](skills/instagram-carousel/SKILL.md) | Slide-by-slide Instagram carousel scripts with captions, hashtags, and visual direction |
+| [`social-content-planner`](skills/social-content-planner/SKILL.md) | Instagram and Facebook content strategy with funnel-mapped weekly planning and Reels scripts |
+| [`customer-service`](skills/customer-service/SKILL.md) | Phone, chat, and email scripts; feedback responses; FAQ content; and help center articles |
+| [`ecommerce-content`](skills/ecommerce-content/SKILL.md) | Product descriptions, category pages, Amazon listings, feature highlights, and comparison pages |
 
 ### Paid advertising and measurement
 
@@ -226,6 +264,7 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 | [`pricing`](skills/pricing/SKILL.md) | Pricing models, tier structure, value metrics, and pricing page design |
 | [`competitors`](skills/competitors/SKILL.md) | Comparison pages and alternative pages for SEO and sales positioning |
 | [`competitor-profiling`](skills/competitor-profiling/SKILL.md) | Competitor research dossiers: positioning, pricing, messaging, and channels |
+| [`email-marketing`](skills/email-marketing/SKILL.md) | Cold email, abandoned cart, lead magnet delivery, newsletter generation, and campaign repurposing |
 
 ### Strategy and research
 
@@ -235,6 +274,17 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 | [`marketing-ideas`](skills/marketing-ideas/SKILL.md) | Channel ideas, growth loops, underused tactics, and experiment prioritization |
 | [`marketing-psychology`](skills/marketing-psychology/SKILL.md) | Anchoring, social proof, loss aversion, scarcity, and other biases applied to marketing |
 | [`customer-research`](skills/customer-research/SKILL.md) | Customer interviews, JTBD, review mining, surveys, and research-to-messaging translation |
+| [`business-strategy`](skills/business-strategy/SKILL.md) | Business idea generation, full business plan development, and customer journey mapping across 7 stages |
+
+### Brand, creator, and communications
+
+| Skill | Description |
+|-------|-------------|
+| [`brand-storytelling`](skills/brand-storytelling/SKILL.md) | Brand voice audits, About Pages, customer avatars, value propositions, and brand story writing |
+| [`linkedin-strategy`](skills/linkedin-strategy/SKILL.md) | LinkedIn posts, profile optimization, connection messages, DM sequences, and company page content |
+| [`pr-communications`](skills/pr-communications/SKILL.md) | Press releases, media pitches, crisis communications, executive quotes, and PR repurposing |
+| [`ai-image-creator`](skills/ai-image-creator/SKILL.md) | Image prompt generation, content asset maps, Instagram carousel and Story slide production |
+| [`education-content`](skills/education-content/SKILL.md) | Course descriptions, Bloom's Taxonomy objectives, module outlines, workshop descriptions, and curriculum maps |
 
 ---
 
@@ -268,7 +318,7 @@ The agent addresses you directly. "You" and "your" appear throughout. Generic th
 
 No em dashes. No hidden Unicode characters. Commas, semicolons, and periods replace them.
 
-No hashtags, emojis, or asterisks in any output.
+No hashtags, emojis, or asterisks in any strategy or long-form output. Social media repurposed formats use platform-appropriate formatting only.
 
 No AI buzzwords. The agent does not write "leverage," "unlock," "game-changer," "dive into," "cutting-edge," or any variation of these.
 
@@ -282,15 +332,26 @@ Every section ends with a specific, actionable next step. No section closes with
 
 Full history in [VERSIONS.md](VERSIONS.md).
 
+**v1.1.0 (2026-05-15)** — 17 new skills added by Alain Dorcelus: sales-copywriting, instagram-carousel, social-content-planner, brand-storytelling, business-strategy, content-repurposing, landing-page-cro, customer-service, ecommerce-content, seo-blog-writer, ai-image-creator, education-content, email-marketing, linkedin-strategy, local-seo, pr-communications, seo-content-strategy. Total skill count: 57.
+
 **v1.0.0 (2026-05-15)** — Initial release. 40 skills, 63 CLI tools, 80+ integration docs. All skills enforce mandatory content standards. Compatible with Claude Code, OpenAI Codex, Cursor, Windsurf, and all Agent Skills-compatible agents.
 
 ---
 
-## Credits
+## Credits and support
 
-Created and maintained by [ScayverGraphix](https://github.com/ScayverGraphix).
+This library was created and is maintained by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
 
-This library draws on the Agent Skills spec published by [vercel-labs/skills](https://github.com/vercel-labs/skills) and builds on work from the marketing skills community, including the original [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) project.
+The 17 custom skills added in v1.1.0 represent original instructional design work covering email marketing, brand storytelling, LinkedIn strategy, public relations, local SEO, e-commerce content, education content development, AI image creation, and more. Each skill was researched, structured, and written from scratch to meet the same output standards as the original library.
+
+If this library saves you hours of prompting, gives your agent new capabilities, or ships better marketing for your business, consider supporting the work directly.
+
+**Support Alain's work:**
+
+- ☕ [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain)
+- 💸 CashApp: **$AlainDorcelus**
+
+This library also draws on the Agent Skills spec published by [vercel-labs/skills](https://github.com/vercel-labs/skills) and builds on work from the marketing skills community, including the original [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) project.
 
 ---
 
@@ -304,4 +365,4 @@ For bugs or questions, open an issue on GitHub.
 
 ## License
 
-MIT. Copyright 2026 ScayverGraphix. See [LICENSE](LICENSE) for the full text.
+MIT. Copyright 2026 Alain Dorcelus (ScayverGraphix). See [LICENSE](LICENSE) for the full text.
