@@ -13,8 +13,6 @@ This release turns the tools directory into a much larger agent-ready integratio
 **Tools**
 
 - Expanded `tools/integrations/` to 346 standalone platform guides.
-- Moved the former Bit Integrations-derived tool docs out of `tools/integrations/bit-integrations/` and into the main `tools/integrations/` directory.
-- Removed the nested `bit-integrations` folder.
 - Preserved the original source registry as `tools/integrations/bit-integrations-registry.md`.
 - Rewrote individual tool docs to use a platform-independent reference format: description, capabilities, authentication, common agent operations, key fields, parameters, when to use, rate limits, and relevant skills.
 - Regenerated `tools/REGISTRY.md` so agents can discover all integration guides from one index.
