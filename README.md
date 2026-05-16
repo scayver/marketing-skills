@@ -69,48 +69,85 @@ This is the dependency that makes the whole library coherent.
 
 ## Skill map
 
-```
-                        ┌──────────────────────────────────────┐
-                        │          product-marketing           │
-                        │    (read by all other skills first)  │
-                        └──────────────────┬───────────────────┘
-                                           │
-  ┌──────────────┬─────────────┬───────────┼──────────┬──────────────┬──────────────┬──────────────┐
-  ▼              ▼             ▼           ▼          ▼              ▼              ▼              ▼
-┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐ ┌──────────┐ ┌─────────────┐ ┌───────────┐ ┌───────────┐
-│  SEO &   │ │   CRO    │ │Content & │ │ Paid & │ │ Growth & │ │  Sales &    │ │ Strategy  │ │ Creator & │
-│ Discovery│ │          │ │   Copy   │ │Measure │ │Retention │ │    GTM      │ │           │ │  Brand    │
-├──────────┤ ├──────────┤ ├──────────┤ ├────────┤ ├──────────┤ ├─────────────┤ ├───────────┤ ├───────────┤
-│seo-audit │ │cro       │ │copywritng│ │ads     │ │referrals │ │revops       │ │mktg-ideas │ │brand-     │
-│ai-seo    │ │signup    │ │copy-edit │ │ad-creat│ │free-tools│ │sales-enable │ │mktg-psych │ │ storytell │
-│site-arch │ │onboarding│ │cold-email│ │ab-test │ │churn-prev│ │launch       │ │customer-  │ │business-  │
-│programm  │ │popups    │ │emails    │ │analyts │ │community │ │pricing      │ │  research │ │ strategy  │
-│schema    │ │paywalls  │ │social    │ │        │ │lead-magnt│ │competitors  │ │           │ │linkedin-  │
-│content   │ │landing-  │ │video     │ │        │ │co-mktg   │ │comp-profile │ │           │ │ strategy  │
-│aso       │ │ page-cro │ │sales-copy│ │        │ │directory │ │             │ │           │ │pr-comms   │
-│seo-blog  │ │          │ │email-mkt │ │        │ │          │ │             │ │           │ │ai-image   │
-│seo-strat │ │          │ │local-seo │ │        │ │          │ │             │ │           │ │education  │
-│          │ │          │ │ecommerce │ │        │ │          │ │             │ │           │ │           │
-│          │ │          │ │instagram │ │        │ │          │ │             │ │           │ │           │
-│          │ │          │ │social-   │ │        │ │          │ │             │ │           │ │           │
-│          │ │          │ │ planner  │ │        │ │          │ │             │ │           │ │           │
-│          │ │          │ │content-  │ │        │ │          │ │             │ │           │ │           │
-│          │ │          │ │ repurpose│ │        │ │          │ │             │ │           │ │           │
-│          │ │          │ │customer- │ │        │ │          │ │             │ │           │ │           │
-│          │ │          │ │ service  │ │        │ │          │ │             │ │           │ │           │
-└──────────┘ └──────────┘ └──────────┘ └────────┘ └──────────┘ └─────────────┘ └───────────┘ └───────────┘
+`product-marketing` is the root context skill. It should run first for any new product, offer, or business because the other skills depend on that positioning context.
+
+```text
+product-marketing
+├── SEO and discovery
+│   ├── seo-audit
+│   ├── ai-seo
+│   ├── site-architecture
+│   ├── programmatic-seo
+│   ├── schema
+│   ├── aso
+│   ├── seo-blog-writer
+│   └── seo-content-strategy
+├── Conversion optimization
+│   ├── cro
+│   ├── signup
+│   ├── onboarding
+│   ├── popups
+│   ├── paywalls
+│   └── landing-page-cro
+├── Content and copy
+│   ├── copywriting
+│   ├── copy-editing
+│   ├── cold-email
+│   ├── emails
+│   ├── email-marketing
+│   ├── sales-copywriting
+│   ├── social
+│   ├── social-content-planner
+│   ├── instagram-carousel
+│   ├── content-repurposing
+│   ├── ecommerce-content
+│   ├── customer-service
+│   ├── video
+│   └── image
+├── Paid media and measurement
+│   ├── ads
+│   ├── ad-creative
+│   ├── ab-testing
+│   ├── analytics
+│   └── analytics-review
+├── Growth and retention
+│   ├── referrals
+│   ├── free-tools
+│   ├── churn-prevention
+│   ├── community-marketing
+│   ├── lead-magnets
+│   ├── co-marketing
+│   └── directory-submissions
+├── Sales and go-to-market
+│   ├── revops
+│   ├── sales-enablement
+│   ├── launch
+│   ├── pricing
+│   ├── competitors
+│   └── competitor-profiling
+├── Strategy and research
+│   ├── marketing-ideas
+│   ├── marketing-psychology
+│   ├── customer-research
+│   └── business-strategy
+└── Brand and creator systems
+    ├── brand-storytelling
+    ├── linkedin-strategy
+    ├── pr-communications
+    ├── ai-image-creator
+    └── education-content
 
 Cross-skill dependencies:
-  copywriting      <->  cro           <->  ab-testing
-  revops           <->  sales-enable  <->  cold-email
-  seo-audit        <->  schema        <->  ai-seo
-  seo-blog-writer  <->  seo-content-strategy
-  customer-research ->  copywriting, cro, competitors
-  brand-storytelling -> linkedin-strategy, pr-communications
-  email-marketing  <->  landing-page-cro  <->  sales-copywriting
-  local-seo        <->  seo-audit     <->  seo-content-strategy
-  education-content -> content-repurposing, email-marketing
-  ai-image-creator  -> instagram-carousel, social-content-planner
+  copywriting        <-> cro                 <-> ab-testing
+  revops             <-> sales-enablement    <-> cold-email
+  seo-audit          <-> schema              <-> ai-seo
+  seo-blog-writer    <-> seo-content-strategy
+  customer-research  ->  copywriting, cro, competitors
+  brand-storytelling ->  linkedin-strategy, pr-communications
+  email-marketing    <-> landing-page-cro    <-> sales-copywriting
+  local-seo          <-> seo-audit           <-> seo-content-strategy
+  education-content  ->  content-repurposing, email-marketing
+  ai-image-creator   ->  instagram-carousel, social-content-planner
 ```
 
 ---
