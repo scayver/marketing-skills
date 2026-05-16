@@ -1,82 +1,87 @@
 # SureForms
 
-SureForms is an AI-powered WordPress form builder by the SureCart/SureBiz team, designed to create high-converting forms quickly with AI assistance and a Gutenberg-native block interface. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+SureForms is an AI-powered WordPress form builder by the SureBiz team, designed for creating high-converting forms with a Gutenberg-native block interface.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/SureForms.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/sureforms/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### List Forms
+```bash
+GET https://yoursite.com/wp-json/sureforms/v1/forms
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+Authorization: Basic {base64_credentials}
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Get a Single Form
+```bash
+GET https://yoursite.com/wp-json/sureforms/v1/forms/{id}
 
-## Connecting to Action Platforms
+Authorization: Basic {base64_credentials}
+```
 
-After selecting SureForms as the trigger in Bit Integrations, connect it to any of these action platforms:
+### List Form Entries
+```bash
+GET https://yoursite.com/wp-json/sureforms/v1/entries?form_id={id}
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get a Single Entry
+```bash
+GET https://yoursite.com/wp-json/sureforms/v1/entries/{id}
 
-1. Install and activate SureForms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in SureForms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select SureForms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Basic {base64_credentials}
+```
 
-## Field Mapping Tips
+## Key Fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Form
+- `id` - Form ID
+- `title` - Form name
+- `fields` - Array of field configurations
+- `status` - publish, draft
+
+### Entry
+- `id` - Entry ID
+- `form_id` - Originating form
+- `data` - Key-value map of submitted field values
+- `created_at` - ISO 8601 submission timestamp
+- `user_id` - WordPress user ID if logged in (optional)
+
+## Parameters
+
+- `form_id` - Required to scope entries to a specific form
+- `per_page` / `page` - Pagination controls
+- `date_from` / `date_to` - Filter entries by submission date range
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from AI-generated forms and routing to a CRM
+- Triggering email sequences on form submission
+- Aggregating form entry data for reporting
+- Syncing form responses to spreadsheets or project tools
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:draft-content
+- marketing:email-sequence
+- data:explore-data
+- operations:process-doc

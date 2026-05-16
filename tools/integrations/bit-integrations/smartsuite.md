@@ -1,67 +1,103 @@
 # SmartSuite
 
-SmartSuite is a collaborative work management platform that combines databases, workflows, and project tracking in a flexible, no-code environment. Available as an Action in the Bit Integrations WordPress plugin.
+SmartSuite is a collaborative work management platform combining databases, project tracking, and workflows in a no-code environment.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Smart-Suite.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create records in SmartSuite solutions and applications |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to any SmartSuite field in the selected solution |
-
-## Action Events
-
-- Create record
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://app.smartsuite.com/api/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | - | No official SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: API Key
-- **Required**: API key from SmartSuite account settings. Enter the key in Bit Integrations and select the target solution and application.
+- **Type**: API Token
+- **Header**: `Authorization: Token {api_key}` and `ACCOUNT-ID: {account_id}`
+- **Get token**: Profile > API & Integrations in the SmartSuite dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to SmartSuite CRM Record
-**Trigger:** WordPress lead form submission
-**Action:** Create a new record in a SmartSuite CRM solution with contact details
-**Use case:** Populate a SmartSuite-based CRM or database automatically from every website lead
+### List Solutions
+```bash
+GET https://app.smartsuite.com/api/v1/solution/
 
-### Recipe 2: Project Request Form to SmartSuite Project
-**Trigger:** WordPress project request form submission
-**Action:** Create a record in a SmartSuite project management solution
-**Use case:** Automatically initiate project tracking in SmartSuite when clients submit project briefs
+Authorization: Token {api_key}
+ACCOUNT-ID: {account_id}
+```
 
-### Recipe 3: Event Registration to SmartSuite Attendee App
-**Trigger:** Event registration form submission
-**Action:** Create a record in a SmartSuite event management application
-**Use case:** Track and manage event attendees in SmartSuite populated from WordPress registration forms
+### List Applications (Tables) in a Solution
+```bash
+GET https://app.smartsuite.com/api/v1/solution/{solution_id}/applications/
 
-## Setup Steps
+Authorization: Token {api_key}
+ACCOUNT-ID: {account_id}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select SmartSuite as the Action.
-5. In SmartSuite, go to account settings and copy your API key.
-6. Enter the API key in Bit Integrations and select the target solution and application.
-7. Map form fields to SmartSuite field names.
-8. Save and test.
+### Create a Record
+```bash
+POST https://app.smartsuite.com/api/v1/applications/{application_id}/records/
+
+Authorization: Token {api_key}
+ACCOUNT-ID: {account_id}
+Content-Type: application/json
+
+{
+  "title": {"value": "New Lead"},
+  "status": {"value": "open"},
+  "email": {"value": "contact@example.com"}
+}
+```
+
+### List Records
+```bash
+GET https://app.smartsuite.com/api/v1/applications/{application_id}/records/
+
+Authorization: Token {api_key}
+ACCOUNT-ID: {account_id}
+```
+
+### Update a Record
+```bash
+PATCH https://app.smartsuite.com/api/v1/applications/{application_id}/records/{record_id}/
+
+Authorization: Token {api_key}
+ACCOUNT-ID: {account_id}
+Content-Type: application/json
+
+{"status": {"value": "completed"}}
+```
+
+## Key Fields
+
+### Record
+- `id` - Unique record identifier
+- `title` - Record title field
+- `application_id` - Parent application (table) ID
+- `created_at` - ISO 8601 creation timestamp
+- `updated_at` - ISO 8601 last-updated timestamp
+
+## Parameters
+
+- `application_id` - Required for record operations; identifies the target table
+- `solution_id` - Required for listing applications
+- `limit` / `offset` - Pagination controls for list endpoints
 
 ## When to Use
 
-- When SmartSuite is your primary work management platform and you need WordPress data to flow in automatically
-- When building connected databases in SmartSuite that should be populated from WordPress forms
-- When managing leads, projects, or events in SmartSuite without manual data entry
+- Syncing leads or contacts into a SmartSuite CRM application
+- Creating project records automatically from external form submissions
+- Tracking tasks, events, or inventory without manual data entry
+- Reporting on SmartSuite data from marketing pipelines
 
-## Related Integrations
+## Rate Limits
 
-- airtable.md
-- notion.md
-- clickup.md
-- asana.md
+- See SmartSuite pricing page and API documentation for current limits
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- product-management:write-spec
+- operations:process-doc
+- data:explore-data

@@ -1,75 +1,105 @@
 # WP Fusion
 
-WP Fusion is a WordPress plugin that connects your site to over 100 CRMs and marketing platforms, acting as a universal integration layer for tags, contact data, and access control. Available as Action in the Bit Integrations WordPress plugin.
+WP Fusion is a WordPress plugin that connects WordPress sites to over 100 CRMs and marketing automation platforms, providing tag-based access control, contact sync, and automation bridging.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-Fusion.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Apply tag, remove tag, update contact |
-| Free Tier | ✓ | Free |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Apply tag — add a tag to a contact in WP Fusion's connected CRM or marketing platform
-- Remove tag — remove a tag from a contact in the connected CRM
-- Update contact — push updated user data to the connected CRM via WP Fusion
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `/wp-json/wp-fusion/v1/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI |
+| SDK | - | Not available |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WP Fusion must be installed, active, and already connected to your CRM or marketing platform via its own settings; Bit Integrations then communicates with WP Fusion directly
-- **Note**: WP Fusion manages its own API connections to external platforms — no additional API credentials are needed in Bit Integrations itself
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Apply CRM tag on LMS course completion
-**Trigger:** LearnDash / TutorLMS — Course completed
-**Action:** WP Fusion — Apply tag
-**Key fields mapped:** User email, tag tied to course completion
-**Use case:** Use WP Fusion to tag contacts in your CRM when they complete a course, enabling CRM-based automations without direct CRM integration in Bit Integrations
+### Apply a tag to a contact
+```
+POST https://yoursite.com/wp-json/wp-fusion/v1/tags
 
-### Recipe 2: Remove tag on membership cancellation
-**Trigger:** MemberPress — Membership cancelled
-**Action:** WP Fusion — Remove tag
-**Key fields mapped:** User email, active member tag
-**Use case:** Automatically remove active-member tags in your CRM when a membership lapses, keeping list segments accurate
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-### Recipe 3: Update contact data after form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** WP Fusion — Update contact
-**Key fields mapped:** Email, first name, last name, custom field values
-**Use case:** Push form data into your CRM via WP Fusion as a single integration point instead of configuring direct CRM connections in multiple places
+{
+  "user_id": 42,
+  "tags": ["customer", "course-completed"]
+}
+```
 
-## Setup Steps
+### Remove a tag from a contact
+```
+DELETE https://yoursite.com/wp-json/wp-fusion/v1/tags
 
-1. Install Bit Integrations and WP Fusion on your WordPress site.
-2. Connect WP Fusion to your CRM or marketing platform via its own settings panel.
-3. Go to Bit Integrations > Create Integration.
-4. Select WP Fusion as the action.
-5. Choose the action event: Apply Tag, Remove Tag, or Update Contact.
-6. Select or type the tag name, or map the contact fields to update.
-7. Map the user email from your trigger source to WP Fusion's contact lookup field.
-8. Save and test with a real event to confirm the tag or data update fires in your CRM.
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "user_id": 42,
+  "tags": ["trial-user"]
+}
+```
+
+### Update contact data in connected CRM
+```
+POST https://yoursite.com/wp-json/wp-fusion/v1/contacts/{user_id}
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "first_name": "Jane",
+  "last_name": "Smith",
+  "email": "jane@example.com",
+  "custom_field": "value"
+}
+```
+
+### Get tags for a user
+```
+GET https://yoursite.com/wp-json/wp-fusion/v1/tags/{user_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Tag Operation
+- `user_id` - WordPress user ID
+- `tags` - Array of tag names or IDs to apply or remove
+
+### Contact Object
+- `user_id` - WordPress user ID
+- `contact_id` - CRM contact ID
+- `email` - Contact email address
+- `tags` - Current array of tags applied in the CRM
+- `meta` - WordPress user meta fields synced to CRM
+
+## Parameters
+
+- `user_id` - WordPress user to operate on
+- `tags` - Tag names to apply or remove
+- `force_sync` - Boolean to force immediate sync to CRM
 
 ## When to Use
 
-- You want to use WP Fusion as a single CRM integration layer across multiple Bit Integrations workflows
-- Your CRM is not directly supported by Bit Integrations but is supported by WP Fusion
-- You need to apply or remove CRM tags based on LMS, membership, or form events
-- You want to push WordPress user data into your CRM from multiple trigger sources through one consistent action
+- Applying or removing CRM tags based on LMS completions, membership events, or form submissions
+- Syncing WordPress user data to CRMs not directly supported by other integrations
+- Managing access control to gated content based on CRM tag state
+- Bridging multiple WordPress plugins to a single CRM via WP Fusion's unified layer
 
-## Related Integrations
+## Rate Limits
 
-- memberpress.md
-- learndash.md
-- lifterlms.md
-- restrict-content.md
-- suremembers.md
+- Subject to WordPress server limits and connected CRM's API rate limits
+- WP Fusion queues sync operations; avoid flooding with simultaneous bulk updates
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- sales:account-research

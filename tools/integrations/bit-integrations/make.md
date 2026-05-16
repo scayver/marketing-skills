@@ -1,67 +1,90 @@
 # Make
 
-Make (formerly Integromat) is a visual automation platform that connects apps via scenarios with advanced data transformation. Available as an Action in the Bit Integrations WordPress plugin.
+Visual automation platform (formerly Integromat) for connecting apps and automating multi-step workflows with advanced data routing and transformation.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Make.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to a Make webhook trigger to start a scenario |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map any form field to the outgoing webhook payload |
-
-## Action Events
-
-- Send data to Make (Integromat) Webhooks module to start a scenario
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://us1.make.com/api/v2/` |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | - | No official SDK; community libraries available |
 
 ## Authentication
 
-- **Type**: Webhook URL
-- **Required**: Webhook URL copied from a Make scenario's "Webhooks" trigger module
+- **Type**: API Token (Bearer)
+- **Header**: `Authorization: Token {api_token}`
+- **Get token**: Make Dashboard > Profile icon > API > Generate API Token
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Multi-Step Scenario
-**Trigger:** WordPress form submission
-**Action:** Send payload to Make webhook, triggering a multi-step scenario with routers and filters
-**Use case:** Run complex automation logic (conditions, data parsing, multiple destinations) from a single form submission
+### List scenarios
+```bash
+GET https://us1.make.com/api/v2/scenarios?teamId={team_id}
 
-### Recipe 2: WooCommerce Order to Fulfillment Workflow
-**Trigger:** WooCommerce order placed
-**Action:** Send order data to Make scenario that notifies the warehouse, updates inventory, and emails the customer
-**Use case:** Automate the full order fulfillment chain without custom code
+Authorization: Token {api_token}
+```
 
-### Recipe 3: Lead Form to CRM + Slack Notification
-**Trigger:** WordPress lead form submission
-**Action:** Make scenario creates CRM contact and posts a Slack message simultaneously
-**Use case:** Notify sales instantly and create CRM records in one automated flow
+### Activate a scenario
+```bash
+PATCH https://us1.make.com/api/v2/scenarios/{scenario_id}
 
-## Setup Steps
+Authorization: Token {api_token}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger (form plugin, WooCommerce, etc.).
-4. Select Make as the Action.
-5. In Make, create a new scenario and add a "Webhooks > Custom webhook" module as the trigger. Copy the webhook URL.
-6. Paste the webhook URL into Bit Integrations.
-7. Map fields.
-8. Save and test.
+{"isActive": true}
+```
+
+### List executions for a scenario
+```bash
+GET https://us1.make.com/api/v2/scenarios/{scenario_id}/logs
+
+Authorization: Token {api_token}
+```
+
+### Trigger a scenario via webhook
+```bash
+POST https://hook.us1.make.com/{webhook_path}
+
+Content-Type: application/json
+
+{"key": "value", "email": "user@example.com"}
+```
+
+## Key Fields
+
+### Scenario
+- `id` - Scenario ID
+- `name` - Scenario display name
+- `isActive` - Whether the scenario is enabled
+- `teamId` - Owning team ID
+- `scheduling` - Scheduling configuration object
+
+### Execution Log
+- `status` - Execution status (success, error, warning)
+- `duration` - Run time in milliseconds
+- `operations` - Number of operations consumed
+
+## Parameters
+
+- `teamId` - Filter by team (required for most endpoints)
+- `pg[limit]` - Page size
+- `pg[offset]` - Pagination offset
 
 ## When to Use
 
-- When you need advanced data transformation or routing logic between WordPress and other apps
-- When a single WordPress event should trigger actions in multiple services simultaneously
-- When your team prefers Make's visual scenario builder over simpler webhook tools
+- Orchestrating multi-step automations across many SaaS tools with visual logic
+- Building complex data transformation pipelines between platforms
+- Triggering external workflows from API events or webhooks
+- Monitoring and managing automation health and execution logs programmatically
 
-## Related Integrations
+## Rate Limits
 
-- zapier.md
-- n8n.md
-- pabbly.md
-- webhook-outgoing.md
+- Varies by plan; see Make pricing page for operation limits per month
+
+## Relevant Skills
+
+- operations:process-optimization
+- operations:runbook
+- marketing:campaign-plan

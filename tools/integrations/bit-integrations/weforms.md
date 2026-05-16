@@ -1,82 +1,89 @@
 # weForms
 
-weForms is a fast and user-friendly WordPress form builder with a Gutenberg-compatible interface and a focus on performance and simplicity. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+weForms is a fast, Gutenberg-compatible WordPress form builder focused on performance and simplicity for contact forms, surveys, and lead capture.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/weForms.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/weforms/v1/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI |
+| SDK | - | Not available |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password or Cookie Auth
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### List all forms
+```
+GET https://yoursite.com/wp-json/weforms/v1/contact-forms
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+Authorization: Basic {base64_credentials}
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Get a specific form
+```
+GET https://yoursite.com/wp-json/weforms/v1/contact-forms/{form_id}
 
-## Connecting to Action Platforms
+Authorization: Basic {base64_credentials}
+```
 
-After selecting weForms as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Get form entries
+```
+GET https://yoursite.com/wp-json/weforms/v1/contact-forms/{form_id}/entries
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get a single entry
+```
+GET https://yoursite.com/wp-json/weforms/v1/contact-forms/{form_id}/entries/{entry_id}
 
-1. Install and activate weForms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in weForms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select weForms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Basic {base64_credentials}
+```
 
-## Field Mapping Tips
+## Key Fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Form Object
+- `id` - Form ID
+- `title` - Form name
+- `fields` - Array of field definitions
+- `settings` - Form settings (notifications, redirects)
+- `created_at` - Creation timestamp
+
+### Entry Object
+- `id` - Entry ID
+- `form_id` - Associated form ID
+- `fields` - Key-value pairs of submitted field data
+- `created_at` - Submission timestamp
+- `ip_address` - Submitter IP address
+
+## Parameters
+
+- `per_page` - Entries per page (default 10)
+- `page` - Page number for pagination
+- `order` - `asc` or `desc` (default `desc`)
+- `form_id` - Filter entries by specific form
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Retrieving lead submissions programmatically for CRM import
+- Auditing form entries for data quality or compliance
+- Building custom reporting dashboards on top of form data
+- Exporting submissions to external data stores or spreadsheets
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- Subject to WordPress server limits; no hard API rate limit
+- Batch entry exports with pagination to avoid server timeouts
+
+## Relevant Skills
+
+- marketing:draft-content
+- marketing:campaign-plan
+- data:explore-data

@@ -1,67 +1,95 @@
 # FluentCommunity
 
-FluentCommunity is a WordPress community platform plugin by the Fluent team that enables social feeds, spaces, and member management within WordPress. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress community platform plugin with social feeds, spaces, and member management built on WordPress.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Community and Forum
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent-Community.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add members to FluentCommunity spaces |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user data to FluentCommunity space membership |
-
-## Action Events
-
-- Add member to community space
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via FluentCommunity endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and FluentCommunity must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Membership Purchase to FluentCommunity Space
-**Trigger:** WooCommerce or membership plugin purchase
-**Action:** Add the buyer to the corresponding FluentCommunity space
-**Use case:** Grant community space access automatically when a membership or course is purchased
+### List members
+```bash
+GET https://yoursite.com/wp-json/fluent-community/v2/members
 
-### Recipe 2: User Registration to Welcome Space
-**Trigger:** WordPress user registration
-**Action:** Add the new user to a FluentCommunity onboarding or welcome space
-**Use case:** Automatically onboard new registrations into a community welcome space
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Course Enrollment to Learner Space
-**Trigger:** LMS course enrollment
-**Action:** Add the enrolled student to a FluentCommunity learner cohort space
-**Use case:** Build course-specific community spaces that students join automatically on enrollment
+### Get member profile
+```bash
+GET https://yoursite.com/wp-json/fluent-community/v2/members/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and FluentCommunity on your WordPress site.
-2. Create the target FluentCommunity spaces.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select FluentCommunity as the Action.
-6. Select the target space.
-7. Map the user identifier.
-8. Save and test.
+### List spaces
+```bash
+GET https://yoursite.com/wp-json/fluent-community/v2/spaces
+
+Authorization: Basic {base64_credentials}
+```
+
+### List posts in space
+```bash
+GET https://yoursite.com/wp-json/fluent-community/v2/spaces/{space_id}/posts
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Member
+- `id` - WordPress user ID
+- `display_name` - Member display name
+- `email` - Member email
+- `role` - Community role (admin, moderator, member)
+- `joined_at` - Join date
+- `spaces` - Spaces the member belongs to
+
+### Space
+- `id` - Space ID
+- `title` - Space name
+- `description` - Space description
+- `visibility` - public, private
+- `member_count` - Number of members
+
+### Post
+- `id` - Post ID
+- `content` - Post body
+- `author_id` - Author user ID
+- `space_id` - Parent space
+- `created_at` - ISO 8601 timestamp
+
+## Parameters
+
+- `per_page` - Results per page
+- `page` - Page number
+- `space_id` - Filter posts by space
 
 ## When to Use
 
-- When purchases or enrollments should automatically add users to FluentCommunity spaces
-- When building a community membership site using FluentCommunity with automated access management
-- When new registrations should be placed into a community onboarding space automatically
+- Sync community members to an email marketing list
+- Monitor new posts for community management
+- Automate welcome messages for new members
+- Report on community engagement and growth
 
-## Related Integrations
+## Rate Limits
 
-- buddyboss.md
-- buddypress.md
-- wpforo.md
-- fluent-support.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- community-management

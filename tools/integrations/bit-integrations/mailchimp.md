@@ -1,87 +1,111 @@
 # Mailchimp
 
-Mailchimp is a widely used email marketing and audience management platform for small to mid-size businesses. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing and audience management platform for building lists, sending campaigns, and running automations.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Mail-Chimp.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add to audience, apply tags, update merge fields |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to audience
-- Apply tag to contact
-- Update merge fields
-- Update subscriber status (subscribed, pending, unsubscribed)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Full REST API for lists, members, campaigns, tags, segments |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official Python SDK; community SDKs for PHP, Ruby, Node |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Mailchimp account > Account > Extras > API keys > Create a Key
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (Basic Auth)
+- **Header**: `Authorization: Basic {base64(anystring:api_key)}`
+- **Base URL**: `https://{dc}.api.mailchimp.com/3.0/` (dc is server prefix from API key, e.g., us14)
+- **Get key**: Mailchimp Account > Extras > API Keys > Create A Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| FNAME | Subscriber first name (merge field) | Optional |
-| LNAME | Subscriber last name (merge field) | Optional |
-| PHONE | Subscriber phone number (merge field) | Optional |
-| Tags | Comma-separated tags to apply | Optional |
-| Merge Fields | Additional custom merge field values | Optional |
-| Status | Subscription status (subscribed, pending) | Optional |
+### Add a subscriber to an audience
 
-## Common Workflow Recipes
+```bash
+POST https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Mailchimp audience with welcome tag
-**Key fields mapped:** Email, FNAME, LNAME
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Basic {base64(anystring:api_key)}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Mailchimp customer audience or segment
-**Key fields mapped:** Email, FNAME, Order amount (as merge field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"email_address": "jane@example.com", "status": "subscribed", "merge_fields": {"FNAME": "Jane", "LNAME": "Doe"}}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Mailchimp audience and apply enrollment tag
-**Key fields mapped:** Email, FNAME, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Add or update a subscriber (upsert)
 
-## Setup Steps
+```bash
+PUT https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Mailchimp as the action.
-5. Connect your Mailchimp account using your API Key.
-6. Select the audience to add subscribers to.
-7. Map the email field and any name or tag fields.
-8. Save and test with a real form submission.
+Authorization: Basic {base64(anystring:api_key)}
+Content-Type: application/json
+
+{"email_address": "jane@example.com", "status_if_new": "subscribed", "merge_fields": {"FNAME": "Jane"}}
+```
+
+### Add a tag to a subscriber
+
+```bash
+POST https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}/tags
+
+Authorization: Basic {base64(anystring:api_key)}
+Content-Type: application/json
+
+{"tags": [{"name": "LeadMagnet", "status": "active"}]}
+```
+
+### Get all audiences (lists)
+
+```bash
+GET https://{dc}.api.mailchimp.com/3.0/lists?count=50
+
+Authorization: Basic {base64(anystring:api_key)}
+```
+
+### Get members of an audience
+
+```bash
+GET https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members?count=100&status=subscribed
+
+Authorization: Basic {base64(anystring:api_key)}
+```
+
+## Key Fields
+
+### Member Object
+- `email_address` - Subscriber email
+- `status` - subscribed | unsubscribed | pending | cleaned
+- `merge_fields` - Object with FNAME, LNAME, PHONE, and custom fields
+- `tags` - Array of tag objects applied to the member
+- `timestamp_signup` - When they first subscribed
+
+### List (Audience) Object
+- `id` - List ID
+- `name` - Audience name
+- `stats.member_count` - Total active subscribers
+- `double_optin` - Whether double opt-in is enabled
+
+## Parameters
+
+- `count` - Results per page (max 1000)
+- `offset` - Pagination offset
+- `status` - Filter members by subscription status
+- `subscriber_hash` - MD5 hash of lowercase email address
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using tags
-- Syncing WooCommerce buyers to a customer email audience
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing and managing email subscriber audiences
+- Sending broadcast newsletters and automated campaigns
+- Segmenting subscribers by tags, groups, or merge field values
+- Running drip sequences triggered by subscriber events
 
-## Related Integrations
+## Rate Limits
 
-- activecampaign.md
-- mailerlite.md
-- getresponse.md
+- 10 simultaneous connections per account
+- No hard per-minute limit; rate limiting applies for high-volume use
+- Batch endpoint available for bulk operations
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- ecommerce

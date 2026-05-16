@@ -1,83 +1,113 @@
 # Sarbacane
 
-Sarbacane (Mailify) is a French email and SMS marketing platform used by businesses across Europe for campaign management and list automation. Available as an Action in the Bit Integrations WordPress plugin.
+French email and SMS marketing platform (also known as Mailify) for campaign management, list automation, and multi-channel messaging for European businesses.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Sarbacane.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update contact fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://sarbacaneapis.com/v1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK; standard REST |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Sarbacane account settings — API key and Account ID
-- **Required in Bit Integrations**: API Key and Account ID
+- **Type**: API Key + Account ID
+- **Header**: `apiKey: {api_key}` and `accountId: {account_id}`
+- **Get credentials**: Sarbacane account > Settings > API section
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Nom | Subscriber last name | Optional |
-| Prenom | Subscriber first name | Optional |
-| List ID | The Sarbacane list to add the contact to | Required |
+### List contact lists
 
-## Common Workflow Recipes
+```bash
+GET https://sarbacaneapis.com/v1/lists
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Sarbacane list with welcome tag
-**Key fields mapped:** Email, Prenom, Nom
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+apiKey: {api_key}
+accountId: {account_id}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Sarbacane customer list or segment
-**Key fields mapped:** Email, Prenom, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Add contact to list
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Sarbacane list for enrollment-based nurture
-**Key fields mapped:** Email, Prenom, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+```bash
+POST https://sarbacaneapis.com/v1/lists/{list_id}/contacts
 
-## Setup Steps
+apiKey: {api_key}
+accountId: {account_id}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Sarbacane as the action.
-5. Connect your Sarbacane account using your API Key and Account ID.
-6. Select the list to add contacts to.
-7. Map the email field and name fields (prenom, nom).
-8. Save and test with a real form submission.
+{"email": "jane@example.com", "properties": {"prenom": "Jane", "nom": "Doe"}}
+```
+
+### Get contact
+
+```bash
+GET https://sarbacaneapis.com/v1/contacts?email=jane@example.com
+
+apiKey: {api_key}
+accountId: {account_id}
+```
+
+### List campaigns
+
+```bash
+GET https://sarbacaneapis.com/v1/campaigns
+
+apiKey: {api_key}
+accountId: {account_id}
+```
+
+### Get campaign statistics
+
+```bash
+GET https://sarbacaneapis.com/v1/campaigns/{campaign_id}/stats
+
+apiKey: {api_key}
+accountId: {account_id}
+```
+
+## Key Fields
+
+### Contact Object
+- `id` - Contact ID
+- `email` - Email address
+- `properties.prenom` - First name
+- `properties.nom` - Last name
+- `properties.phone` - Phone number
+- `unsubscribed` - Boolean unsubscribe status
+
+### List Object
+- `id` - List ID
+- `name` - List name
+- `count` - Number of contacts
+
+### Campaign Statistics
+- `sent` - Emails sent
+- `opens` - Unique opens
+- `clicks` - Unique clicks
+- `unsubscribes` - Unsubscribes
+- `bounces` - Bounced emails
+
+## Parameters
+
+- `list_id` - Target specific list
+- `email` - Filter by email
+- `page` - Page number
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list for European audiences
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Managing email and SMS campaigns for French and European audiences
+- Growing subscriber lists with GDPR-compliant opt-ins
+- Segmenting contacts by source, behavior, or purchase history
+- Sending transactional or promotional email campaigns
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- mailjet.md
-- brevo.md
+- See Sarbacane pricing page for plan-based limits
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report

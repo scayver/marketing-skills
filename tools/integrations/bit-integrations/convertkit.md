@@ -1,85 +1,119 @@
 # Kit (ConvertKit)
 
-Kit (formerly ConvertKit) is a creator-focused email marketing platform that uses tags and sequences instead of traditional lists to manage subscribers. Available as an Action in the Bit Integrations WordPress plugin.
+Creator-focused email marketing platform that uses tags, sequences, and forms instead of traditional lists to manage and nurture subscriber audiences.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Kit1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Subscribe to form, apply tag, add to sequence |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Subscribe contact to form
-- Apply tag to subscriber
-- Add subscriber to sequence
-- Update subscriber fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v3 at api.convertkit.com |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official Ruby gem; community libraries for PHP, Python, Node.js |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Kit account > Settings > Advanced > API Key
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (query parameter)
+- **Parameter**: `api_key={api_key}` or `api_secret={api_secret}` depending on endpoint
+- **Get token**: Kit account > Settings > Advanced > API Key / API Secret
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Tags | Tags to apply to the subscriber | Optional |
+### List all forms
+```
+GET https://api.convertkit.com/v3/forms?api_key={api_key}
+```
 
-## Common Workflow Recipes
+### Subscribe someone to a form
+```
+POST https://api.convertkit.com/v3/forms/{form_id}/subscribe
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Subscribe contact to Kit form and apply a welcome tag
-**Key fields mapped:** Email, First Name
-**Use case:** Automatically grow your subscriber base when visitors fill out any lead capture form
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Apply a buyer tag to the subscriber in Kit and add to a post-purchase sequence
-**Key fields mapped:** Email, First Name
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{
+  "api_key": "{api_key}",
+  "email": "jane@example.com",
+  "first_name": "Jane",
+  "tags": [12345, 67890]
+}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Subscribe to Kit form, apply enrollment tag, and add to onboarding sequence
-**Key fields mapped:** Email, First Name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Apply a tag to a subscriber
+```
+POST https://api.convertkit.com/v3/tags/{tag_id}/subscribe
 
-## Setup Steps
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Kit (ConvertKit) as the action.
-5. Connect your Kit account using your API Key.
-6. Select the form or tag to use for new subscribers.
-7. Map the email field and first name field.
-8. Save and test with a real form submission.
+{"api_key": "{api_key}", "email": "jane@example.com"}
+```
+
+### Add subscriber to a sequence
+```
+POST https://api.convertkit.com/v3/sequences/{sequence_id}/subscribe
+
+Content-Type: application/json
+
+{"api_key": "{api_key}", "email": "jane@example.com", "first_name": "Jane"}
+```
+
+### List all tags
+```
+GET https://api.convertkit.com/v3/tags?api_key={api_key}
+```
+
+### Unsubscribe a contact
+```
+PUT https://api.convertkit.com/v3/unsubscribe
+
+Content-Type: application/json
+
+{"api_secret": "{api_secret}", "email": "jane@example.com"}
+```
+
+## Key Fields
+
+### Subscriber
+- `email` - Subscriber email address (required)
+- `first_name` - First name
+- `tags` - Array of tag IDs to apply on subscribe
+- `fields` - Object of custom field key/value pairs
+
+### Form
+- `id` - Form ID required for subscription endpoint
+- `name` - Form name
+- `subscriber_count` - Total subscribers via this form
+
+### Tag
+- `id` - Tag ID
+- `name` - Tag label
+- `created_at` - ISO 8601 creation timestamp
+
+### Sequence
+- `id` - Sequence ID
+- `name` - Sequence name
+
+## Parameters
+
+- `api_key` - Required for most read/subscribe operations
+- `api_secret` - Required for unsubscribe and some write operations
+- `form_id` - Targets a specific opt-in form
+- `tag_id` - Targets a specific tag
+- `sequence_id` - Targets a specific email sequence
 
 ## When to Use
 
-- Growing a subscriber base from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using tags
-- Adding WooCommerce buyers to post-purchase email sequences
-- Enrolling members or course students in onboarding sequences
-- Managing creator audiences with a tag-based system instead of lists
-- Replacing manual CSV imports from WordPress to your email platform
+- Adding subscribers from web forms, course enrollments, or e-commerce events
+- Tagging subscribers by lead source, product, or behavior for segmentation
+- Enrolling new subscribers in onboarding or drip sequences automatically
+- Managing creator-style audiences where tag logic replaces traditional list segments
 
-## Related Integrations
+## Rate Limits
 
-- mailerlite.md
-- getresponse.md
-- activecampaign.md
+- 120 requests per minute per API key
+- See [developers.kit.com](https://developers.kit.com) for current limits
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- course-creation

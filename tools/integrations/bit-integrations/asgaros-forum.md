@@ -1,66 +1,95 @@
 # Asgaros Forum
 
-Asgaros Forum is a lightweight and straightforward WordPress forum plugin for adding discussion boards to any WordPress site. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Lightweight and easy-to-use WordPress forum plugin for adding discussion boards, categories, and threaded topics to any WordPress site.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Community and Forum
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Asgaros-Forum.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add members to Asgaros Forum |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user data to Asgaros Forum member fields |
-
-## Action Events
-
-- Add member to forum
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No public external REST API |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | WordPress PHP hooks only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Asgaros Forum must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress admin access
+- **Header**: N/A — plugin managed within WordPress admin
+- **Get token**: N/A — use WordPress Application Password for general WP REST if needed
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: User Registration to Forum Access
-**Trigger:** WordPress user registration
-**Action:** Add the new user as a forum member in Asgaros Forum
-**Use case:** Automatically grant forum access to all new WordPress registrations
+Asgaros Forum has no external REST API. Membership and content management is done through WordPress admin or PHP hooks.
 
-### Recipe 2: Membership Purchase to Premium Forum Access
-**Trigger:** WooCommerce or membership plugin purchase
-**Action:** Add the buyer as a forum member in Asgaros Forum
-**Use case:** Grant forum access as part of a membership or course purchase bundle
+### Grant forum membership via PHP
 
-### Recipe 3: Form Sign-Up to Forum Community
-**Trigger:** WordPress community interest form submission
-**Action:** Add the form submitter as an Asgaros Forum member
-**Use case:** Let visitors request forum access via a form and automatically grant it
+```php
+// Add a user as a forum member on user registration
+add_action( 'user_register', function( $user_id ) {
+    $forum = AsgarosForumMembers::getInstance();
+    $forum->addMember( $user_id );
+});
+```
 
-## Setup Steps
+### Check if user is a forum member (PHP)
 
-1. Install Bit Integrations Pro and Asgaros Forum on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Asgaros Forum as the Action.
-5. Configure the member addition settings.
-6. Map the user identifier.
-7. Save and test.
+```php
+$is_member = AsgarosForumMembers::isMember( $user_id );
+```
+
+### Create a forum post programmatically (PHP)
+
+```php
+$post_data = array(
+    'post_title'   => 'New Discussion Topic',
+    'post_content' => 'This topic was created automatically.',
+    'post_type'    => 'asgarosforum',
+    'post_status'  => 'publish',
+    'post_author'  => $user_id,
+);
+wp_insert_post( $post_data );
+```
+
+### Query forum topics via WordPress REST API
+
+```bash
+GET https://yoursite.com/wp-json/wp/v2/asgarosforum?per_page=20
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Forum Topic
+- `post_id` - WordPress post ID for the topic
+- `post_title` - Topic title
+- `post_content` - Topic body
+- `post_author` - Author user ID
+- `post_parent` - Parent category or forum ID
+- `post_status` - publish, draft
+
+### Member
+- `user_id` - WordPress user ID
+- `is_member` - Boolean forum membership status
+
+## Parameters
+
+- `user_id` - WordPress user ID for membership operations
+- `forum_id` - Target forum category ID
+- `per_page` - Results per page (WP REST query)
 
 ## When to Use
 
-- When automating forum membership grants based on registration, purchase, or form events
-- When running a simple WordPress forum with Asgaros and needing automated membership management
-- When forum access should be part of a larger automated workflow triggered by WordPress events
+- Automatically granting forum membership when users register or purchase a membership
+- Creating welcome topics or pinned announcements programmatically
+- Restricting forum access to specific WordPress user roles or membership tiers
+- Building simple community discussion boards without a complex dedicated forum platform
 
-## Related Integrations
+## Rate Limits
 
-- wpforo.md
-- bbpress.md
-- buddypress.md
-- buddyboss.md
+- No rate limits; governed by WordPress server performance
+
+## Relevant Skills
+
+- content-strategy
+- crm-management

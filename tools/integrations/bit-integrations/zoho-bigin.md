@@ -1,86 +1,125 @@
 # Zoho Bigin
 
-Zoho Bigin is a pipeline-focused mini CRM built for small businesses, offering simple contact and deal management without the complexity of a full enterprise CRM. Available as an Action in the Bit Integrations WordPress plugin.
+Pipeline CRM for small businesses managing contacts, companies, deals, and activities.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ZohoBigin.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Contacts and Deals in Zoho Bigin pipelines |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Zoho Bigin fields |
-
-## Action Events
-
-- Create Contact
-- Create Deal in pipeline
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: OAuth 2.0
-- **Where to get credentials**: Zoho Developer Console (api-console.zoho.com) — create a Server-based Application for Bigin scope, note Client ID and Client Secret
-- **Required fields in Bit Integrations**: OAuth connection using Client ID and Client Secret from Zoho Developer Console
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Zoho-oauthtoken {access_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zoho Bigin dashboard
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### List records
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| First_Name | Contact first name | Optional |
-| Last_Name | Contact last name | Required |
-| Email | Email address | Optional; recommended for deduplication |
-| Phone | Phone number | Optional |
-| Pipeline | Target pipeline name | Optional; defaults to primary pipeline |
-| Stage | Pipeline stage name | Optional; defaults to first stage |
+```bash
+GET https://www.zohoapis.com/bigin/v2/records?limit=50
 
-## Common Workflow Recipes
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-### Recipe 1: Contact Form to Bigin Contact
-**Trigger:** WPForms or Elementor form submission
-**Action:** Create Contact in Zoho Bigin
-**Key fields mapped:** First Name, Last Name, Email, Phone
-**Use case:** Automatically add website inquiries as Bigin contacts so small business owners never lose a lead.
+### Get one record
 
-### Recipe 2: Service Request to Bigin Deal
-**Trigger:** Gravity Forms service request submission
-**Action:** Create Deal in Zoho Bigin
-**Key fields mapped:** First Name, Last Name, Email, Pipeline, Stage
-**Use case:** Push service request submissions directly into the right Bigin pipeline stage for follow-up.
+```bash
+GET https://www.zohoapis.com/bigin/v2/records/{record_id}
 
-### Recipe 3: Lead Magnet Opt-In to Bigin Contact
-**Trigger:** Fluent Forms opt-in form submission
-**Action:** Create Contact in Zoho Bigin
-**Key fields mapped:** First Name, Last Name, Email, Phone
-**Use case:** Capture lead magnet subscribers as Bigin contacts to nurture them through the sales pipeline.
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-## Setup Steps
+### Create record
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Zoho Bigin as the action.
-5. Connect your Zoho Bigin account using OAuth 2.0 via your Zoho Developer Console credentials.
-6. Select the object type (Contact, Deal) you want to create, and choose the target pipeline if applicable.
-7. Map the fields from your trigger to Zoho Bigin fields.
-8. Save and submit a test entry to verify data arrives correctly.
+```bash
+POST https://www.zohoapis.com/bigin/v2/records
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://www.zohoapis.com/bigin/v2/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://www.zohoapis.com/bigin/v2/events
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- You run a small business and want a simple pipeline CRM without Zoho CRM's full complexity
-- You want website leads to land directly in your Bigin contact list and pipeline
-- You already use Zoho products and want Bigin as a lightweight companion to Zoho Books or Zoho Mail
-- You need basic deal tracking from WordPress form submissions without a complex CRM setup
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- zoho-crm.md
-- clinchpad.md
-- capsulecrm.md
-- nutshell-crm.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- revops
+- sales-enablement
+- analytics

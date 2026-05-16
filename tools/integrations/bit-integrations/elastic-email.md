@@ -1,84 +1,102 @@
 # Elastic Email
 
-Elastic Email is a cost-effective email delivery and marketing platform known for affordable bulk sending and flexible contact management. Available as an Action in the Bit Integrations WordPress plugin.
+Cost-effective email delivery and marketing platform for bulk sending, contact management, and campaign automation.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Elastic_Email1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact, apply status |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact
-- Apply contact status (Active, Unsubscribed)
-- Update contact fields
-- Add contact to public list
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v4 |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official libraries for PHP, Python, Node.js, C# |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: Elastic Email account > Settings > API
-- **Required in Bit Integrations**: API Key
+- **Header**: `X-ElasticEmail-ApiKey: {api_key}`
+- **Get token**: Elastic Email Dashboard > Settings > API
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Public List Names | Comma-separated list names to add contact to | Optional |
+### Add or update contact
+```bash
+POST https://api.elasticemail.com/v4/contacts
 
-## Common Workflow Recipes
+X-ElasticEmail-ApiKey: {api_key}
+Content-Type: application/json
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add contact to Elastic Email list with Active status
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+{
+  "Email": "user@example.com",
+  "FirstName": "Jane",
+  "LastName": "Doe",
+  "Status": "Active"
+}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Elastic Email customer list
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### List contacts
+```bash
+GET https://api.elasticemail.com/v4/contacts?limit=100&offset=0
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Elastic Email list with Active status for enrollment nurture
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+X-ElasticEmail-ApiKey: {api_key}
+```
 
-## Setup Steps
+### Send transactional email
+```bash
+POST https://api.elasticemail.com/v4/emails/transactional
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Elastic Email as the action.
-5. Connect your Elastic Email account using your API Key.
-6. Set the contact status and select the public list.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+X-ElasticEmail-ApiKey: {api_key}
+Content-Type: application/json
+
+{
+  "Recipients": {"To": ["user@example.com"]},
+  "Content": {
+    "From": "sender@yourdomain.com",
+    "Subject": "Welcome!",
+    "Body": [{"ContentType": "HTML", "Content": "<p>Hello</p>"}]
+  }
+}
+```
+
+### List campaigns
+```bash
+GET https://api.elasticemail.com/v4/campaigns
+
+X-ElasticEmail-ApiKey: {api_key}
+```
+
+## Key Fields
+
+### Contact
+- `Email` - Primary identifier
+- `FirstName` / `LastName` - Name fields
+- `Status` - Active, Unsubscribed, Bounced, Engaged
+- `CustomFields` - Key-value custom attributes
+
+### Campaign
+- `Name` - Campaign name
+- `Status` - Draft, Scheduled, Running, Paused, Cancelled
+- `Content` - Subject, from address, body
+
+## Parameters
+
+- `limit` - Max results (default 100)
+- `offset` - Pagination offset
+- `status` - Filter contacts by status
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using public lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Send transactional emails on purchase or signup
+- Manage bulk marketing list contacts
+- Launch and monitor email campaigns
+- Sync contact status from external CRM
 
-## Related Integrations
+## Rate Limits
 
-- sendgrid.md
-- mailjet.md
-- mailchimp.md
+- See Elastic Email pricing page; varies by plan
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:draft-content

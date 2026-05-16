@@ -1,70 +1,104 @@
 # ARMember
 
-ARMember is a WordPress membership plugin for building subscription sites with content restriction, payment gateways, and member management. Available as Action in the Bit Integrations WordPress plugin.
+WordPress membership plugin for building subscription sites with content restriction, multiple membership plans, payment gateway integration, and member management.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ARMember1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add member to plan |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Add member to plan — assign a WordPress user to an ARMember membership plan
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/armember/v1/` |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: ARMember must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords > Add New
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add member to plan on WooCommerce purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** ARMember — Add member to plan
-**Key fields mapped:** Customer email, product linked to membership plan
-**Use case:** Automatically grant ARMember plan access when a WooCommerce product is purchased
+### List membership plans
 
-### Recipe 2: Add member to plan from form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** ARMember — Add member to plan
-**Key fields mapped:** Email field, membership plan selection
-**Use case:** Enroll users in an ARMember plan via a sign-up or registration form
+```bash
+GET https://yoursite.com/wp-json/armember/v1/plans
 
-### Recipe 3: Add member to plan from CRM trigger
-**Trigger:** HubSpot / ActiveCampaign — Deal closed or tag applied
-**Action:** ARMember — Add member to plan
-**Key fields mapped:** Contact email, plan to assign
-**Use case:** Grant membership access when a CRM deal reaches a closed-won stage
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get a member's current plan
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select ARMember as the action.
-4. Choose Add Member to Plan and select the target plan.
-5. Map the user email from your trigger source to ARMember's member field.
-6. Save and test with a real event (complete a test purchase or submit a test form).
+```bash
+GET https://yoursite.com/wp-json/armember/v1/members/{user_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Assign a member to a plan
+
+```bash
+POST https://yoursite.com/wp-json/armember/v1/members/{user_id}/plans
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"plan_id": 3, "status": "active"}
+```
+
+### List active members
+
+```bash
+GET https://yoursite.com/wp-json/armember/v1/members?status=active&per_page=50
+
+Authorization: Basic {base64_credentials}
+```
+
+### Cancel a member's plan
+
+```bash
+DELETE https://yoursite.com/wp-json/armember/v1/members/{user_id}/plans/{plan_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Membership Plan
+- `id` - Plan ID
+- `name` - Plan name
+- `price` - Plan price
+- `duration` - Subscription duration
+- `duration_unit` - days, months, years
+- `trial_days` - Free trial period
+
+### Member
+- `user_id` - WordPress user ID
+- `plan_id` - Assigned plan ID
+- `status` - active, expired, cancelled, pending
+- `start_date` - Membership start date
+- `expiry_date` - Membership expiry date
+
+## Parameters
+
+- `status` - Filter members by status (active, expired, cancelled)
+- `plan_id` - Filter members by plan
+- `per_page` - Results per page
+- `page` - Pagination page
 
 ## When to Use
 
-- You sell access via WooCommerce and deliver membership through ARMember
-- You want to enroll members via form submissions or CRM-based triggers
-- You need to programmatically assign membership plans based on external events
-- You integrate ARMember into a multi-step onboarding or fulfillment workflow
+- Programmatically assigning membership plans after external payment or form submission
+- Reporting on active vs. expired member counts by plan
+- Syncing membership status to external CRM or email marketing platforms
+- Automating cancellation or upgrade workflows triggered by external events
 
-## Related Integrations
+## Rate Limits
 
-- memberpress.md
-- paid-memberships-pro.md
-- restrict-content.md
-- woocommerce.md
+- Subject to WordPress server limits; no platform-enforced rate limiting
+
+## Relevant Skills
+
+- email-marketing
+- crm-management
+- ecommerce

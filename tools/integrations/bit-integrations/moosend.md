@@ -1,83 +1,84 @@
 # Moosend
 
-Moosend is a feature-rich email marketing and automation platform known for its visual workflow builder, affordable pricing, and strong segmentation capabilities. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing and automation platform with a visual workflow builder, strong segmentation, and AI-powered predictive analytics for audience targeting.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Moosend.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Subscribe member to mailing list, unsubscribe |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Subscribe member to mailing list
-- Unsubscribe member from mailing list
-- Update subscriber custom fields
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.moosend.com/v3/` |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK; community wrappers available |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Moosend account > Settings > API Key
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (query parameter)
+- **Parameter**: `?apikey={your_api_key}`
+- **Get token**: Moosend account > Settings > API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| Mailing List ID | The Moosend mailing list to subscribe to | Required |
-| Custom Fields | Custom field key-value pairs | Optional |
+### Get all mailing lists
+```bash
+GET https://api.moosend.com/v3/lists.json?apikey={your_api_key}
+```
 
-## Common Workflow Recipes
+### Subscribe a member to a list
+```bash
+POST https://api.moosend.com/v3/subscribers/{mailing_list_id}/subscribe.json?apikey={your_api_key}
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Subscribe member to Moosend mailing list
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Subscribe buyer to Moosend customer mailing list
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"Email": "user@example.com", "Name": "Jane Doe", "CustomFields": ["field1=value1"]}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Subscribe to Moosend mailing list with enrollment custom fields
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Unsubscribe from a list
+```bash
+POST https://api.moosend.com/v3/subscribers/{mailing_list_id}/unsubscribe.json?apikey={your_api_key}
 
-## Setup Steps
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Moosend as the action.
-5. Connect your Moosend account using your API Key.
-6. Select the mailing list to subscribe members to.
-7. Map the email field and any name or custom fields.
-8. Save and test with a real form submission.
+{"Email": "user@example.com"}
+```
+
+### Get campaign statistics
+```bash
+GET https://api.moosend.com/v3/campaigns/{campaign_id}/stats/opens.json?apikey={your_api_key}
+```
+
+## Key Fields
+
+### Subscriber
+- `Email` - Email address (required)
+- `Name` - Full name
+- `CustomFields` - Array of `"field=value"` strings for custom attributes
+- `Tags` - Array of tag strings
+
+### Mailing List
+- `ID` - List UUID
+- `Name` - List display name
+- `SubscribersCount` - Total subscriber count
+
+## Parameters
+
+- `apikey` - API key (required on all requests)
+- `mailing_list_id` - Target mailing list UUID
+- `campaign_id` - Target campaign UUID
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using mailing lists
-- Syncing WooCommerce buyers to a customer mailing list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Managing email subscriber lists and automating opt-in/opt-out flows
+- Sending transactional or broadcast email campaigns
+- Building behavioral automation workflows with visual triggers and conditions
+- Segmenting audiences using predictive analytics or custom field values
 
-## Related Integrations
+## Rate Limits
 
-- mailerlite.md
-- getresponse.md
-- activecampaign.md
+- See Moosend pricing page; limits vary by plan
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report

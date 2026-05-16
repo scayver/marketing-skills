@@ -1,84 +1,92 @@
 # MailUp
 
-MailUp is an Italian email, SMS, and messaging platform serving mid-to-large businesses with advanced list management and multi-channel campaign tools. Available as an Action in the Bit Integrations WordPress plugin.
+Italian email and SMS marketing platform for managing lists, recipients, and multi-channel campaign delivery at scale.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/MailUp.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add recipient to list or group |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add recipient to list
-- Add recipient to group
-- Update recipient fields
-- Unsubscribe recipient
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://services.mailup.com/API/v1.1/Rest/ConsoleService.svc/` |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | ✓ | Official .NET and PHP SDKs available |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: MailUp admin panel > Account Management > Developer API (Client ID + Client Secret)
-- **Required in Bit Integrations**: Client ID and Client Secret
+- **Type**: OAuth 2.0
+- **Token URL**: `https://services.mailup.com/Authorization/OAuth/Token`
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: MailUp Admin > Settings > Developer > API Credentials — obtain client_id and client_secret, then POST to token URL with `grant_type=password`
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| Fields | Custom subscriber field key-value pairs | Optional |
-| Groups | Group IDs to assign the recipient to | Optional |
+### Get all lists
+```bash
+GET https://services.mailup.com/API/v1.1/Rest/ConsoleService.svc/Console/User/Lists
 
-## Common Workflow Recipes
+Authorization: Bearer {access_token}
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add recipient to MailUp list with welcome tag
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+### Add recipient to a list
+```bash
+POST https://services.mailup.com/API/v1.1/Rest/ConsoleService.svc/Console/List/{list_id}/Recipient
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to MailUp customer group or list
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to MailUp group with enrollment fields
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+{"Email": "user@example.com", "Name": "Jane Doe", "Fields": [{"Description": "phone", "Value": "+1234567890"}]}
+```
 
-## Setup Steps
+### Get campaign statistics
+```bash
+GET https://services.mailup.com/API/v1.1/Rest/ConsoleService.svc/Console/List/{list_id}/Email/{message_id}/Stats/Views
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select MailUp as the action.
-5. Connect your MailUp account using your Client ID and Client Secret.
-6. Select the list or group to add recipients to.
-7. Map the email field and any name or custom fields.
-8. Save and test with a real form submission.
+Authorization: Bearer {access_token}
+```
+
+### Send a transactional email
+```bash
+POST https://services.mailup.com/API/v1.1/Rest/ConsoleService.svc/Console/List/{list_id}/Email/{message_id}/Send
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"Recipient": {"Email": "user@example.com", "Name": "Jane"}}
+```
+
+## Key Fields
+
+### Recipient
+- `Email` - Email address (required)
+- `Name` - Full name
+- `MobileNumber` - Phone number for SMS
+- `MobilePrefix` - Country prefix for SMS
+- `Fields` - Array of custom field objects with `Description` and `Value`
+
+### Message
+- `idMessage` - Message ID
+- `Subject` - Email subject
+- `Status` - Message status
+
+## Parameters
+
+- `list_id` - Target list identifier
+- `pageNumber` - Pagination page (0-indexed)
+- `pageSize` - Results per page
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using groups
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Sending bulk email or SMS campaigns to segmented audiences
+- Managing large subscriber lists with GDPR compliance requirements
+- Automating transactional emails via API triggers
+- Tracking opens, clicks, and bounce rates per campaign
 
-## Related Integrations
+## Rate Limits
 
-- mailjet.md
-- brevo.md
-- mailchimp.md
+- See MailUp pricing page; limits vary by plan
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report

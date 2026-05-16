@@ -1,79 +1,119 @@
 # Paid Memberships Pro
 
-Paid Memberships Pro is a flexible open-source WordPress membership plugin with support for multiple membership levels, recurring payments, and content restriction. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WordPress membership plugin for subscription levels, access control, checkout, and member management.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** Membership and Access Control
-**Icon:** Action: `https://bitapps.pro/wp-content/uploads/2023/07/paid-memberships-pro.png` — Trigger: `https://bitapps.pro/wp-content/uploads/2023/07/paid-memberships-pro-1.png`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on checkout completion, expiry, and cancellation events |
-| As Action | ✓ | Add member or change membership level |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Membership checkout completed — fires when a member completes checkout for a membership
-- Membership expired — fires when a membership expires
-- Membership cancelled — fires when a member cancels their subscription
-
-## Action Events
-
-- Add member — create or assign a membership to a WordPress user
-- Change level — change a user's current Paid Memberships Pro membership level
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Paid Memberships Pro must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add new member to CRM on checkout
-**Trigger:** Paid Memberships Pro — Membership checkout completed
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** User email, first name, last name, membership level, checkout date
-**Use case:** Automatically create or update CRM contacts when a new member joins
+### Check plugin status
 
-### Recipe 2: Change level and sync email tag after upgrade
-**Trigger:** Paid Memberships Pro — Membership checkout completed (on a higher-tier level)
-**Action:** Paid Memberships Pro — Change level AND ActiveCampaign — Update tag
-**Key fields mapped:** User email, new membership level
-**Use case:** Upgrade a member to a new level and simultaneously update their email platform segment
+```bash
+wp plugin status paid-memberships-pro
+```
 
-### Recipe 3: Start win-back automation on membership expiry
-**Trigger:** Paid Memberships Pro — Membership expired
-**Action:** ConvertKit / Mailchimp — Add to automation
-**Key fields mapped:** User email, expired membership level, expiry date
-**Use case:** Trigger a re-engagement or renewal campaign when memberships lapse
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Paid Memberships Pro as the trigger or action.
-4. For triggers, choose the event (e.g., Membership Checkout Completed) and select the membership level.
-5. For actions, choose Add Member or Change Level and configure the target level.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (complete a test checkout or expire a test membership).
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/paid-memberships-pro/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='paid-memberships-pro' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- You want to push new member data into your CRM or email platform automatically on checkout
-- You need to trigger email automations when memberships expire or are cancelled
-- You want to change or upgrade membership levels programmatically from external triggers
-- You need to sync Paid Memberships Pro data with LMS plugins for course access
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- memberpress.md
-- restrict-content.md
-- learndash.md
-- lifterlms.md
-- woocommerce.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- business-strategy
+- email-marketing
+- customer-service

@@ -1,86 +1,127 @@
 # Drip
 
-Drip is an eCommerce-focused email marketing and automation platform known for deep behavioral segmentation, event tracking, and revenue attribution. Available as an Action in the Bit Integrations WordPress plugin.
+E-commerce-focused email marketing and automation platform known for deep behavioral segmentation, event-based workflows, revenue attribution, and powerful subscriber tagging.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Drip.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create or update subscriber, apply tag, record event |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Create or update subscriber
-- Apply tag to subscriber
-- Record custom event
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v2 at api.getdrip.com |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official Ruby gem; community PHP and Node.js libraries |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Drip account > User Settings > User Info > API Token
-- **Required in Bit Integrations**: API Token and Account ID
+- **Type**: Bearer Token (API token)
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Drip account > User Settings > User Info > API Token
+- **Account ID**: Found in the URL when logged in: `app.getdrip.com/{account_id}/`
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Phone | Subscriber phone number | Optional |
-| Tags | Tags to apply to the subscriber | Optional |
-| Account ID | Your Drip account ID | Required |
+### Create or update a subscriber
+```
+POST https://api.getdrip.com/v2/{account_id}/subscribers
 
-## Common Workflow Recipes
+Authorization: Bearer {api_token}
+Content-Type: application/json
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Create subscriber in Drip and apply a welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your subscriber base when visitors fill out any lead capture form
+{
+  "subscribers": [{
+    "email": "jane@example.com",
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "tags": ["lead", "webinar-2026"],
+    "custom_fields": {"source": "website", "plan": "pro"},
+    "new_email": null
+  }]
+}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Create or update subscriber in Drip with buyer tag and record purchase event
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Apply a tag to a subscriber
+```
+POST https://api.getdrip.com/v2/{account_id}/tags
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Create subscriber in Drip, apply enrollment tag, and record enrollment event
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+Authorization: Bearer {api_token}
+Content-Type: application/json
 
-## Setup Steps
+{
+  "tags": [{
+    "email": "jane@example.com",
+    "tag": "customer"
+  }]
+}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Drip as the action.
-5. Connect your Drip account using your API Token and Account ID.
-6. Configure the subscriber action and tags to apply.
-7. Map the email field and any name or tag fields.
-8. Save and test with a real form submission.
+### Record a custom event
+```
+POST https://api.getdrip.com/v2/{account_id}/events
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "events": [{
+    "email": "jane@example.com",
+    "action": "Purchased",
+    "properties": {"product_name": "Pro Plan", "value": "99.00"}
+  }]
+}
+```
+
+### Unsubscribe a contact
+```
+POST https://api.getdrip.com/v2/{account_id}/unsubscribes
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{"unsubscribes": [{"email": "jane@example.com"}]}
+```
+
+### Get subscriber details
+```
+GET https://api.getdrip.com/v2/{account_id}/subscribers/{subscriber_id_or_email}
+
+Authorization: Bearer {api_token}
+```
+
+## Key Fields
+
+### Subscriber
+- `email` - Email address (required)
+- `first_name` / `last_name` - Name fields
+- `tags` - Array of tag strings to apply
+- `custom_fields` - Object of key/value pairs for custom data
+- `status` - active / unsubscribed / bounced
+
+### Event
+- `email` - Subscriber email to associate the event with
+- `action` - Event name string (e.g., "Purchased", "Signed Up")
+- `properties` - Object of arbitrary key/value metadata
+
+## Parameters
+
+- `account_id` - Required in every URL path
+- `subscriber_id` - Numeric ID or email address for single subscriber lookup
+- `page` - Pagination page number (1-indexed)
+- `per_page` - Results per page (max 1000)
 
 ## When to Use
 
-- Growing a subscriber base from WordPress form submissions for eCommerce stores
-- Segmenting new subscribers by lead source using tags
-- Recording WordPress and WooCommerce events in Drip for behavioral automation
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Adding e-commerce customers to behavioral email workflows based on purchase history
+- Tagging subscribers by product, behavior, or lead source for fine-grained segmentation
+- Recording custom events (purchases, enrollments, upgrades) to trigger Drip automations
+- Syncing high-value subscriber data from an external CRM into Drip for email personalization
 
-## Related Integrations
+## Rate Limits
 
-- activecampaign.md
-- klaviyo.md
-- omnisend.md
+- 3,600 requests per hour per account
+- See [developer.drip.com](https://developer.drip.com) for current limits
+
+## Relevant Skills
+
+- email-marketing
+- ecommerce
+- lead-generation

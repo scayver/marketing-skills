@@ -1,66 +1,97 @@
 # weDocs
 
-weDocs is a WordPress documentation plugin for creating and managing organized knowledge base articles and documentation sites. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+weDocs is a WordPress documentation plugin for creating and managing organized knowledge base articles, sections, and documentation sites.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Community and Forum
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/04/weDocs.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create documentation articles in weDocs |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to weDocs article content fields |
-
-## Action Events
-
-- Create doc article
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/wedocs/v1/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI with weDocs commands |
+| SDK | - | Not available |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and weDocs must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password or Cookie Auth
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Content Submission Form to Knowledge Base Article
-**Trigger:** WordPress content submission form
-**Action:** Create a new weDocs knowledge base article from the submitted content
-**Use case:** Let team members or contributors submit documentation drafts via a form that auto-creates weDocs articles
+### List all docs
+```
+GET https://yoursite.com/wp-json/wedocs/v1/docs
 
-### Recipe 2: Support Ticket Resolution to FAQ Article
-**Trigger:** Fluent Support ticket resolved or support form closed
-**Action:** Create a weDocs article with the question and resolution
-**Use case:** Automatically grow the knowledge base by converting resolved support tickets into documentation
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Product Launch to Documentation Entry
-**Trigger:** WooCommerce product published or form submission announcing a new feature
-**Action:** Create a weDocs article for the new product or feature
-**Use case:** Automate documentation creation alongside product or feature launches
+### Get a specific doc section
+```
+GET https://yoursite.com/wp-json/wedocs/v1/docs/{doc_id}/sections
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and weDocs on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select weDocs as the Action.
-5. Select the target documentation section.
-6. Map form fields to article title and content.
-7. Save and test.
+### Create a new article
+```
+POST https://yoursite.com/wp-json/wedocs/v1/docs
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "title": "Getting Started Guide",
+  "content": "Welcome to our product...",
+  "status": "publish",
+  "parent": 42
+}
+```
+
+### Search articles
+```
+GET https://yoursite.com/wp-json/wedocs/v1/docs?search=installation
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Doc Article
+- `id` - Article ID
+- `title` - Article title
+- `content` - Article body (HTML)
+- `status` - `publish`, `draft`, or `pending`
+- `parent` - Parent doc or section ID
+- `menu_order` - Position in navigation
+
+### Section
+- `id` - Section ID
+- `doc_id` - Parent documentation ID
+- `title` - Section title
+- `order` - Display order within doc
+
+## Parameters
+
+- `per_page` - Number of results (default 10, max 100)
+- `search` - Filter articles by keyword
+- `parent` - Filter by parent section or doc ID
+- `status` - Filter by publish status
 
 ## When to Use
 
-- When content submission forms should automatically create weDocs knowledge base articles
-- When support resolutions should feed into a self-service documentation library
-- When building a documentation workflow that auto-populates weDocs from WordPress form data
+- Programmatically creating knowledge base articles from support data
+- Syncing documentation from external content sources into weDocs
+- Auditing and updating existing documentation via API
+- Building documentation workflows triggered by product updates
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- fluent-support.md
-- ninja-tables.md
+- Subject to WordPress server limits; no hard API rate limit
+- Recommended: respect server resources, avoid bulk imports without batching
+
+## Relevant Skills
+
+- operations:process-doc
+- customer-support:kb-article
+- engineering:documentation

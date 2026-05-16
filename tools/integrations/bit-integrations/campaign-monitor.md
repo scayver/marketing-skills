@@ -1,83 +1,116 @@
 # Campaign Monitor
 
-Campaign Monitor is a professional email marketing platform focused on beautifully designed campaigns and detailed subscriber segmentation. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing platform focused on beautifully designed campaigns, subscriber segmentation, and detailed analytics for growing businesses.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/CampaignMonitor1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add subscriber to list, update subscriber, add custom fields |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to list
-- Update subscriber information
-- Add custom field values
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v3.3 with full CRUD for lists, campaigns, subscribers |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official SDKs for PHP, Ruby, Python, Java, .NET, Node.js |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Campaign Monitor account > Account > API keys > Generate API key
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (HTTP Basic Auth — use API key as username, any string as password)
+- **Header**: `Authorization: Basic {base64(api_key:x)}`
+- **Get token**: Campaign Monitor account > Account > API Keys > Generate API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| Custom Fields | Key-value pairs for custom subscriber fields | Optional |
+### List all subscriber lists for a client
+```
+GET https://api.createsend.com/api/v3.3/clients/{client_id}/lists.json
 
-## Common Workflow Recipes
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Campaign Monitor list with welcome tag
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+### Add subscriber to a list
+```
+POST https://api.createsend.com/api/v3.3/subscribers/{list_id}.json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Campaign Monitor customer list or segment
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Campaign Monitor list and apply enrollment custom field
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+{
+  "EmailAddress": "user@example.com",
+  "Name": "Jane Smith",
+  "CustomFields": [{"Key": "Source", "Value": "website"}],
+  "Resubscribe": true
+}
+```
 
-## Setup Steps
+### Update subscriber data
+```
+PUT https://api.createsend.com/api/v3.3/subscribers/{list_id}.json?email=user@example.com
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Campaign Monitor as the action.
-5. Connect your Campaign Monitor account using your API Key.
-6. Select the list to add subscribers to.
-7. Map the email field and any name or custom fields.
-8. Save and test with a real form submission.
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "EmailAddress": "user@example.com",
+  "Name": "Jane Smith",
+  "CustomFields": [{"Key": "Plan", "Value": "Pro"}]
+}
+```
+
+### Unsubscribe a contact
+```
+POST https://api.createsend.com/api/v3.3/subscribers/{list_id}/unsubscribe.json
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"EmailAddress": "user@example.com"}
+```
+
+### Get campaign summary statistics
+```
+GET https://api.createsend.com/api/v3.3/campaigns/{campaign_id}/summary.json
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Subscriber
+- `EmailAddress` - Subscriber email (required)
+- `Name` - Full name
+- `CustomFields` - Array of `{Key, Value}` objects for custom subscriber data
+- `Resubscribe` - Boolean; re-subscribes previously unsubscribed contacts when `true`
+
+### List
+- `ListID` - Unique list identifier
+- `Title` - List name
+- `UnsubscribePage` - Custom unsubscribe URL
+
+### Campaign
+- `CampaignID` - Unique campaign identifier
+- `Subject` - Campaign subject line
+- `SentDate` - ISO 8601 send timestamp
+
+## Parameters
+
+- `list_id` - Targets a specific subscriber list for subscriber operations
+- `client_id` - Identifies the Campaign Monitor client account
+- `campaign_id` - Targets a specific campaign for stats or actions
+- `email` - Used as query param when updating a subscriber by email
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using custom fields
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Automating subscriber list growth from web forms or e-commerce events
+- Syncing buyer segments from WooCommerce or Shopify into targeted lists
+- Pulling campaign performance metrics (opens, clicks, unsubscribes) into reports
+- Managing custom field data on subscribers for segmentation and personalization
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- activecampaign.md
-- mailerlite.md
+- 10,000 API calls per day per account by default
+- See [campaignmonitor.com/api](https://www.campaignmonitor.com/api/) for current limits
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- content-strategy

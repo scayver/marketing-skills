@@ -1,66 +1,89 @@
 # WP-Polls
 
-WP-Polls is a WordPress plugin for creating and managing polls and voting forms on WordPress posts and pages. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WP-Polls is a WordPress plugin for embedding polls and voting forms into posts and pages, with AJAX-based voting, result display, and basic analytics.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Gamification and Loyalty
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-Polls-2.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; log votes in WP-Polls |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map vote data to WP-Polls poll fields |
-
-## Action Events
-
-- Log vote in a poll
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; WordPress-native only |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI for database-level queries |
+| SDK | - | Not available |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and WP-Polls must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress admin login or Application Password for WP REST API access
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: External Survey Response to Poll Vote
-**Trigger:** WordPress survey or form submission with a selection field
-**Action:** Log the response as a vote in a corresponding WP-Polls poll
-**Use case:** Aggregate voting data from custom forms into WP-Polls for consolidated reporting and display
+### Query polls via WordPress database (WP-CLI)
+```bash
+wp db query "SELECT pollq_id, pollq_question, pollq_totalvotes FROM wp_pollsq ORDER BY pollq_timestamp DESC LIMIT 20"
+```
 
-### Recipe 2: Event Attendance to Poll Participation
-**Trigger:** Event check-in or registration form submission
-**Action:** Record a vote in a post-event satisfaction poll
-**Use case:** Automatically capture attendee satisfaction data in a WP-Polls poll after event check-in
+### Get poll answers and vote counts
+```bash
+wp db query "SELECT polla_aid, polla_answers, polla_votes FROM wp_pollsa WHERE polla_qid = {poll_id}"
+```
 
-### Recipe 3: Product Rating Form to Poll
-**Trigger:** WordPress product rating or review form submission
-**Action:** Log the rating selection as a vote in a WP-Polls product poll
-**Use case:** Aggregate customer ratings from form submissions into WP-Polls for public display
+### Access poll data via WordPress REST API (custom endpoint)
+```
+GET https://yoursite.com/wp-json/wp/v2/polls
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and WP-Polls on your WordPress site.
-2. Create the target poll in WP-Polls.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select WP-Polls as the Action.
-6. Select the target poll and answer option mapping.
-7. Map form fields to poll vote data.
-8. Save and test.
+### Register a vote programmatically (via plugin hook)
+```php
+// WordPress PHP hook
+do_action('wp_polls_vote', $poll_id, $poll_answer_id, $user_id);
+```
+
+## Key Fields
+
+### Poll Object (wp_pollsq table)
+- `pollq_id` - Poll ID
+- `pollq_question` - Poll question text
+- `pollq_totalvotes` - Total votes cast
+- `pollq_timestamp` - Creation timestamp
+- `pollq_expiry` - Expiry date (Unix timestamp; 0 = no expiry)
+- `pollq_active` - 1 = active, 0 = closed
+
+### Poll Answer Object (wp_pollsa table)
+- `polla_aid` - Answer ID
+- `polla_qid` - Parent poll ID
+- `polla_answers` - Answer text
+- `polla_votes` - Vote count for this answer
+
+### Poll Log Object (wp_pollsip table)
+- `pollip_qid` - Poll ID
+- `pollip_ip` - Voter IP address
+- `pollip_userid` - WordPress user ID (0 for guests)
+- `pollip_timestamp` - Vote timestamp
+
+## Parameters
+
+- `poll_id` - Target poll identifier
+- `answer_id` - Target answer option for a vote
+- `multiple` - Whether the poll allows multiple selections
 
 ## When to Use
 
-- When form selections or survey responses should be logged as WP-Polls votes for aggregated display
-- When consolidating voting data from multiple WordPress sources into a single WP-Polls poll
-- When automating poll participation as part of a broader WordPress user engagement workflow
+- Embedding audience preference surveys into blog posts or landing pages
+- Tracking reader sentiment or product preferences via simple voting
+- Collecting feedback from site visitors without complex form builders
+- Displaying live voting results to engage community members
 
-## Related Integrations
+## Rate Limits
 
-- gamipress.md
-- ninja-tables.md
-- google-sheets.md
+- No external API; rate limiting depends on server configuration
+- Duplicate vote prevention controlled by IP logging or cookie settings
+
+## Relevant Skills
+
+- marketing:content-creation
+- marketing:draft-content
+- data:explore-data

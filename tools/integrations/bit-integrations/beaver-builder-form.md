@@ -1,82 +1,83 @@
 # Beaver Builder Form
 
-Beaver Builder is a popular WordPress page builder, and its contact form module allows users to embed forms directly within page layouts. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Contact form module built into the Beaver Builder WordPress page builder — allows embedding forms directly within page layouts without a separate form plugin.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Beaver_Builder1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No public external REST API |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | WordPress PHP hooks only |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress admin access
+- **Header**: N/A — plugin managed within WordPress admin
+- **Get token**: N/A — requires Beaver Builder premium license
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+Beaver Builder Form has no external REST API. Submissions are handled server-side and can be intercepted via WordPress action hooks.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Hook into Beaver Builder form submission (PHP)
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+```php
+add_action( 'fl_builder_before_save_form', function( $form, $settings ) {
+    // $settings contains form field values
+    $email = $settings->email ?? '';
+    $name  = $settings->name ?? '';
+    // Custom logic: send to CRM, email platform, etc.
+}, 10, 2 );
+```
 
-## Connecting to Action Platforms
+### After submission hook (PHP)
 
-After selecting Beaver Builder Form as the trigger in Bit Integrations, connect it to any of these action platforms:
+```php
+add_action( 'fl_builder_after_save_form', function( $form, $settings, $mailer, $response ) {
+    $email = $settings->email ?? '';
+    // Trigger external API call here
+}, 10, 4 );
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Access field values from settings object
 
-## Setup Steps
+```php
+// Field names match the "Name" set in Beaver Builder's form module field editor
+$first_name = $settings->first_name ?? '';
+$phone      = $settings->phone ?? '';
+$message    = $settings->message ?? '';
+```
 
-1. Install and activate Beaver Builder on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a page with a contact form module in Beaver Builder and publish it.
-4. Go to Bit Integrations > Create Integration.
-5. Select Beaver Builder Form as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+## Key Fields
 
-## Field Mapping Tips
+### Form Submission (via hook settings object)
+- Field values are accessed via `$settings->{field_name}` where field_name matches the configured field name in the Beaver Builder form module
+- `$form` - Form configuration object (module ID, settings)
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Common Field Types
+- Text, email, phone, textarea — standard input fields
+- Select, radio, checkbox — selection fields
+- Hidden — hidden fields for UTM parameters or tracking data
+
+## Parameters
+
+- Field names are configured per-form in the Beaver Builder module settings; no standardized API parameters
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Forwarding Beaver Builder form submissions to CRM or email platforms via PHP hooks
+- Adding custom validation or enrichment logic to form submissions
+- Passing UTM data captured in hidden fields to external analytics or CRM systems
+- Building contact forms within Beaver Builder layouts without installing a standalone form plugin
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No rate limits; governed by WordPress server performance
+
+## Relevant Skills
+
+- lead-generation
+- crm-management
+- email-marketing

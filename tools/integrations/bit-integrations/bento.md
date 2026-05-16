@@ -1,84 +1,128 @@
 # Bento
 
-Bento is a behavior-based email marketing and automation platform built for developers and SaaS businesses, offering event tracking, tagging, and transactional email capabilities. Available as an Action in the Bit Integrations WordPress plugin.
+Behavior-based email marketing and automation platform built for developers and SaaS businesses — combines event tracking, segmentation, tagging, broadcast emails, and transactional email in one platform.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Bento.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Subscribe, add tag, track event |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Subscribe contact
-- Add tag to subscriber
-- Track custom event
-- Update subscriber fields
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://app.bentonow.com/api/v1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official Ruby, Node.js, PHP, Python SDKs |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Bento account > Settings > API (Publishable Key + Secret Key)
-- **Required in Bit Integrations**: Publishable Key and Secret Key
+- **Type**: HTTP Basic Auth with Publishable Key + Secret Key
+- **Header**: `Authorization: Basic {base64(publishable_key:secret_key)}`
+- **Get token**: Bento > Settings > API Keys — copy Publishable Key and Secret Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Tags | Tags to apply to the subscriber | Optional |
+### Subscribe a contact
 
-## Common Workflow Recipes
+```bash
+POST https://app.bentonow.com/api/v1/fetch/subscribers
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Subscribe contact in Bento and apply a welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your subscriber base when visitors fill out any lead capture form
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Subscribe buyer in Bento with buyer tag and track purchase event
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{
+  "site_uuid": "{site_uuid}",
+  "subscriber": {
+    "email": "jane@example.com",
+    "first_name": "Jane",
+    "last_name": "Doe"
+  }
+}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Subscribe to Bento, apply enrollment tag, and track enrollment event
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Add tags to a subscriber
 
-## Setup Steps
+```bash
+POST https://app.bentonow.com/api/v1/fetch/tags
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Bento as the action.
-5. Connect your Bento account using your Publishable Key and Secret Key.
-6. Configure the subscribe action and tags to apply.
-7. Map the email field and any name or tag fields.
-8. Save and test with a real form submission.
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "site_uuid": "{site_uuid}",
+  "tag_name": "purchased",
+  "subscriber": {"email": "jane@example.com"}
+}
+```
+
+### Track a custom event
+
+```bash
+POST https://app.bentonow.com/api/v1/fetch/events
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "site_uuid": "{site_uuid}",
+  "events": [
+    {
+      "email": "jane@example.com",
+      "type": "$purchase",
+      "fields": {"order_id": "WC-1234", "amount": 99.00}
+    }
+  ]
+}
+```
+
+### Get subscriber details
+
+```bash
+GET https://app.bentonow.com/api/v1/fetch/subscribers?site_uuid={site_uuid}&email=jane@example.com
+
+Authorization: Basic {base64_credentials}
+```
+
+### Remove a tag from a subscriber
+
+```bash
+DELETE https://app.bentonow.com/api/v1/fetch/tags
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"site_uuid": "{site_uuid}", "tag_name": "trial", "subscriber": {"email": "jane@example.com"}}
+```
+
+## Key Fields
+
+### Subscriber
+- `email` - Email address (required, unique identifier)
+- `first_name`, `last_name` - Name fields
+- `tags` - Array of applied tag strings
+- `fields` - Custom field key-value pairs
+- `uuid` - Bento-generated subscriber UUID
+
+### Event
+- `type` - Event name (e.g., `$purchase`, `$pageview`, `course_completed`)
+- `fields` - Event-specific metadata object
+- `email` - Subscriber email the event belongs to
+
+## Parameters
+
+- `site_uuid` - Required on all requests — your Bento site identifier
+- `email` - Filter or identify subscriber by email
 
 ## When to Use
 
-- Adding WordPress users to behavior-based SaaS email flows
-- Segmenting new subscribers by lead source using tags
-- Tracking WordPress and WooCommerce events in Bento for behavioral automation
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Tracking SaaS or e-commerce user behavior events for behavior-based automation
+- Subscribing users from sign-up or lead capture forms with tag-based segmentation
+- Triggering email sequences based on specific events (purchase, trial start, feature use)
+- Sending transactional emails alongside behavioral marketing campaigns
 
-## Related Integrations
+## Rate Limits
 
-- encharge.md
-- drip.md
-- activecampaign.md
+- See Bento pricing page for rate limits and subscriber limits by plan
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- ecommerce

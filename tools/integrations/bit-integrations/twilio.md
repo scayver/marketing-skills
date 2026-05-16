@@ -1,69 +1,100 @@
 # Twilio
 
-Twilio is a cloud communications platform for programmatic SMS, voice, WhatsApp, and other messaging at scale. Available as an Action in the Bit Integrations WordPress plugin.
+Twilio is a cloud communications platform for programmatic SMS, MMS, voice calls, WhatsApp messaging, and email at scale.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Communication and Messaging
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Twilio.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send SMS and WhatsApp messages via Twilio |
-| Free Tier | ✓ | Free with Bit Integrations free plan (Twilio usage costs apply separately) |
-| Field Mapping | ✓ | Map form fields to message recipient and body |
-
-## Action Events
-
-- Send SMS
-- Send WhatsApp message
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/` |
+| MCP | - | No official MCP server |
+| CLI | ✓ | Twilio CLI (`twilio` command) |
+| SDK | ✓ | Official SDKs in Python, Node.js, Java, C#, PHP, Ruby, Go |
 
 ## Authentication
 
-- **Type**: API Key (Account SID + Auth Token)
-- **Required**: Account SID, Auth Token, and a Twilio phone number from console.twilio.com. Enter all in Bit Integrations.
+- **Type**: HTTP Basic Auth (Account SID + Auth Token)
+- **Header**: `Authorization: Basic {base64(AccountSid:AuthToken)}`
+- **Get credentials**: Twilio Console > Dashboard — Account SID and Auth Token displayed on home screen
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to SMS Confirmation
-**Trigger:** WordPress form submission (appointment, registration, order)
-**Action:** Send an SMS confirmation to the submitter's phone number
-**Use case:** Deliver instant SMS confirmations for bookings, registrations, or purchases submitted via WordPress
+### Send an SMS
+```bash
+POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json
 
-### Recipe 2: WooCommerce Order to Customer SMS Alert
-**Trigger:** WooCommerce order status change
-**Action:** Send an SMS to the customer with order status update
-**Use case:** Keep customers informed of their order status via text message without email
+Authorization: Basic {base64_credentials}
+Content-Type: application/x-www-form-urlencoded
 
-### Recipe 3: Lead Form to Sales Rep SMS Alert
-**Trigger:** WordPress lead form submission
-**Action:** Send an SMS to a sales representative with the lead's name and phone number
-**Use case:** Alert the sales team instantly via text when a high-priority lead submits a form
+To=%2B15551234567&From=%2B15559876543&Body=Your+order+has+shipped!
+```
 
-## Setup Steps
+### Send an MMS with Media
+```bash
+POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Twilio as the Action.
-5. Log in to console.twilio.com, copy your Account SID and Auth Token, and get a Twilio phone number.
-6. Enter Account SID, Auth Token, and Twilio phone number in Bit Integrations.
-7. Select the action (Send SMS or Send WhatsApp).
-8. Map fields: To (recipient number), From (Twilio number), Body (message text).
-9. Save and test.
+Authorization: Basic {base64_credentials}
+Content-Type: application/x-www-form-urlencoded
+
+To=%2B15551234567&From=%2B15559876543&Body=Check+this+out&MediaUrl=https%3A%2F%2Fexample.com%2Fimage.jpg
+```
+
+### List Messages
+```bash
+GET https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json?To=%2B15551234567
+
+Authorization: Basic {base64_credentials}
+```
+
+### Make a Voice Call
+```bash
+POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Calls.json
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/x-www-form-urlencoded
+
+To=%2B15551234567&From=%2B15559876543&Url=https%3A%2F%2Fhandler.twilio.com%2Ftwiml%2FEH123
+```
+
+## Key Fields
+
+### Message
+- `sid` - Unique message SID
+- `from` - Sender phone number (E.164 format)
+- `to` - Recipient phone number (E.164 format)
+- `body` - Message content
+- `status` - queued, sent, delivered, failed
+- `date_sent` - ISO 8601 send timestamp
+- `price` - Cost per message (negative number in USD)
+
+### Call
+- `sid` - Unique call SID
+- `from` / `to` - Caller and callee numbers
+- `status` - initiated, ringing, in-progress, completed, failed
+- `duration` - Call length in seconds
+
+## Parameters
+
+- `To` / `From` - E.164 formatted phone numbers
+- `Body` - Message text (up to 1,600 characters; longer messages split into segments)
+- `MediaUrl` - URL of media attachment for MMS
+- `StatusCallback` - Webhook URL for delivery status updates
 
 ## When to Use
 
-- When form submissions or WooCommerce events should trigger SMS notifications to customers or staff
-- When offering SMS order status updates as an alternative to email
-- When real-time text alerts for high-value leads or events are needed
+- Sending transactional SMS notifications (order confirmations, shipping alerts)
+- Delivering OTP codes for two-factor authentication
+- Running SMS marketing campaigns to opted-in subscribers
+- Automating voice call broadcasts or reminders
 
-## Related Integrations
+## Rate Limits
 
-- whatsapp.md
-- telegram.md
-- slack.md
-- zoom-meeting.md
+- 1 SMS/second per long code number by default; short codes support 100+ SMS/second
+- See Twilio messaging limits documentation for current thresholds
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- marketing:email-sequence
+- customer-support:draft-response
+- operations:runbook

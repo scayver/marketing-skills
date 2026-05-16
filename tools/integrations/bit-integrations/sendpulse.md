@@ -1,86 +1,125 @@
 # SendPulse
 
-SendPulse is a multi-channel marketing platform combining email, SMS, web push notifications, and chatbot automation in a single dashboard. Available as an Action in the Bit Integrations WordPress plugin.
+Marketing automation platform for email, SMS, chatbots, and transactional messaging.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/SendPulse.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add subscriber to mailing list, update subscriber |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to mailing list
-- Update subscriber information
-- Apply variables to subscriber profile
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: SendPulse account > Settings > API (Client ID + Client Secret)
-- **Required in Bit Integrations**: Client ID and Client Secret
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the SendPulse dashboard
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| Phone | Subscriber phone number | Optional |
-| Variables | Custom variable key-value pairs | Optional |
-| List ID | The SendPulse mailing list to add the subscriber to | Required |
+### List records
 
-## Common Workflow Recipes
+```bash
+GET https://api.sendpulse.com/v1/records?limit=50
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to SendPulse mailing list
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Bearer {api_token}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to SendPulse customer mailing list
-**Key fields mapped:** Email, Name, Order amount (as custom variable if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Get one record
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to SendPulse mailing list with enrollment variables
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+```bash
+GET https://api.sendpulse.com/v1/records/{record_id}
 
-## Setup Steps
+Authorization: Bearer {api_token}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select SendPulse as the action.
-5. Connect your SendPulse account using your Client ID and Client Secret.
-6. Select the mailing list to add subscribers to.
-7. Map the email field and any name, phone, or variable fields.
-8. Save and test with a real form submission.
+### Create record
+
+```bash
+POST https://api.sendpulse.com/v1/records
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://api.sendpulse.com/v1/records/{record_id}
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://api.sendpulse.com/v1/events
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using mailing lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Running multi-channel campaigns (email + SMS + push) from one platform
-- Replacing manual CSV imports from WordPress to your email platform
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- getresponse.md
-- brevo.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- email-marketing
+- emails
+- analytics

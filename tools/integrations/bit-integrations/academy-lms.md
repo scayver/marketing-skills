@@ -1,76 +1,104 @@
 # Academy LMS
 
-Academy LMS is a WordPress LMS plugin for building online academies with course management, quiz systems, and student progress tracking. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WordPress-based learning management system for creating and selling online courses with quizzes, progress tracking, and certificate generation.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** LMS and Course Platforms
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/Academy-LMS-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/Academy-LMS.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on course enrollment and course completion events |
-| As Action | ✓ | Enroll student in course |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Course enrollment — fires when a student enrolls in a course
-- Course completion — fires when a student completes a course
-
-## Action Events
-
-- Enroll student — add a WordPress user to an Academy LMS course
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/academy/v1/` |
+| MCP | - | Not available |
+| CLI | - | WP-CLI support via plugin commands |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Academy LMS must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords > Add New
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add student to email list on enrollment
-**Trigger:** Academy LMS — Course enrollment
-**Action:** Mailchimp / MailerLite — Add subscriber or add to group
-**Key fields mapped:** Student email, course name, enrollment date
-**Use case:** Automatically add enrolled students to a course-specific email segment
+### List courses
 
-### Recipe 2: Notify team on course completion
-**Trigger:** Academy LMS — Course completion
-**Action:** Email notification or Slack webhook
-**Key fields mapped:** Student name, course name, completion date
-**Use case:** Alert instructors or support teams when students complete a course
+```bash
+GET https://yoursite.com/wp-json/academy/v1/courses
 
-### Recipe 3: Enroll student after payment
-**Trigger:** WooCommerce — Order completed
-**Action:** Academy LMS — Enroll student
-**Key fields mapped:** Customer email, product linked to course
-**Use case:** Automatically enroll students in Academy LMS courses after purchasing via WooCommerce
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get single course
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Academy LMS as the trigger or action.
-4. For triggers, choose the event (e.g., Course Completion) and select the course.
-5. For actions, choose Enroll Student and select the target course.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (enroll a test student or complete a test course).
+```bash
+GET https://yoursite.com/wp-json/academy/v1/courses/{course_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List enrolled students for a course
+
+```bash
+GET https://yoursite.com/wp-json/academy/v1/courses/{course_id}/students
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get student progress
+
+```bash
+GET https://yoursite.com/wp-json/academy/v1/students/{user_id}/progress
+
+Authorization: Basic {base64_credentials}
+```
+
+### Enroll a student
+
+```bash
+POST https://yoursite.com/wp-json/academy/v1/enrollments
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"course_id": 42, "user_id": 7}
+```
+
+## Key Fields
+
+### Course
+- `id` - Course ID
+- `title` - Course title
+- `status` - publish, draft, pending
+- `price` - Course price
+- `instructor_id` - Instructor user ID
+- `enrolled_count` - Total enrollments
+
+### Enrollment
+- `user_id` - WordPress user ID
+- `course_id` - Course being enrolled in
+- `enrolled_at` - Enrollment timestamp
+- `progress` - Completion percentage (0–100)
+- `completed_at` - Completion timestamp (null if incomplete)
+
+## Parameters
+
+- `per_page` - Results per page (default 10, max 100)
+- `page` - Pagination page number
+- `status` - Filter courses by status (publish, draft)
+- `course_id` - Filter enrollments or quizzes by course
 
 ## When to Use
 
-- You want to sync Academy LMS enrollments with your email marketing platform
-- You need to enroll students automatically from WooCommerce or form-based flows
-- You want to trigger notifications when students complete courses
-- You need to integrate Academy LMS data into a broader automation stack
+- Reporting on course enrollment and completion rates
+- Automating certificate delivery when students complete a course
+- Syncing student data to external CRM or email platforms
+- Pulling course catalog data into reports or dashboards
 
-## Related Integrations
+## Rate Limits
 
-- learndash.md
-- tutorlms.md
-- masterstudy-lms.md
-- woocommerce.md
+- Subject to WordPress server limits; no platform-enforced rate limiting
+
+## Relevant Skills
+
+- content-strategy
+- email-marketing
+- lead-generation

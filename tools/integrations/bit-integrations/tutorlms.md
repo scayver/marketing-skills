@@ -1,81 +1,99 @@
 # TutorLMS
 
-TutorLMS is a feature-rich WordPress LMS plugin with a drag-and-drop course builder, advanced quizzing, and certificate generation. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+TutorLMS is a feature-rich WordPress LMS plugin with a drag-and-drop course builder, quizzes, certificates, and student progress tracking.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** LMS and Course Platforms
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/TutorLMS-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/TutorLMS.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on enrollment, lesson, quiz, and certificate events |
-| As Action | ✓ | Enroll or unenroll students from courses |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Course enrolled — fires when a student enrolls in a course
-- Course completed — fires when a student completes a course
-- Lesson completed — fires when a student completes a lesson
-- Quiz attempted — fires when a student submits a quiz attempt
-- Quiz passed — fires when a student passes a quiz
-- Certificate issued — fires when a student earns a certificate
-
-## Action Events
-
-- Enroll student in course — add a WordPress user to a TutorLMS course
-- Unenroll — remove a student from a TutorLMS course
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/tutor/v2/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: TutorLMS must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Sync new enrollments to email marketing platform
-**Trigger:** TutorLMS — Course enrolled
-**Action:** MailerLite / ConvertKit — Add subscriber or add tag
-**Key fields mapped:** Student email, course name, enrollment date
-**Use case:** Automatically start a drip email sequence when a student enrolls
+### List Courses
+```bash
+GET https://yoursite.com/wp-json/tutor/v2/courses
 
-### Recipe 2: Enroll student after WooCommerce purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** TutorLMS — Enroll student in course
-**Key fields mapped:** Customer email, product linked to course
-**Use case:** Automatically grant course access when a standalone product is purchased
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Notify team in Slack when certificate issued
-**Trigger:** TutorLMS — Certificate issued
-**Action:** Slack (via webhook) — Post message
-**Key fields mapped:** Student name, course name, date
-**Use case:** Celebrate student achievements with your team in real time
+### Get a Single Course
+```bash
+GET https://yoursite.com/wp-json/tutor/v2/courses/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select TutorLMS as the trigger or action.
-4. For triggers, choose the event (e.g., Course Completed) and select the target course.
-5. For actions, choose Enroll Student in Course and select the course.
-6. Map the relevant fields (student email, course ID, etc.) to the connected platform.
-7. Save and test with a real event (enroll a test student or complete a test lesson).
+### List Students
+```bash
+GET https://yoursite.com/wp-json/tutor/v2/students
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get Student Progress
+```bash
+GET https://yoursite.com/wp-json/tutor/v2/students/{user_id}/courses/{course_id}/progress
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Quizzes for a Course
+```bash
+GET https://yoursite.com/wp-json/tutor/v2/courses/{course_id}/quizzes
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Course
+- `id` - Course ID
+- `title` - Course name
+- `status` - publish, draft
+- `price` - Course price (0 for free)
+- `enrollments_count` - Total enrolled students
+
+### Student
+- `id` - WordPress user ID
+- `email` - Student email
+- `display_name` - Student name
+- `enrolled_courses` - Array of enrolled course IDs
+
+### Progress
+- `completed_lessons` - Number of completed lessons
+- `total_lessons` - Total lessons in course
+- `completion_percent` - 0-100 percentage
+
+## Parameters
+
+- `per_page` / `page` - Pagination controls
+- `status` - Filter courses by status
+- `course_id` - Scope students or quizzes to a course
 
 ## When to Use
 
-- You want to automatically tag or segment students in your email platform based on course activity
-- You need to enroll students based on external purchases or form completions
-- You want to notify your team when students hit key milestones
-- You need to sync TutorLMS student records into a CRM
+- Triggering completion certificates or email sequences at 100% progress
+- Syncing enrolled student data to a CRM for upsell sequences
+- Reporting on course completion rates and quiz scores
+- Automating enrollment for new purchasers from an eCommerce event
 
-## Related Integrations
+## Rate Limits
 
-- learndash.md
-- lifterlms.md
-- masterstudy-lms.md
-- woocommerce.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:email-sequence
+- data:analyze
+- operations:process-doc
+- sales:account-research

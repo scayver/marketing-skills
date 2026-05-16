@@ -1,83 +1,116 @@
 # Woodpecker
 
-Woodpecker is a cold email outreach tool designed for B2B sales and marketing teams to automate personalized cold email campaigns and follow-up sequences. Available as an Action in the Bit Integrations WordPress plugin.
+Woodpecker is a B2B cold email outreach platform for automating personalized email campaigns and multi-step follow-up sequences targeted at sales prospects.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Woodpecker.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add prospect to campaign |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add prospect to campaign
-- Update prospect fields
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.woodpecker.co/rest/v1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Not available |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: Woodpecker account > Settings > Integrations > API
-- **Required in Bit Integrations**: API Key
+- **Header**: `Authorization: Bearer {api_key}`
+- **Get token**: Woodpecker dashboard > Settings > Integrations > API Keys
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Prospect email address | Required |
-| First Name | Prospect first name | Optional |
-| Last Name | Prospect last name | Optional |
-| Company | Prospect company name | Optional |
-| Campaign ID | The Woodpecker campaign to add the prospect to | Required |
+### List all campaigns
+```
+GET https://api.woodpecker.co/rest/v1/campaigns
 
-## Common Workflow Recipes
+Authorization: Bearer {api_key}
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add prospect to Woodpecker cold email campaign
-**Key fields mapped:** Email, First Name, Last Name, Company
-**Use case:** Automatically enroll leads who fill out your contact form into a cold outreach campaign
+### Add a prospect to a campaign
+```
+POST https://api.woodpecker.co/rest/v1/prospects
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer as prospect to Woodpecker customer follow-up campaign
-**Key fields mapped:** Email, First Name, Company
-**Use case:** Segment buyers separately from leads for targeted post-purchase outreach sequences
+Authorization: Bearer {api_key}
+Content-Type: application/json
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add enrolled user to Woodpecker onboarding outreach campaign
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger personalized outreach sequences automatically on enrollment
+{
+  "prospects": [
+    {
+      "email": "jane@company.com",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "company": "Acme Corp",
+      "campaign": {"id": 12345}
+    }
+  ]
+}
+```
 
-## Setup Steps
+### Get campaign statistics
+```
+GET https://api.woodpecker.co/rest/v1/campaign_list/{campaign_id}/stats
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Woodpecker as the action.
-5. Connect your Woodpecker account using your API Key.
-6. Select the campaign to add prospects to.
-7. Map the email field and any name or company fields.
-8. Save and test with a real form submission.
+Authorization: Bearer {api_key}
+```
+
+### Update a prospect
+```
+PUT https://api.woodpecker.co/rest/v1/prospects
+
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{
+  "email": "jane@company.com",
+  "status": "REPLIED"
+}
+```
+
+## Key Fields
+
+### Prospect Object
+- `email` - Prospect email address (required)
+- `first_name` - First name
+- `last_name` - Last name
+- `company` - Company name
+- `industry` - Industry vertical
+- `website` - Company website
+- `status` - `ACTIVE`, `BOUNCED`, `REPLIED`, `INTERESTED`, `NOT_INTERESTED`, `MAYBE_LATER`
+- `campaign.id` - Campaign to enroll the prospect in
+
+### Campaign Object
+- `id` - Campaign ID
+- `status` - `RUNNING`, `PAUSED`, `COMPLETED`, `DRAFT`
+- `name` - Campaign name
+- `from_email` - Sending email address
+
+### Stats Object
+- `sent` - Total emails sent
+- `opened` - Open count
+- `clicked` - Click count
+- `replied` - Reply count
+- `bounced` - Bounce count
+
+## Parameters
+
+- `campaign` - Campaign ID to filter prospects
+- `status` - Filter prospects by status
+- `per_page` - Results per page
 
 ## When to Use
 
-- Enrolling WordPress form leads into B2B cold outreach campaigns automatically
-- Adding WooCommerce customers to follow-up sales sequences
-- Running personalized outreach from WordPress-captured contact data
-- Automating prospect enrollment without manual CRM data entry
-- Replacing manual prospect import into Woodpecker campaigns
+- Enrolling new B2B leads into cold outreach sequences automatically
+- Syncing prospect status changes back to CRM on reply or interest signal
+- Auditing campaign performance for outreach strategy optimization
+- Building lead pipeline from inbound form data into outbound sequences
 
-## Related Integrations
+## Rate Limits
 
-- lemlist.md
-- activecampaign.md
-- mailchimp.md
+- 200 requests per minute
+- See: [Woodpecker API Docs](https://woodpecker.co/api/)
+
+## Relevant Skills
+
+- sales:draft-outreach
+- sales:account-research
+- marketing:campaign-plan

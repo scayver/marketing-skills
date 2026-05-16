@@ -1,84 +1,86 @@
 # Tripetto
 
-Tripetto is a WordPress form builder that supports both classic and conversational (chat-like) form layouts, making it suitable for surveys, quizzes, and multi-step forms with a guided user experience. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Tripetto is a WordPress form builder supporting classic and conversational (chat-like) form layouts, suitable for surveys, quizzes, and multi-step guided forms.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Tripetto.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; operates via WordPress hooks and native connections |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | ✓ | Tripetto JavaScript SDK for embedding forms in custom apps |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password (for WP REST API access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+Tripetto does not expose a plugin-specific REST API. Submissions are handled via WordPress hooks or Tripetto's native service connections (EmailOctopus, Mailchimp, Slack, webhooks).
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Hook into Form Submission (PHP)
+```php
+// Fires when any Tripetto form is submitted
+add_action( 'tripetto_runner_submit', function( $instance, $fields, $entry ) {
+  foreach ( $fields as $field ) {
+    $key   = $field['alias'] ?? $field['name'];
+    $value = $field['value'];
+    // Route $key => $value to external system
+  }
+}, 10, 3 );
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Configure a Webhook Connection (via Tripetto admin UI)
+Tripetto supports native webhook output — configure in the form editor under Connections > Webhook. The payload is a JSON object with all field values.
 
-## Connecting to Action Platforms
+### Embed Form via JavaScript SDK
+```js
+import { TripettoRunner } from "@tripetto/runner";
 
-After selecting Tripetto as the trigger in Bit Integrations, connect it to any of these action platforms:
+TripettoRunner.run({
+  element: document.getElementById("form-container"),
+  form: { /* exported form definition JSON */ },
+  onSubmit: (instance) => {
+    const fields = TripettoRunner.fields(instance);
+    // fields is an array of {name, alias, value} objects
+  },
+});
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+## Key Fields
 
-## Setup Steps
+### Submission Entry
+- `alias` / `name` - Field identifier
+- `value` - Submitted field value
+- `type` - Field type (text, email, number, choice, etc.)
 
-1. Install and activate Tripetto on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Tripetto and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Tripetto as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Webhook Payload
+- `fields` - Array of field objects with name and value
+- `form_id` - Originating form identifier
+- `timestamp` - ISO 8601 submission time
 
-## Field Mapping Tips
+## Parameters
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- Form behavior configured in Tripetto's visual form editor
+- Native connections (Mailchimp, EmailOctopus, Slack, Webhook) set up in-editor
 
 ## When to Use
 
-- Capturing leads from conversational forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering segmented email sequences based on multi-step form answers
-- Passing UTM data from forms into CRM contact records for attribution
+- Collecting conversational survey responses with branching logic
+- Routing multi-step form submissions to email lists or CRMs
+- Embedding custom-branded forms in headless or custom app contexts
+- Capturing quiz results and sending personalized follow-ups
 
-## Related Integrations
+## Rate Limits
 
-- quill-forms.md
-- formgent.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No platform-level rate limits; constrained by WordPress server performance
+
+## Relevant Skills
+
+- marketing:draft-content
+- data:explore-data
+- marketing:email-sequence
+- product-management:synthesize-research

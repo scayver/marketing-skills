@@ -1,66 +1,106 @@
 # Better Messages
 
-Better Messages is a WordPress private messaging plugin that enables real-time direct messages and chat between users on a WordPress site. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress private messaging plugin enabling real-time direct messaging and group chats between users — with a modern UI, push notifications, and BuddyPress/BuddyBoss integration.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Community and Forum
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Better-Messages.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; send messages to users via Better Messages |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map message content and recipient user fields |
-
-## Action Events
-
-- Send private message to a user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/better-messages/v1/` |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Better Messages must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords > Add New
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: New Member Welcome Message
-**Trigger:** WordPress user registration or membership activation
-**Action:** Send a personalized welcome direct message via Better Messages from an admin account
-**Use case:** Greet new members with a personal message automatically upon registration or purchase
+### Send a private message to a user
 
-### Recipe 2: Course Enrollment to Student Notification Message
-**Trigger:** LMS course enrollment
-**Action:** Send a Better Messages direct message to the student with course start information
-**Use case:** Deliver personalized course start messages directly in the community inbox
+```bash
+POST https://yoursite.com/wp-json/better-messages/v1/send-message
 
-### Recipe 3: Support Form to Private Message
-**Trigger:** WordPress support form submission
-**Action:** Send the submitter a private acknowledgment message via Better Messages
-**Use case:** Immediately acknowledge support requests with a personal message in the community messaging system
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-## Setup Steps
+{
+  "recipient_ids": [42],
+  "text": "Welcome to the community! Let us know if you need help.",
+  "sender_id": 1
+}
+```
 
-1. Install Bit Integrations Pro and Better Messages on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Better Messages as the Action.
-5. Configure the sender account and recipient user mapping.
-6. Map the message content (static or dynamic from form fields).
-7. Save and test.
+### Get conversation thread
+
+```bash
+GET https://yoursite.com/wp-json/better-messages/v1/thread/{thread_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List threads for a user
+
+```bash
+GET https://yoursite.com/wp-json/better-messages/v1/threads?user_id=42
+
+Authorization: Basic {base64_credentials}
+```
+
+### Create a group chat
+
+```bash
+POST https://yoursite.com/wp-json/better-messages/v1/create-thread
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "participants": [42, 58, 99],
+  "name": "Project Alpha Team",
+  "text": "Welcome to the project group!"
+}
+```
+
+## Key Fields
+
+### Message
+- `id` - Message ID
+- `thread_id` - Parent conversation thread ID
+- `sender_id` - WordPress user ID of sender
+- `recipient_ids` - Array of recipient WordPress user IDs
+- `text` - Message body
+- `date_sent` - Timestamp
+
+### Thread
+- `id` - Thread ID
+- `name` - Thread name (group chats)
+- `participants` - Array of participant user IDs
+- `last_message` - Preview of most recent message
+- `unread_count` - Unread message count for the requesting user
+
+## Parameters
+
+- `user_id` - Filter threads by user
+- `thread_id` - Retrieve a specific thread
+- `per_page` - Results per page
+- `page` - Pagination page
 
 ## When to Use
 
-- When new members or course enrollees should receive automatic welcome messages via WordPress private messaging
-- When form submissions or events should trigger personalized in-platform messages to users
-- When building a community site where automated private messages supplement email notifications
+- Sending automated welcome messages to new members or course enrollees
+- Notifying users of support ticket updates or status changes via private message
+- Building community onboarding flows that include in-platform messaging
+- Triggering targeted messages based on membership tier or activity events
 
-## Related Integrations
+## Rate Limits
 
-- buddyboss.md
-- fluent-community.md
-- slack.md
-- telegram.md
+- Subject to WordPress server limits; no platform-enforced rate limiting
+
+## Relevant Skills
+
+- crm-management
+- email-marketing

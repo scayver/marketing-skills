@@ -1,67 +1,125 @@
 # Pabbly Connect
 
-Pabbly Connect is an affordable automation platform that connects 1,000+ apps via workflows with a one-time pricing model. Available as an Action in the Bit Integrations WordPress plugin.
+Workflow automation platform for connecting apps through triggers, actions, routers, and webhooks.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bitapps.pro/wp-content/uploads/2023/07/pabbly-connect.png`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to Pabbly Connect webhook trigger |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map any form field to the outgoing webhook payload |
-
-## Action Events
-
-- Send data to a Pabbly Connect workflow via webhook trigger
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: Webhook URL
-- **Required**: Webhook URL from a Pabbly Connect workflow's "Webhook" trigger step
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Webhook URL token in request path`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Pabbly Connect dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Lead to CRM
-**Trigger:** WordPress form submission
-**Action:** Send lead data to Pabbly Connect, which creates a contact in a CRM like Zoho or HubSpot
-**Use case:** Automatically populate CRM contacts without manual data entry
+### List records
 
-### Recipe 2: WooCommerce Order to Invoice Tool
-**Trigger:** WooCommerce order completed
-**Action:** Pabbly Connect workflow generates an invoice in FreshBooks or Zoho Invoice
-**Use case:** Automate invoicing for every completed purchase
+```bash
+GET https://connect.pabbly.com/workflow/sendwebhookdata/{webhook_id}/records?limit=50
 
-### Recipe 3: New User to Email Welcome Sequence
-**Trigger:** WordPress user registration
-**Action:** Pabbly workflow adds user to email marketing list and starts a welcome automation
-**Use case:** Trigger onboarding sequences immediately on signup
+Webhook URL token in request path
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Pabbly Connect as the Action.
-5. In Pabbly Connect, create a workflow and select "Webhook" as the trigger. Copy the webhook URL.
-6. Paste the webhook URL into Bit Integrations.
-7. Map fields.
-8. Save and test.
+```bash
+GET https://connect.pabbly.com/workflow/sendwebhookdata/{webhook_id}/records/{record_id}
+
+Webhook URL token in request path
+```
+
+### Create record
+
+```bash
+POST https://connect.pabbly.com/workflow/sendwebhookdata/{webhook_id}/records
+
+Webhook URL token in request path
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://connect.pabbly.com/workflow/sendwebhookdata/{webhook_id}/records/{record_id}
+
+Webhook URL token in request path
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://connect.pabbly.com/workflow/sendwebhookdata/{webhook_id}/events
+
+Webhook URL token in request path
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When you want Zapier-style automation with a one-time payment rather than monthly subscription
-- When connecting WordPress to apps supported by Pabbly Connect but not natively by Bit Integrations
-- When you need multi-step workflows triggered from WordPress form events
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- zapier.md
-- make.md
-- konnectzit.md
-- webhook-outgoing.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- revops
+- analytics
+- business-strategy

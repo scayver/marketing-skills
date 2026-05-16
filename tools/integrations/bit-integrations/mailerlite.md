@@ -1,83 +1,109 @@
 # MailerLite
 
-MailerLite is a simple, affordable email marketing platform known for its clean editor and generous free plan. Available as an Action in the Bit Integrations WordPress plugin.
+Affordable email marketing platform known for its clean editor, generous free plan, and automation capabilities.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Mailer-Lite.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add subscriber to group, update fields |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to group
-- Update subscriber fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API for subscribers, groups, segments, campaigns, automations |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official PHP SDK; community SDKs for Python, Node |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: MailerLite account > Integrations > API > Generate new token
-- **Required in Bit Integrations**: API Key
+- **Type**: Bearer Token
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: MailerLite Integrations > API > Generate new token
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| Fields | Custom field key-value pairs | Optional |
-| Groups | Group IDs to assign the subscriber to | Optional |
+### Create or update a subscriber
 
-## Common Workflow Recipes
+```bash
+POST https://connect.mailerlite.com/api/subscribers
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to MailerLite group with welcome tag
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Bearer {api_token}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to MailerLite customer group
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"email": "jane@example.com", "fields": {"name": "Jane Doe", "last_name": "Doe"}, "groups": ["group_id_here"]}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to MailerLite group with enrollment tag
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Add subscriber to a group
 
-## Setup Steps
+```bash
+POST https://connect.mailerlite.com/api/subscribers/{subscriber_id}/groups/{group_id}
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select MailerLite as the action.
-5. Connect your MailerLite account using your API Key.
-6. Select the group to add subscribers to.
-7. Map the email field and any name or custom fields.
-8. Save and test with a real form submission.
+Authorization: Bearer {api_token}
+```
+
+### Get all groups
+
+```bash
+GET https://connect.mailerlite.com/api/groups?limit=50
+
+Authorization: Bearer {api_token}
+```
+
+### Get subscribers in a group
+
+```bash
+GET https://connect.mailerlite.com/api/groups/{group_id}/subscribers?limit=100
+
+Authorization: Bearer {api_token}
+```
+
+### Get automations
+
+```bash
+GET https://connect.mailerlite.com/api/automations
+
+Authorization: Bearer {api_token}
+```
+
+## Key Fields
+
+### Subscriber Object
+- `id` - Unique subscriber ID
+- `email` - Primary email address
+- `status` - active | unsubscribed | bounced | junk | unconfirmed
+- `fields` - Custom field values (name, last_name, company, phone, etc.)
+- `groups` - Array of group objects subscriber belongs to
+- `subscribed_at` - Subscription timestamp
+
+### Group Object
+- `id` - Group ID
+- `name` - Group name
+- `active_count` - Number of active subscribers
+
+### Automation
+- `id` - Automation ID
+- `name` - Automation name
+- `status` - active | draft
+- `trigger` - Trigger type (signup, date, etc.)
+
+## Parameters
+
+- `limit` - Results per page (max 1000)
+- `cursor` - Cursor for pagination
+- `filter[status]` - Filter subscribers by status
+- `sort` - Sort field
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using groups
-- Syncing WooCommerce buyers to a customer email group
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing email lists with a clean, affordable platform
+- Segmenting subscribers into groups by lead source or behavior
+- Running automated email sequences triggered by subscriber events
+- Sending newsletters and campaigns to targeted subscriber groups
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- getresponse.md
-- convertkit.md
+- 120 requests per minute
+- See developers.mailerlite.com for endpoint-specific limits
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- content-creation

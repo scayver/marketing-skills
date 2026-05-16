@@ -1,68 +1,125 @@
 # Zoho Recruit
 
-Zoho Recruit is an applicant tracking system (ATS) for managing candidates, job openings, and hiring pipelines. Available as an Action in the Bit Integrations WordPress plugin.
+Recruiting platform for candidates, jobs, interviews, clients, and hiring pipelines.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Zoho-Recruit.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create candidates and contacts in Zoho Recruit |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Zoho Recruit candidate and contact fields |
-
-## Action Events
-
-- Create candidate
-- Create contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: OAuth 2.0
-- **Required**: Authorize Bit Integrations via Zoho OAuth. Select the target Zoho Recruit account and job opening.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Zoho-oauthtoken {access_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zoho Recruit dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Job Application Form to Zoho Recruit Candidate
-**Trigger:** WordPress job application form submission
-**Action:** Create a new candidate in Zoho Recruit with name, email, phone, and experience details
-**Use case:** Route all web-based job applications directly into Zoho Recruit for ATS tracking
+### List records
 
-### Recipe 2: Resume Upload Form to Candidate Record
-**Trigger:** WordPress form with resume file upload
-**Action:** Create a Zoho Recruit candidate record with applicant details
-**Use case:** Capture and organize incoming resumes from a WordPress careers page into your ATS
+```bash
+GET https://recruit.zoho.com/recruit/v2/records?limit=50
 
-### Recipe 3: Recruitment Event Registration to Candidate Contact
-**Trigger:** Job fair or recruitment event registration form
-**Action:** Create a Zoho Recruit contact for follow-up
-**Use case:** Convert recruitment event attendees into Zoho Recruit contacts for the talent pipeline
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Zoho Recruit as the Action.
-5. Authorize Bit Integrations with your Zoho account.
-6. Select the target job opening or module.
-7. Map fields: Last_Name, Email, Phone, Experience_in_Years, Current_Job_Description.
-8. Save and test.
+```bash
+GET https://recruit.zoho.com/recruit/v2/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+```
+
+### Create record
+
+```bash
+POST https://recruit.zoho.com/recruit/v2/records
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://recruit.zoho.com/recruit/v2/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://recruit.zoho.com/recruit/v2/events
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When your careers page or job application forms should automatically feed Zoho Recruit
-- When managing candidate pipelines in Zoho Recruit and using WordPress as the public-facing intake form
-- When recruitment events use WordPress forms for registration and you want attendees in Zoho Recruit
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- zoho-crm.md
-- zoho-flow.md
-- airtable.md
-- google-sheets.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- linkedin-strategy
+- brand-storytelling
+- business-strategy

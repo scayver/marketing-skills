@@ -1,84 +1,97 @@
-# ClinchPad CRM
+# ClinchPad
 
-ClinchPad is a simple pipeline-focused CRM designed for small teams and freelancers, offering visual deal tracking across customizable pipeline stages without complex setup. Available as an Action in the Bit Integrations WordPress plugin.
+Lightweight pipeline-focused CRM for small teams and freelancers that provides visual deal tracking across customizable stages without complex setup.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bitapps.pro/wp-content/uploads/2023/07/clinchpad-1.png`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Leads in ClinchPad pipelines |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to ClinchPad fields |
-
-## Action Events
-
-- Create Lead
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v1 with JSON |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: ClinchPad account settings > API — generate and copy the API key
-- **Required fields in Bit Integrations**: API Key
+- **Type**: API Key (query parameter)
+- **Parameter**: `api_key={your_api_key}` appended to every request URL
+- **Get token**: ClinchPad account > Settings > API
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### List all pipelines
+```
+GET https://clinchpad.com/api/v1/pipelines?api_key={api_key}
+```
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| name | Full name of the lead | Required |
-| email | Email address | Optional; used for contact detail |
-| phone | Phone number | Optional |
-| pipeline_id | ID of the target pipeline | Optional; defaults to primary pipeline |
-| stage_id | ID of the target pipeline stage | Optional; defaults to first stage |
+### List leads in a pipeline
+```
+GET https://clinchpad.com/api/v1/leads?api_key={api_key}&pipeline_id={pipeline_id}
+```
 
-## Common Workflow Recipes
+### Create a lead
+```
+POST https://clinchpad.com/api/v1/leads?api_key={api_key}
 
-### Recipe 1: Contact Form to ClinchPad Lead
-**Trigger:** WPForms or Contact Form 7 submission
-**Action:** Create Lead in ClinchPad
-**Key fields mapped:** Name, Email, Phone, Pipeline, Stage
-**Use case:** Automatically add website inquiries as ClinchPad leads so freelancers and small teams can track deals visually.
+Content-Type: application/json
 
-### Recipe 2: Service Request to ClinchPad Pipeline Stage
-**Trigger:** Gravity Forms service request submission
-**Action:** Create Lead in specific ClinchPad pipeline and stage
-**Key fields mapped:** Name, Email, Phone, Pipeline ID, Stage ID
-**Use case:** Route service requests to the correct ClinchPad pipeline stage based on which service form was submitted.
+{
+  "name": "Jane Smith",
+  "pipeline_id": "abc123",
+  "stage_id": "def456",
+  "contacts": [
+    {"email": "jane@example.com", "phone": "+1 555 000 0000"}
+  ]
+}
+```
 
-### Recipe 3: Free Quote Request to ClinchPad Lead
-**Trigger:** Elementor quote request form
-**Action:** Create Lead in ClinchPad
-**Key fields mapped:** Name, Email, Phone
-**Use case:** Capture quote requests from your website as ClinchPad leads so your team can track quotes through to closure.
+### Update a lead's stage
+```
+PUT https://clinchpad.com/api/v1/leads/{lead_id}?api_key={api_key}
 
-## Setup Steps
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select ClinchPad as the action.
-5. Connect your ClinchPad account using your API key from ClinchPad account settings.
-6. Select the target pipeline and stage where new leads should be placed.
-7. Map the fields from your trigger to ClinchPad fields.
-8. Save and submit a test entry to verify data arrives correctly.
+{"stage_id": "ghi789"}
+```
+
+## Key Fields
+
+### Lead
+- `name` - Lead/deal name (required)
+- `pipeline_id` - Target pipeline (defaults to primary pipeline)
+- `stage_id` - Target pipeline stage (defaults to first stage)
+- `contacts` - Array of contact objects with `email` and `phone`
+- `value` - Estimated deal value
+- `expected_close` - Expected close date (ISO 8601)
+
+### Pipeline
+- `id` - Pipeline identifier
+- `name` - Pipeline name
+
+### Stage
+- `id` - Stage identifier
+- `name` - Stage label (e.g., Prospecting, Proposal, Closed)
+
+## Parameters
+
+- `api_key` - Required on every request
+- `pipeline_id` - Filter leads by pipeline
+- `stage_id` - Filter leads by stage
+- `lead_id` - Required for update and delete operations
 
 ## When to Use
 
-- You use ClinchPad as a lightweight pipeline tracker and want website leads entering it automatically
-- You are a freelancer or small team that needs simple deal tracking without a complex CRM
-- You want different inquiry forms to route leads into different ClinchPad pipelines
-- You need a no-frills way to ensure every website lead is tracked through to closure
+- Adding website inquiry leads directly into a visual ClinchPad pipeline
+- Routing different form submissions to different pipeline stages based on inquiry type
+- Tracking freelance project proposals from inquiry through to close
+- Simple deal tracking without the complexity of a full-featured CRM
 
-## Related Integrations
+## Rate Limits
 
-- zoho-bigin.md
-- capsulecrm.md
-- nutshell-crm.md
-- pipedrive.md
+- See ClinchPad account settings or contact support for current limits
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- sales-brief

@@ -1,86 +1,79 @@
 # CoBlocks
 
-CoBlocks is a Gutenberg block suite for WordPress from GoDaddy that includes a Form block, allowing users to build and embed contact forms directly within the block editor. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Gutenberg block suite for WordPress (by GoDaddy) that includes a Form block, enabling contact forms to be embedded directly within the WordPress block editor.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/CoBlocks.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-only plugin |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Not available |
+| WordPress REST | ✓ | Standard WP REST API for block post types |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress application password (for REST access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Hook into CoBlocks form submission (PHP)
+```php
+add_action('coblocks_form_submit', function($data, $form_id) {
+    // $data contains submitted field values keyed by label
+    // $form_id is the post ID of the page containing the form
+}, 10, 2);
+```
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Query pages containing CoBlocks form blocks
+```
+GET /wp-json/wp/v2/pages?per_page=100
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic {base64_credentials}
+```
+Then inspect `content.rendered` or `content.raw` for `<!-- wp:coblocks/form` block markup.
 
-## Connecting to Action Platforms
+### Get a specific page by ID
+```
+GET /wp-json/wp/v2/pages/{page_id}
 
-After selecting CoBlocks as the trigger in Bit Integrations, connect it to any of these action platforms:
+Authorization: Basic {base64_credentials}
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+## Key Fields
 
-## Setup Steps
+### Form Submission Data
+- `name` - Submitter name field value
+- `email` - Submitter email field value
+- `message` - Message or textarea field value
+- `subject` - Optional subject field
+- `form_id` - WordPress post ID of the page containing the form
 
-1. Install and activate CoBlocks on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a page with the CoBlocks Form block and publish it.
-4. Go to Bit Integrations > Create Integration.
-5. Select CoBlocks as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Block Markup Attributes
+- `subject` - Email subject line configured in block settings
+- `to` - Notification recipient email
+- `successText` - Confirmation message shown after submission
 
-## Field Mapping Tips
+## Parameters
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- `form_id` - Page post ID where the CoBlocks form block is embedded
+- `data` - Associative array of submitted field values in PHP hooks
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing contact form leads from pages built entirely in the WordPress block editor
+- Triggering automations (CRM, email list) when visitors submit a Gutenberg-native form
+- Logging block editor form submissions to a spreadsheet or database
+- Sending team notifications when a block-based contact form is completed
 
-## Related Integrations
+## Rate Limits
 
-- essential-blocks.md
-- spectra.md
-- kadence-blocks-form.md
-- gutena-forms.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; performance governed by WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- content-strategy

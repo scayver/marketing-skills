@@ -1,83 +1,77 @@
 # Contact Form Email
 
-Contact Form Email is a simple WordPress plugin that captures form submissions and sends them directly by email, with a lightweight setup suited for basic contact forms. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Lightweight WordPress plugin that captures form submissions and delivers them to a specified email address, with a minimal configuration footprint suited for simple contact needs.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Contact-Form-Email.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Not available |
+| WordPress REST | - | No dedicated REST endpoint; use PHP hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress authentication (for any WP REST access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Hook into form submission (PHP)
+The plugin fires a WordPress action when a form is processed. Hook name may vary by plugin version — check the plugin source or documentation for the exact action name.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+```php
+// Generic approach — intercept the submission at wp_mail time
+add_filter('wp_mail', function($args) {
+    // Inspect $args['to'] to identify Contact Form Email messages
+    // Extract submitted data from $args['message']
+    return $args;
+});
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Query form configurations via WP-CLI
+```bash
+wp option list --search="contact_form_email_*"
+```
 
-## Connecting to Action Platforms
+### Retrieve stored settings
+```
+GET /wp-json/wp/v2/settings
 
-After selecting Contact Form Email as the trigger in Bit Integrations, connect it to any of these action platforms:
+Authorization: Basic {base64_credentials}
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+## Key Fields
 
-## Setup Steps
+### Submitted Data (plugin-dependent)
+- Submitted field values are passed as an associative array to the plugin's internal action hook
+- Common default fields: `name`, `email`, `message`
+- Field names are determined by the HTML `name` attributes in the shortcode or widget configuration
 
-1. Install and activate Contact Form Email on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form using Contact Form Email and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Contact Form Email as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Plugin Settings
+- `to` - Recipient email address
+- `subject` - Email subject template
+- `form_fields` - Configured input fields (name, email, message, etc.)
 
-## Field Mapping Tips
+## Parameters
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- Field names are user-defined in the plugin configuration; no standardized schema
+- The plugin does not expose a public query or pagination API
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Simple WordPress sites needing a minimal contact form with no database storage
+- Capturing basic name/email/message submissions to trigger lightweight automations via PHP hooks
+- Sites where form entries only need to arrive by email, with no submission history required
 
-## Related Integrations
+## Rate Limits
 
-- contact-form-7.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; submission handling is handled by WordPress and server mail configuration
+
+## Relevant Skills
+
+- lead-generation
+- content-strategy

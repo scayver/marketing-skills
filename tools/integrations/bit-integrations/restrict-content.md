@@ -1,78 +1,109 @@
-# Restrict Content (Pro)
+# Restrict Content Pro
 
-Restrict Content Pro is a straightforward WordPress membership plugin for creating subscription-based sites with content restriction by membership level. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WordPress membership plugin for creating subscription-based sites with content restriction by membership level, payments, and member management.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** Membership and Access Control
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/Restrict-Content-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/Restrict-Content.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on membership activation, expiry, and cancellation events |
-| As Action | ✓ | Add member to a subscription level |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Membership activated — fires when a member's subscription becomes active
-- Membership expired — fires when a membership expires
-- Membership cancelled — fires when a member cancels their subscription
-
-## Action Events
-
-- Add member to subscription level — assign a Restrict Content Pro subscription level to a WordPress user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/rcp/v1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Restrict Content Pro must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress REST API (Application Password)
+- **Header**: `Authorization: Bearer {application_password}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add new member to email list on activation
-**Trigger:** Restrict Content — Membership activated
-**Action:** Mailchimp / MailerLite — Add subscriber or add tag
-**Key fields mapped:** User email, membership level, activation date
-**Use case:** Automatically welcome new members to your email list when their subscription activates
+### List members
 
-### Recipe 2: Trigger win-back campaign on cancellation
-**Trigger:** Restrict Content — Membership cancelled
-**Action:** ConvertKit / ActiveCampaign — Add to automation or remove tag
-**Key fields mapped:** User email, membership level, cancellation date
-**Use case:** Start a re-engagement email flow as soon as a member cancels
+```bash
+GET https://yoursite.com/wp-json/rcp/v1/members
 
-### Recipe 3: Enroll member in LMS course on activation
-**Trigger:** Restrict Content — Membership activated
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** User email, subscription level mapped to course
-**Use case:** Automatically grant course access when a membership becomes active
+Authorization: Bearer {token}
+```
 
-## Setup Steps
+### Get member by ID
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Restrict Content as the trigger or action.
-4. For triggers, choose the event (e.g., Membership Expired) and select the subscription level.
-5. For actions, choose Add Member to Subscription Level and select the target level.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (activate a test membership or trigger a test cancellation).
+```bash
+GET https://yoursite.com/wp-json/rcp/v1/members/{member_id}
+
+Authorization: Bearer {token}
+```
+
+### List membership levels
+
+```bash
+GET https://yoursite.com/wp-json/rcp/v1/memberships
+
+Authorization: Bearer {token}
+```
+
+### List payments
+
+```bash
+GET https://yoursite.com/wp-json/rcp/v1/payments?status=complete
+
+Authorization: Bearer {token}
+```
+
+### Hook: On membership activated
+
+```php
+add_action('rcp_membership_post_activate', function($membership) {
+    $user_id = $membership->get_user_id();
+    $level   = $membership->get_object_id();
+    // Run logic on activation
+});
+```
+
+## Key Fields
+
+### Member Object
+- `id` - Member ID
+- `user_id` - WordPress user ID
+- `email` - Email address
+- `membership_level_id` - Current membership level ID
+- `status` - active / pending / expired / cancelled
+- `expiration_date` - Expiry date
+
+### Membership Level Object
+- `id` - Level ID
+- `name` - Level name
+- `price` - Price
+- `duration` - Duration in days
+- `duration_unit` - day / month / year
+
+### Payment Object
+- `id` - Payment ID
+- `user_id` - User ID
+- `amount` - Amount paid
+- `status` - complete / pending / failed
+- `date` - Payment date
+
+## Parameters
+
+- `status` - Filter members by status (active, expired, cancelled)
+- `membership_level_id` - Filter by level
+- `per_page` - Results per page
 
 ## When to Use
 
-- You want to sync Restrict Content Pro members with your email marketing platform
-- You need to enroll members in LMS courses automatically when their subscription activates
-- You want to trigger re-engagement campaigns on membership expiry or cancellation
-- You need to manage access to connected tools based on membership status
+- Building subscription-based membership sites with gated content
+- Tracking member status and expiry dates programmatically
+- Triggering automations on membership activation, expiry, or cancellation
+- Syncing members with email marketing platforms based on subscription level
 
-## Related Integrations
+## Rate Limits
 
-- memberpress.md
-- paid-memberships-pro.md
-- learndash.md
-- lifterlms.md
-- suremembers.md
+- Subject to WordPress server limits; no dedicated rate limit
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- sales:pipeline-review

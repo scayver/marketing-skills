@@ -1,67 +1,85 @@
 # Convert Pro
 
-Convert Pro is an opt-in and popup plugin for WordPress with advanced targeting, A/B testing, and deep integrations with email marketing services. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress opt-in and popup plugin with advanced targeting rules, A/B testing, behavioral triggers, and built-in integrations with major email marketing platforms.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Popups and Lead Capture
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Convert-Pro.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add subscribers to Convert Pro |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to Convert Pro subscriber fields |
-
-## Action Events
-
-- Add subscriber
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-only plugin |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Not available |
+| WordPress REST | ✓ | Standard WP REST API for post types; PHP hooks for lead events |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Convert Pro must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress application password (for REST access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: External Form to Convert Pro Subscriber List
-**Trigger:** WordPress form submission (from a non-Convert Pro form)
-**Action:** Add the submitter as a Convert Pro subscriber
-**Use case:** Feed subscribers from any WordPress form into Convert Pro's list management for centralized opt-in tracking
+### Hook into opt-in submission (PHP)
+```php
+add_action('cp_conversion_data', function($post_id, $data) {
+    // $post_id — ID of the Convert Pro module
+    // $data — array of submitted fields including email, name
+}, 10, 2);
+```
 
-### Recipe 2: WooCommerce Order to Convert Pro List
-**Trigger:** WooCommerce order completed
-**Action:** Add the buyer to a Convert Pro subscriber list
-**Use case:** Build a buyer subscriber list in Convert Pro for post-purchase retargeting or email campaigns
+### List Convert Pro modules (as WordPress posts)
+```
+GET /wp-json/wp/v2/posts?post_type=cp_module&per_page=100
 
-### Recipe 3: Registration to Convert Pro Subscriber
-**Trigger:** WordPress user registration
-**Action:** Add the new user as a Convert Pro subscriber
-**Use case:** Capture all new WordPress registrations as Convert Pro subscribers for targeted popup campaigns
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get a specific module
+```
+GET /wp-json/wp/v2/posts/{module_post_id}
 
-1. Install Bit Integrations Pro and Convert Pro on your WordPress site.
-2. Configure Convert Pro lists or module connections.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Convert Pro as the Action.
-6. Select the target module or list.
-7. Map form fields to subscriber fields (email, name).
-8. Save and test.
+Authorization: Basic {base64_credentials}
+```
+
+### Query conversion log via WP-CLI
+```bash
+wp db query "SELECT * FROM wp_cp_conversion_log ORDER BY date DESC LIMIT 50;"
+```
+
+## Key Fields
+
+### Conversion Event
+- `post_id` - WordPress post ID of the Convert Pro module (popup/bar/widget)
+- `email` - Subscriber email address captured from the opt-in form
+- `name` - Subscriber name (if name field is included)
+- `module_type` - Type of display (popup, slide-in, info-bar, widget)
+
+### Module Post
+- `ID` - WordPress post ID
+- `post_title` - Module name
+- `post_status` - publish / draft
+- `meta` - Contains targeting rules, design settings, connected integrations
+
+## Parameters
+
+- `post_id` - Identifies the Convert Pro module that triggered the conversion
+- `data` - Associative array of submitted opt-in field values in PHP hooks
+- `module_type` - Display format of the triggering opt-in
 
 ## When to Use
 
-- When WordPress form events should add contacts to Convert Pro's subscriber management
-- When building a Convert Pro-centered lead capture strategy with Bit Integrations form triggers as supplemental sources
-- When WooCommerce buyers or registrations should automatically be added to Convert Pro subscriber lists
+- Capturing popup and slide-in opt-in leads and routing them to CRM or email platforms
+- Triggering automations when a visitor converts via a specific campaign or A/B test variant
+- Logging popup conversion data for attribution alongside UTM parameters
+- Syncing targeted opt-in leads (exit intent, scroll-triggered) with downstream marketing tools
 
-## Related Integrations
+## Rate Limits
 
-- optinmonster.md
-- thrive-leads.md
-- hustle.md
-- popup-maker.md
+- No external API; performance governed by WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- content-strategy

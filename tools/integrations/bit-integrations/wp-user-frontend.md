@@ -1,72 +1,119 @@
 # WP User Frontend
 
-WP User Frontend is a WordPress plugin that allows users to submit posts, manage profiles, and register from the front end without accessing the WordPress admin. Available as Action in the Bit Integrations WordPress plugin.
+WordPress frontend publishing and profile management plugin for user-submitted content.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-User-Frontend.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create post, create user |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Create post — publish or draft a WordPress post via WP User Frontend
-- Create user — register a new WordPress user via WP User Frontend
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WP User Frontend must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Create user account from external form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** WP User Frontend — Create user
-**Key fields mapped:** Email, username, first name, last name
-**Use case:** Automatically create a WordPress account from a front-end form without using native WP registration
+### Check plugin status
 
-### Recipe 2: Create post from CRM contact data
-**Trigger:** HubSpot / Zoho CRM — New contact or deal created
-**Action:** WP User Frontend — Create post
-**Key fields mapped:** Title, content, post type, category
-**Use case:** Publish WordPress content automatically when CRM events occur (e.g., create a case study post when a deal is won)
+```bash
+wp plugin status wp-user-frontend
+```
 
-### Recipe 3: Create user after WooCommerce purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** WP User Frontend — Create user
-**Key fields mapped:** Customer email, first name, last name
-**Use case:** Register a WordPress user account for first-time buyers without requiring them to register manually
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select WP User Frontend as the action.
-4. Choose Create Post or Create User.
-5. For Create User: map email, username, and name fields from your trigger source.
-6. For Create Post: map title, content, and category fields.
-7. Save and test with a real event (submit a test form or complete a test purchase).
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/wp-user-frontend/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='wp-user-frontend' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- You want to create WordPress user accounts automatically from external triggers
-- You need to publish WordPress posts programmatically from CRM or form data
-- You use WP User Frontend for front-end content management and want to integrate it into automation flows
-- You want to onboard users with WordPress accounts as part of a broader checkout or form workflow
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- user-registration.md
-- wp-user-registration.md
-- profile-builder.md
-- woocommerce.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- business-strategy
+- customer-service
+- analytics

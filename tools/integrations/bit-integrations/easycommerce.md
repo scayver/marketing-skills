@@ -1,70 +1,89 @@
 # EasyCommerce
 
-EasyCommerce is a WordPress eCommerce plugin for building lightweight online stores with simplified product management and checkout. Available as Action in the Bit Integrations WordPress plugin.
+WordPress ecommerce plugin for building lightweight online stores with simplified product management and checkout.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Easy-Commerce.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Store and order management actions |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Store and order management actions (refer to Bit Integrations documentation for the current full list of supported action events)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via EasyCommerce endpoints |
+| MCP | - | Not available |
+| CLI | - | WP-CLI compatible |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: EasyCommerce must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password or cookie-based auth
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Create order from CRM deal
-**Trigger:** HubSpot / Zoho CRM — Deal closed won
-**Action:** EasyCommerce — Create order or customer record
-**Key fields mapped:** Contact email, product, order amount
-**Use case:** Automatically generate an EasyCommerce order when a CRM deal is closed
+### List products
+```bash
+GET https://yoursite.com/wp-json/easycommerce/v1/products
 
-### Recipe 2: Create customer from form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** EasyCommerce — Create customer
-**Key fields mapped:** Email, first name, last name, contact details
-**Use case:** Register new EasyCommerce customers from front-end form submissions
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Update order status from external trigger
-**Trigger:** Webhook or external payment system
-**Action:** EasyCommerce — Update order
-**Key fields mapped:** Order ID, new status, customer email
-**Use case:** Sync EasyCommerce order statuses when payments or fulfillment events occur in external systems
+### Get single product
+```bash
+GET https://yoursite.com/wp-json/easycommerce/v1/products/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select EasyCommerce as the action.
-4. Choose the appropriate action event for your workflow.
-5. Map the required fields from your trigger source.
-6. Save and test with a real event (submit a test form or trigger a CRM event).
+### List orders
+```bash
+GET https://yoursite.com/wp-json/easycommerce/v1/orders?status=completed
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get customers
+```bash
+GET https://yoursite.com/wp-json/easycommerce/v1/customers
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Product
+- `id` - Product ID
+- `name` - Product name
+- `price` - Sale price
+- `regular_price` - Regular price
+- `stock_quantity` - Inventory count
+- `status` - publish, draft
+
+### Order
+- `id` - Order ID
+- `status` - pending, processing, completed, cancelled
+- `total` - Order total
+- `customer_email` - Buyer email
+- `line_items` - Products in order
+
+## Parameters
+
+- `status` - Filter by order or product status
+- `per_page` - Results per page
+- `page` - Page number
+- `orderby` / `order` - Sort field and direction
 
 ## When to Use
 
-- You use EasyCommerce for lightweight store management and want orders or customers created from external triggers
-- You need to integrate EasyCommerce into a CRM-based sales workflow
-- You want to automate customer record creation from form submissions
-- You need EasyCommerce synced with external payment or fulfillment systems
+- Sync store orders to a CRM or marketing platform
+- Monitor inventory levels programmatically
+- Pull customer purchase history for segmentation
+- Automate post-purchase email flows
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- surecart.md
-- storeengine.md
-- fluentcart.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- small-business:sales-brief
+- marketing:email-sequence
+- data:analyze

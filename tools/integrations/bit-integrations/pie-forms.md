@@ -1,82 +1,78 @@
 # Pie Forms
 
-Pie Forms is a WordPress form builder plugin with a drag-and-drop interface and integration support for popular email marketing and payment platforms. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+WordPress drag-and-drop form builder with built-in integrations for email marketing, payments, and CRM platforms.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Pie-Forms.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-native only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP action/filter hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress plugin-native
+- **Required**: Pie Forms installed and active on the same WordPress site
+- **Note**: External connections use each platform's own credentials configured within Pie Forms settings
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+Pie Forms does not expose a standalone REST API. Interact with form data via WordPress REST API or PHP hooks.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### List forms (WordPress REST API)
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/pie-forms
 
-## Connecting to Action Platforms
+Authorization: Bearer {application_password}
+```
 
-After selecting Pie Forms as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Hook: On form submission
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+```php
+add_action('pie_forms_process_complete', function($fields, $entry, $form_data) {
+    // $fields contains all submitted field values
+    // $form_data contains form ID and settings
+}, 10, 3);
+```
 
-## Setup Steps
+### Hook: After entry saved
 
-1. Install and activate Pie Forms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Pie Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Pie Forms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+```php
+add_action('pie_forms_entry_save', function($entry_id, $fields, $form_data) {
+    // Fires after the entry is stored in the database
+}, 10, 3);
+```
 
-## Field Mapping Tips
+## Key Fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Form Submission Data
+- `form_id` - ID of the submitted form
+- `fields` - Array of field values keyed by field ID
+- `entry_id` - Database entry ID
+- `date_created` - Submission timestamp
+- `user_id` - Logged-in user ID (if applicable)
+
+## Parameters
+
+- `form_id` - Target specific form
+- `field_id` - Target specific field within a form
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from WordPress contact and inquiry forms
+- Building multi-step registration or onboarding forms
+- Collecting survey responses for analysis
+- Triggering downstream automations on form submission via hooks
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; subject to WordPress server limits only
+
+## Relevant Skills
+
+- marketing:draft-content
+- operations:process-doc
+- human-resources:onboarding

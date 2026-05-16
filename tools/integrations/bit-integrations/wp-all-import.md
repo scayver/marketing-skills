@@ -1,68 +1,94 @@
 # WP All Import
 
-WP All Import is a powerful WordPress plugin for importing data from CSV, XML, and other file formats into WordPress posts, pages, and custom post types. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WP All Import is a WordPress plugin for importing data from XML, CSV, and other file formats into WordPress posts, pages, WooCommerce products, and custom post types.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Cloud Storage
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-All-Import.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; trigger WP All Import to import data into WordPress |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map incoming data fields to WP All Import import template fields |
-
-## Action Events
-
-- Import data into WordPress posts, pages, or custom post types using a pre-configured WP All Import import template
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `/wp-json/wp-all-import/v1/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI (`wp import`) |
+| SDK | - | Not available |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native + API key
-- **Required**: WP All Import Pro must be installed. An API key from WP All Import is required to trigger imports programmatically. Enter the API key in Bit Integrations.
+- **Type**: API Key
+- **Header**: `X-WP-All-Import-Key: {api_key}`
+- **Get token**: WordPress Admin > All Import > Settings > API; enable API and copy the key
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: External Data Webhook to WordPress Post Import
-**Trigger:** Incoming webhook (external data feed)
-**Action:** Trigger WP All Import to import the received data as WordPress posts
-**Use case:** Automatically import product listings or content from external data sources into WordPress
+### List all import jobs
+```
+GET https://yoursite.com/wp-json/wp-all-import/v1/imports
 
-### Recipe 2: Scheduled Data Sync to Custom Post Type
-**Trigger:** Scheduled or external data delivery event
-**Action:** WP All Import imports data into a custom post type (e.g., properties, products, listings)
-**Use case:** Keep WordPress content synchronized with external databases or feeds automatically
+X-WP-All-Import-Key: {api_key}
+```
 
-### Recipe 3: Form Submission Data Batch to Import
-**Trigger:** Bulk data form submission or file upload
-**Action:** Process uploaded data file through WP All Import into WordPress posts
-**Use case:** Allow admins to submit data files via a form that automatically triggers a WP All Import run
+### Get import job status
+```
+GET https://yoursite.com/wp-json/wp-all-import/v1/imports/{import_id}
 
-## Setup Steps
+X-WP-All-Import-Key: {api_key}
+```
 
-1. Install Bit Integrations Pro and WP All Import Pro on your WordPress site.
-2. In WP All Import, create and configure an import template for the target post type.
-3. Go to WP All Import settings and obtain the API key.
-4. Go to Bit Integrations > Create Integration.
-5. Choose your trigger.
-6. Select WP All Import as the Action.
-7. Enter the WP All Import API key and select the target import template.
-8. Map fields.
-9. Save and test.
+### Trigger an import run
+```
+POST https://yoursite.com/wp-json/wp-all-import/v1/imports/{import_id}/trigger
+
+X-WP-All-Import-Key: {api_key}
+Content-Type: application/json
+
+{}
+```
+
+### Get import history / logs
+```
+GET https://yoursite.com/wp-json/wp-all-import/v1/imports/{import_id}/history
+
+X-WP-All-Import-Key: {api_key}
+```
+
+## Key Fields
+
+### Import Job Object
+- `id` - Import job ID
+- `status` - `pending`, `processing`, `completed`, `failed`
+- `file_url` - URL of the source data file
+- `post_type` - Target WordPress post type
+- `count` - Number of records imported
+- `created_at` - Job creation timestamp
+
+### Import History Entry
+- `id` - Log entry ID
+- `import_id` - Associated import job
+- `date` - Run date
+- `created` - Records created in this run
+- `updated` - Records updated
+- `skipped` - Records skipped
+- `errors` - Error messages array
+
+## Parameters
+
+- `import_id` - The specific import template to trigger
+- `file_url` - Override the source file URL for a run
+- `per_page` - Number of history entries to return
 
 ## When to Use
 
-- When external data needs to be imported into WordPress as posts or custom post types automatically
-- When running scheduled or event-triggered content sync jobs between external sources and WordPress
-- When large data sets need to be imported into WordPress without manual WP Admin interaction
+- Automating scheduled product catalog syncs from supplier data feeds
+- Importing bulk lead or contact data from CSV into WordPress custom post types
+- Triggering content imports from external CMS or database exports
+- Refreshing WooCommerce product listings from external XML feeds
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- webhook-incoming.md
-- custom-api.md
+- Subject to WordPress server capacity; no hard API rate limit
+- Large imports may time out; use chunked files or WP-CLI for very large datasets
+
+## Relevant Skills
+
+- data:explore-data
+- operations:process-doc
+- marketing:content-creation

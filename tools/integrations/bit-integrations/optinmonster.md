@@ -1,67 +1,125 @@
 # OptinMonster
 
-OptinMonster is a lead generation and conversion optimization platform for building popups, slide-ins, and opt-in forms with advanced targeting rules. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Lead generation platform for popups, campaigns, targeting rules, and onsite conversion optimization.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Popups and Lead Capture
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Optin-Monster.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add leads to OptinMonster campaigns |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to OptinMonster lead fields |
-
-## Action Events
-
-- Add lead to campaign
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: API Key
-- **Required**: API key from your OptinMonster account. Enter in Bit Integrations along with the target campaign ID.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the OptinMonster dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to OptinMonster Lead Capture
-**Trigger:** WordPress form submission
-**Action:** Add the lead to an OptinMonster campaign for follow-up
-**Use case:** Centralize leads from multiple WordPress forms into OptinMonster's lead management system
+### List records
 
-### Recipe 2: WooCommerce Browse Abandonment to OptinMonster
-**Trigger:** WooCommerce or custom trigger event
-**Action:** Add the user to an OptinMonster retargeting campaign
-**Use case:** Target cart or browse abandoners with OptinMonster campaigns triggered by WooCommerce events
+```bash
+GET https://api.optinmonster.com/v1/records?limit=50
 
-### Recipe 3: User Registration to OptinMonster Nurture Campaign
-**Trigger:** WordPress user registration
-**Action:** Add the new user to an OptinMonster onboarding or nurture campaign
-**Use case:** Present new registrations with targeted OptinMonster popups or follow-up sequences
+Authorization: Bearer {api_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations Pro on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select OptinMonster as the Action.
-5. Log in to OptinMonster and go to account settings to get your API key.
-6. Enter the API key in Bit Integrations and select the target campaign.
-7. Map form fields to OptinMonster lead fields.
-8. Save and test.
+```bash
+GET https://api.optinmonster.com/v1/records/{record_id}
+
+Authorization: Bearer {api_token}
+```
+
+### Create record
+
+```bash
+POST https://api.optinmonster.com/v1/records
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://api.optinmonster.com/v1/records/{record_id}
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://api.optinmonster.com/v1/events
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When WordPress form leads should be added to OptinMonster campaigns for targeted popup display
-- When building a lead capture funnel that uses OptinMonster for behavioral targeting
-- When centralizing lead management in OptinMonster from multiple WordPress form sources
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- popup-maker.md
-- hustle.md
-- thrive-leads.md
-- convert-pro.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- landing-page-cro
+- lead-magnets
+- email-marketing

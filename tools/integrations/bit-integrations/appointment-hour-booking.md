@@ -1,67 +1,117 @@
 # Appointment Hour Booking
 
-Appointment Hour Booking is a WordPress plugin for managing time-slot based appointment bookings with configurable schedules and services. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress plugin for managing time-slot based appointment bookings with configurable services, schedules, staff, and payment options.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Appointment-Hour-Booking.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create bookings in Appointment Hour Booking |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to booking fields |
-
-## Action Events
-
-- Create booking
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/ahb/v1/` |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Appointment Hour Booking must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords > Add New
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Service Inquiry Form to Time-Slot Booking
-**Trigger:** WordPress service inquiry form submission
-**Action:** Create a booking in Appointment Hour Booking with the requested time slot
-**Use case:** Automate booking creation from a service inquiry form without manual scheduling intervention
+### List bookings
 
-### Recipe 2: WooCommerce Session Purchase to Booking
-**Trigger:** WooCommerce order completed (session or service product)
-**Action:** Create an Appointment Hour Booking entry for the purchased session
-**Use case:** Automatically book a session in the scheduling system when a client purchases a service
+```bash
+GET https://yoursite.com/wp-json/ahb/v1/bookings?page=1&per_page=20
 
-### Recipe 3: Registration to Scheduled Onboarding Slot
-**Trigger:** WordPress user registration or membership activation
-**Action:** Create an Appointment Hour Booking for a welcome or onboarding session
-**Use case:** Schedule an automatic onboarding appointment for every new member or customer
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get a single booking
 
-1. Install Bit Integrations Pro and Appointment Hour Booking on your WordPress site.
-2. Configure services and time slots in Appointment Hour Booking.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Appointment Hour Booking as the Action.
-6. Configure the booking settings and target service.
-7. Map form fields to booking fields.
-8. Save and test.
+```bash
+GET https://yoursite.com/wp-json/ahb/v1/bookings/{booking_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Create a booking
+
+```bash
+POST https://yoursite.com/wp-json/ahb/v1/bookings
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "service_id": 2,
+  "date": "2025-08-20",
+  "time_slot": "10:00",
+  "customer_name": "Jane Doe",
+  "customer_email": "jane@example.com",
+  "customer_phone": "+15551234567"
+}
+```
+
+### List available time slots
+
+```bash
+GET https://yoursite.com/wp-json/ahb/v1/slots?service_id=2&date=2025-08-20
+
+Authorization: Basic {base64_credentials}
+```
+
+### List services
+
+```bash
+GET https://yoursite.com/wp-json/ahb/v1/services
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Booking
+- `id` - Booking ID
+- `service_id` - Booked service ID
+- `date` - Booking date (YYYY-MM-DD)
+- `time_slot` - Start time (HH:MM)
+- `status` - pending, confirmed, cancelled
+- `customer_name` - Customer full name
+- `customer_email` - Customer email
+- `customer_phone` - Customer phone
+
+### Service
+- `id` - Service ID
+- `name` - Service name
+- `duration` - Duration in minutes
+- `price` - Service price
+
+### Time Slot
+- `time` - Slot start time (HH:MM)
+- `available` - Boolean availability
+
+## Parameters
+
+- `page` - Pagination page
+- `per_page` - Results per page
+- `date` - Filter bookings by date
+- `service_id` - Filter by service
+- `status` - Filter by booking status
 
 ## When to Use
 
-- When forms or purchases should automatically create time-slot bookings in Appointment Hour Booking
-- When running a time-slot based service business that uses this plugin for scheduling
-- When WooCommerce service sales should create corresponding Appointment Hour Booking entries
+- Creating bookings programmatically from external intake forms or payment flows
+- Reporting on appointment volume and schedule utilization
+- Syncing booking data to external CRM or email marketing platforms
+- Checking slot availability before creating a booking via API
 
-## Related Integrations
+## Rate Limits
 
-- amelia.md
-- simply-schedule-appointments.md
-- fluentbooking.md
-- google-calendar.md
+- Subject to WordPress server limits; no platform-enforced rate limiting
+
+## Relevant Skills
+
+- crm-management
+- email-marketing
+- event-marketing

@@ -1,87 +1,110 @@
 # Keap
 
-Keap (formerly Infusionsoft) is a CRM and marketing automation platform for small businesses, combining contact management, email campaigns, pipeline tracking, and payment collection in one tool. Available as an Action in the Bit Integrations WordPress plugin.
+CRM and marketing automation platform for small businesses combining contact management, email campaigns, and payment collection.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Keap.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Contacts, apply Tags, and add to Campaign sequences |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Keap fields |
-
-## Action Events
-
-- Create Contact
-- Apply Tag
-- Add to Campaign sequence
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v2 for contacts, tags, orders, opportunities |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official PHP and Python SDKs available |
 
 ## Authentication
 
 - **Type**: OAuth 2.0
-- **Where to get credentials**: Keap Developer account at keys.developer.keap.com — create an app to get Client ID and Client Secret, then authorize via Bit Integrations OAuth flow
-- **Required fields in Bit Integrations**: OAuth connection using Client ID and Client Secret from Keap Developer portal
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Create an app at keys.developer.keap.com; use Client ID + Client Secret to obtain access token via OAuth 2.0 authorization code flow
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Create a contact
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| given_name | Contact first name | Optional |
-| family_name | Contact last name | Optional |
-| email_addresses | Email address | Required; primary contact identifier |
-| phone_numbers | Phone number | Optional |
-| company_name | Associated company name | Optional |
-| tag_ids | Tag IDs to apply to the contact | Optional; must exist in Keap beforehand |
+```bash
+POST https://api.infusionsoft.com/crm/rest/v2/contacts
 
-## Common Workflow Recipes
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-### Recipe 1: Opt-In Form to Keap Contact with Tag
-**Trigger:** WPForms or Gravity Forms email opt-in submission
-**Action:** Create Contact and apply Tag in Keap
-**Key fields mapped:** First Name, Last Name, Email, Tag = LeadMagnet2024
-**Use case:** Add opt-in subscribers to Keap and tag them based on the lead magnet they downloaded for targeted follow-up.
+{"given_name": "Jane", "family_name": "Doe", "email_addresses": [{"email": "jane@example.com", "field": "EMAIL1"}]}
+```
 
-### Recipe 2: Contact Form to Keap Campaign Sequence
-**Trigger:** Contact Form 7 or Elementor form submission
-**Action:** Create Contact and add to Campaign sequence
-**Key fields mapped:** First Name, Last Name, Email, Phone, Campaign sequence ID
-**Use case:** Enroll new website leads directly in a Keap nurture campaign sequence so automated follow-up begins immediately.
+### Apply a tag to a contact
 
-### Recipe 3: WooCommerce Purchase to Keap Customer Tag
-**Trigger:** WooCommerce order completed
-**Action:** Apply Tag to existing Contact in Keap
-**Key fields mapped:** Email, Tag = Customer
-**Use case:** Tag WooCommerce customers in Keap to move them from a leads campaign sequence into a post-purchase retention campaign.
+```bash
+POST https://api.infusionsoft.com/crm/rest/v2/contacts/{contact_id}/tags
 
-## Setup Steps
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Keap as the action.
-5. Connect your Keap account using OAuth 2.0 via your Keap Developer app credentials.
-6. Select the action (Create Contact, Apply Tag, Add to Sequence) and configure the target.
-7. Map the fields from your trigger to Keap fields.
-8. Save and submit a test entry to verify data arrives correctly.
+{"tagIds": [456]}
+```
+
+### Create an opportunity
+
+```bash
+POST https://api.infusionsoft.com/crm/rest/v2/opportunities
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"contact": {"id": 123}, "opportunity_title": "New Lead", "stage": {"id": 1}}
+```
+
+### Get all tags
+
+```bash
+GET https://api.infusionsoft.com/crm/rest/v2/tags?limit=100
+
+Authorization: Bearer {access_token}
+```
+
+### Search contacts by email
+
+```bash
+GET https://api.infusionsoft.com/crm/rest/v2/contacts?email=jane@example.com
+
+Authorization: Bearer {access_token}
+```
+
+## Key Fields
+
+### Contact Object
+- `id` - Unique contact ID
+- `given_name`, `family_name` - First and last name
+- `email_addresses` - Array with email and field label
+- `phone_numbers` - Array with number and field label
+- `company_name` - Associated company
+- `tag_ids` - Applied tag IDs
+
+### Opportunity Object
+- `opportunity_title` - Name of the opportunity
+- `stage` - Current stage object with ID
+- `contact` - Linked contact object
+- `projected_revenue_high` - Estimated deal value
+
+## Parameters
+
+- `limit` - Number of records to return (max 1000)
+- `offset` - Pagination offset
+- `email` - Filter contacts by email address
+- `since` - Return records updated after this ISO 8601 date
 
 ## When to Use
 
-- You use Keap's campaign builder for automated email sequences and need web form triggers to enroll contacts
-- You want to tag new website leads based on which form they submitted for segmented follow-up
-- You need WooCommerce customers to move between Keap campaign sequences automatically after purchase
-- You run a small business with complex automated follow-up and want WordPress as the entry point
+- Running automated email and SMS nurture campaigns for small business leads
+- Tagging and segmenting contacts based on form submissions or purchases
+- Tracking sales opportunities with pipeline management
+- Enrolling contacts in campaign sequences from web events
 
-## Related Integrations
+## Rate Limits
 
-- fluentcrm.md
-- hubspot.md
-- gohighlevel.md
-- salesmate.md
+- 25 requests/second per application
+- See developer.keap.com for daily/monthly limits by plan
+
+## Relevant Skills
+
+- crm-management
+- email-marketing
+- lead-generation

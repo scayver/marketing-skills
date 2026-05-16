@@ -1,85 +1,101 @@
 # Encharge
 
-Encharge is a marketing automation platform built for SaaS businesses, focusing on behavior-based email flows and user lifecycle management. Available as an Action in the Bit Integrations WordPress plugin.
+Marketing automation platform for SaaS businesses, focused on behavior-based email flows and user lifecycle management.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Enchange1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create or update user/subscriber, add tag |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Create or update subscriber
-- Add tag to subscriber
-- Update subscriber profile fields
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v1 |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API-only |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: Encharge account > Settings > API
-- **Required in Bit Integrations**: API Key
+- **Header**: `X-Encharge-Token: {api_key}`
+- **Get token**: Encharge App > Settings > API Keys
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Phone | Subscriber phone number | Optional |
-| Tags | Tags to apply to the subscriber | Optional |
-| User ID | External user ID for cross-system matching | Optional |
+### Create or update user
+```bash
+POST https://api.encharge.io/v1/people
 
-## Common Workflow Recipes
+X-Encharge-Token: {api_key}
+Content-Type: application/json
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Create subscriber in Encharge and apply a welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your subscriber base when visitors fill out any lead capture form
+{
+  "email": "user@example.com",
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "tags": ["trial", "signup"]
+}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Create or update subscriber in Encharge with buyer tag
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Track event
+```bash
+POST https://api.encharge.io/v1/events
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Create subscriber in Encharge with enrollment tag to trigger onboarding flow
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+X-Encharge-Token: {api_key}
+Content-Type: application/json
 
-## Setup Steps
+{
+  "name": "Signed Up",
+  "email": "user@example.com",
+  "properties": {"plan": "pro", "source": "landing-page"}
+}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Encharge as the action.
-5. Connect your Encharge account using your API Key.
-6. Configure the subscriber action and tags to apply.
-7. Map the email field and any name or tag fields.
-8. Save and test with a real form submission.
+### Get user by email
+```bash
+GET https://api.encharge.io/v1/people?email=user@example.com
+
+X-Encharge-Token: {api_key}
+```
+
+### List segments
+```bash
+GET https://api.encharge.io/v1/segments
+
+X-Encharge-Token: {api_key}
+```
+
+## Key Fields
+
+### Person (User)
+- `email` - Primary identifier
+- `firstName` / `lastName` - Name fields
+- `tags` - Array of string tags
+- `userId` - External user ID for SaaS apps
+- `createdAt` - Account creation date
+
+### Event
+- `name` - Event name (e.g., "Upgraded Plan")
+- `email` - User identifier
+- `properties` - Custom key-value attributes
+- `timestamp` - ISO 8601 event time
+
+## Parameters
+
+- `email` - Filter people by email
+- `tag` - Filter by tag
+- `limit` / `offset` - Pagination
 
 ## When to Use
 
-- Adding WordPress users to SaaS onboarding email flows
-- Segmenting new subscribers by lead source using tags
-- Triggering behavior-based email sequences from WordPress events
-- Syncing WooCommerce buyers to customer lifecycle automation
-- Replacing manual CSV imports from WordPress to your email platform
+- Onboard new SaaS trial users with behavior-driven flows
+- Trigger upgrade nudge emails based on feature usage events
+- Segment users by plan, activity, or lifecycle stage
+- Sync user data from your app on sign-up or plan change
 
-## Related Integrations
+## Rate Limits
 
-- activecampaign.md
-- drip.md
-- bento.md
+- See Encharge pricing page
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- product-management:metrics-review

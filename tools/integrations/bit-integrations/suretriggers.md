@@ -1,67 +1,80 @@
 # SureTriggers
 
-SureTriggers is a WordPress-native automation platform by SureBiz that connects WordPress plugins and third-party apps directly from your WordPress dashboard. Available as an Action in the Bit Integrations WordPress plugin.
+SureTriggers is a WordPress-native automation platform by SureBiz that connects WordPress plugins and external apps via triggers and actions from the WordPress dashboard.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/SureTriggers.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Pass data from Bit Integrations into a SureTriggers workflow |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map fields to SureTriggers workflow inputs |
-
-## Action Events
-
-- Trigger a SureTriggers automation with data from a WordPress event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/suretriggers/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native + SureTriggers account
-- **Required**: SureTriggers plugin installed and connected to a SureTriggers cloud account. No additional API keys needed for the WordPress-side connection.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to SureTriggers Multi-Step Workflow
-**Trigger:** WordPress form submission
-**Action:** SureTriggers workflow sends data to multiple apps (email, CRM, Slack)
-**Use case:** Orchestrate complex multi-app automations triggered by Bit Integrations form events
+### List Workflows
+```bash
+GET https://yoursite.com/wp-json/suretriggers/v1/workflows
 
-### Recipe 2: WooCommerce Order to Membership and Email
-**Trigger:** WooCommerce order completed
-**Action:** SureTriggers grants SureMembers access and sends a confirmation email via an ESP
-**Use case:** Automate the full post-purchase sequence for digital products within the SureBiz ecosystem
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: User Registration to Onboarding Automation
-**Trigger:** WordPress user registration
-**Action:** SureTriggers starts an onboarding workflow adding the user to tools and sending welcome messages
-**Use case:** Create a unified onboarding experience across plugins and external services
+### Get a Single Workflow
+```bash
+GET https://yoursite.com/wp-json/suretriggers/v1/workflows/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install both Bit Integrations and SureTriggers on your WordPress site.
-2. Connect SureTriggers to your SureTriggers cloud account.
-3. In SureTriggers, create an automation with a webhook trigger or Bit Integrations connector.
-4. Go to Bit Integrations > Create Integration.
-5. Choose your trigger source.
-6. Select SureTriggers as the Action.
-7. Map fields.
-8. Save and test.
+### List Available Triggers
+```bash
+GET https://yoursite.com/wp-json/suretriggers/v1/triggers
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Available Actions
+```bash
+GET https://yoursite.com/wp-json/suretriggers/v1/actions
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Workflow
+- `id` - Workflow ID
+- `name` - Workflow name
+- `status` - active, inactive
+- `trigger` - Trigger configuration object
+- `actions` - Array of action steps
+
+## Parameters
+
+- `status` - Filter workflows by active/inactive
+- `per_page` / `page` - Pagination controls
 
 ## When to Use
 
-- When your site is built on the SureBiz ecosystem (SureCart, SureMembers, etc.)
-- When you want WordPress-native automation that also connects to external apps via SureTriggers
-- When combining Bit Integrations trigger detection with SureTriggers' automation workflows
+- Auditing automation workflows configured on a WordPress site
+- Checking workflow status for debugging or monitoring
+- Enumerating available triggers and actions for integration mapping
+- Programmatically toggling workflows based on business events
 
-## Related Integrations
+## Rate Limits
 
-- automatorwp.md
-- flowmattic.md
-- uncanny-automator.md
-- zapier.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- operations:process-doc
+- engineering:documentation
+- marketing:campaign-plan
+- data:explore-data

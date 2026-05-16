@@ -1,83 +1,84 @@
-# Divi Form Builder
+# Divi Form Builder (by Divi Engine)
 
-Divi Form Builder by Divi Engine is a third-party add-on for Divi Builder that extends the native Divi form module with advanced field types, multi-step forms, and conditional logic. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Third-party add-on for Divi Builder that extends the native Divi contact form module with advanced field types, multi-step forms, conditional logic, file uploads, and payment fields.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Divi-Form-Builder.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-only plugin |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Not available |
+| WordPress REST | - | No dedicated REST endpoint; use PHP hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress application password (for any WP REST access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Hook into Divi Form Builder submission (PHP)
+```php
+add_action('divi_form_builder_submitted', function($entry, $form_settings) {
+    // $entry — array of submitted field values
+    // $form_settings — form configuration object
+}, 10, 2);
+```
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Query submission entries via WP-CLI
+```bash
+wp post list --post_type=dfb_entry --fields=ID,post_title,post_date
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Get a submission entry via REST
+```
+GET /wp-json/wp/v2/posts/{entry_id}?post_type=dfb_entry
 
-## Connecting to Action Platforms
+Authorization: Basic {base64_credentials}
+```
 
-After selecting Divi Form Builder as the trigger in Bit Integrations, connect it to any of these action platforms:
+### List all Divi Form Builder forms
+```
+GET /wp-json/wp/v2/posts?post_type=dfb_form&per_page=100
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+## Key Fields
 
-1. Install and activate Divi Builder and Divi Form Builder on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form using the Divi Form Builder module and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Divi Form Builder as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Entry (Submission)
+- `form_id` - ID of the originating form
+- `date_submitted` - Submission timestamp
+- Field values are stored as post meta keyed by field name/ID configured in the form builder
 
-## Field Mapping Tips
+### Form Settings
+- `id` - Form post ID
+- `title` - Form name
+- `fields` - Array of field configuration objects (type, label, required, conditional logic rules)
+- `notifications` - Email notification configuration
+- `confirmation` - Post-submission confirmation type (message or redirect)
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+## Parameters
+
+- `form_id` - Identifies the specific Divi Form Builder form
+- `entry` - Associative array of field values passed to PHP submission hooks
+- `field_id` - Unique field identifier used as the key in the entry array
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing multi-step form submissions from complex Divi-built pages
+- Processing file upload form data (resumes, portfolios, documents) submitted via Divi forms
+- Triggering automations when conditional-logic forms are completed
+- Building advanced lead capture or application forms inside Divi without switching page builders
 
-## Related Integrations
+## Rate Limits
 
-- divi-form.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; performance governed by WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- content-strategy

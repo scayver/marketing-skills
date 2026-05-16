@@ -1,81 +1,93 @@
 # MemberPress
 
-MemberPress is a leading WordPress membership plugin for creating subscription sites, gating content by membership level, and managing recurring payments. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+Leading WordPress membership plugin for creating subscription sites, gating content by membership level, and managing recurring payments.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** Membership and Access Control
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/Member-Press-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/Member-Press.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on membership purchase, expiry, cancellation, and renewal events |
-| As Action | ✓ | Add or remove membership levels |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Membership purchased — fires when a member buys a membership
-- Membership expired — fires when a membership expires
-- Membership cancelled — fires when a member cancels their subscription
-- Membership renewed — fires when a membership renews
-
-## Action Events
-
-- Add membership level — assign a MemberPress membership to a WordPress user
-- Remove membership level — remove a MemberPress membership from a user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API via `/wp-json/mp/v1/` with consumer key + secret |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: MemberPress must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: API Consumer Key + Secret (Basic Auth)
+- **Header**: `Authorization: Basic {base64(consumer_key:consumer_secret)}`
+- **Get token**: WordPress Admin > MemberPress > Developer Tools > API Keys
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add contact to CRM on membership purchase
-**Trigger:** MemberPress — Membership purchased
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** User email, first name, last name, membership level, purchase date
-**Use case:** Automatically feed new members into your CRM for onboarding or upsell tracking
+### List members
+```bash
+GET https://yoursite.com/wp-json/mp/v1/members
 
-### Recipe 2: Trigger win-back sequence on cancellation
-**Trigger:** MemberPress — Membership cancelled
-**Action:** ActiveCampaign / Mailchimp — Add to automation or tag
-**Key fields mapped:** User email, membership name, cancellation date
-**Use case:** Start a cancellation win-back email sequence the moment a member cancels
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Enroll new member in LMS course
-**Trigger:** MemberPress — Membership purchased
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** User email, membership level mapped to course
-**Use case:** Automatically enroll members in courses tied to their membership level
+### Get a single member
+```bash
+GET https://yoursite.com/wp-json/mp/v1/members/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select MemberPress as the trigger or action.
-4. For triggers, choose the event (e.g., Membership Purchased) and select the membership level or leave global.
-5. For actions, choose Add Membership Level or Remove Membership Level and select the target level.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (purchase a test membership or cancel a test subscription).
+### List memberships (products)
+```bash
+GET https://yoursite.com/wp-json/mp/v1/memberships
+
+Authorization: Basic {base64_credentials}
+```
+
+### List transactions
+```bash
+GET https://yoursite.com/wp-json/mp/v1/transactions?member_id={id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List subscriptions
+```bash
+GET https://yoursite.com/wp-json/mp/v1/subscriptions?member_id={id}
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Member
+- `id` - WordPress user ID
+- `email` - Member email address
+- `membership` - Array of active membership objects
+- `registered_at` - Registration date
+
+### Transaction
+- `amount` - Payment amount
+- `status` - Transaction status (complete, pending, refunded)
+- `membership_id` - Associated membership ID
+- `created_at` - Transaction timestamp
+
+## Parameters
+
+- `per_page` - Results per page (default 10, max 100)
+- `page` - Page number
+- `member_id` - Filter by member
+- `status` - Filter by status
 
 ## When to Use
 
-- You want to sync new members automatically into your CRM or email platform
-- You need to trigger LMS course enrollment based on membership level purchased
-- You want to start win-back or re-engagement email flows on cancellations or expirations
-- You need to remove access or tags in connected tools when memberships lapse
+- Querying active member counts and subscription statuses for reporting
+- Automating CRM contact creation when members sign up or cancel
+- Syncing membership level data to email marketing segmentation
+- Auditing transactions and subscription renewals programmatically
 
-## Related Integrations
+## Rate Limits
 
-- memberpress-courses.md
-- learndash.md
-- lifterlms.md
-- restrict-content.md
-- paid-memberships-pro.md
-- woocommerce.md
+- Limited by WordPress server capacity; no built-in rate limiting
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- sales:pipeline-review

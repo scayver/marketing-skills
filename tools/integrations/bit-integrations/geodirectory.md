@@ -1,67 +1,100 @@
 # GeoDirectory
 
-GeoDirectory is a scalable WordPress business directory and listings plugin for building Yelp or Airbnb-style local directory sites. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Scalable WordPress business directory and listings plugin for building local directory sites like Yelp or Airbnb.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** SEO and Analytics
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Geo-Directory.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create business listings in GeoDirectory |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to GeoDirectory listing fields |
-
-## Action Events
-
-- Create business listing
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via GeoDirectory endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and GeoDirectory must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Business Submission Form to GeoDirectory Listing
-**Trigger:** WordPress business submission form
-**Action:** Create a new GeoDirectory business listing with the submitted details
-**Use case:** Allow businesses to submit their listings via a custom WordPress form that automatically creates a GeoDirectory entry
+### List listings
+```bash
+GET https://yoursite.com/wp-json/geodir/v2/listings
 
-### Recipe 2: WooCommerce Business Plan Purchase to Directory Listing
-**Trigger:** WooCommerce order completed (directory listing product)
-**Action:** Create a GeoDirectory listing for the purchasing business
-**Use case:** Automatically publish a directory listing when a business pays for a listing package through WooCommerce
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Partner Registration to Directory Entry
-**Trigger:** Partner or affiliate registration form submission
-**Action:** Create a GeoDirectory listing for the new partner
-**Use case:** Automatically add new partners or approved affiliates to a public directory page
+### Get single listing
+```bash
+GET https://yoursite.com/wp-json/geodir/v2/listings/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and GeoDirectory on your WordPress site.
-2. Configure the GeoDirectory listing type and custom fields.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select GeoDirectory as the Action.
-6. Select the listing type.
-7. Map form fields to GeoDirectory listing fields (business name, address, category, description, website, phone).
-8. Save and test.
+### Create listing
+```bash
+POST https://yoursite.com/wp-json/geodir/v2/listings
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "title": "Jane's Coffee Shop",
+  "status": "publish",
+  "geodir_location": "New York, NY",
+  "geodir_email": "jane@example.com"
+}
+```
+
+### List categories
+```bash
+GET https://yoursite.com/wp-json/geodir/v2/categories
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Listing
+- `id` - Listing post ID
+- `title` - Business name
+- `status` - publish, draft, pending
+- `geodir_email` - Business email
+- `geodir_phone` - Phone number
+- `geodir_website` - Website URL
+- `geodir_location` - Address/location
+- `latitude` / `longitude` - Coordinates
+- `rating` - Average rating
+- `category` - Category array
+
+### Category
+- `id` - Category ID
+- `name` - Category name
+- `slug` - URL slug
+- `count` - Listing count
+
+## Parameters
+
+- `status` - Filter by listing status
+- `category` - Filter by category ID or slug
+- `location` - Filter by location keyword
+- `per_page` / `page` - Pagination
 
 ## When to Use
 
-- When business submission forms should automatically create GeoDirectory listings
-- When WooCommerce listing package purchases should publish new directory entries
-- When building a business directory site with automated listing creation from form submissions
+- Bulk import business listings from CSV or external data
+- Sync new listings to a CRM for follow-up outreach
+- Export directory data for offline analysis
+- Automate listing approval notifications
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- airtable.md
-- google-sheets.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- marketing:content-creation
+- data:analyze
+- small-business:business-pulse

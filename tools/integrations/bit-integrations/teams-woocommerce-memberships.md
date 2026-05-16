@@ -1,76 +1,99 @@
 # Teams for WooCommerce Memberships
 
-Teams for WooCommerce Memberships is a WooCommerce extension that enables group or team-based membership purchases, allowing one buyer to grant membership access to multiple team members. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+Teams for WooCommerce Memberships is a WooCommerce extension that enables group or team-based membership purchases, allowing one buyer to grant membership access to multiple team members.
 
-**Role:** Trigger/Action
-**Free Tier:** No — both Trigger and Action require Pro
-**Category:** eCommerce and Payments
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/Teams-for-WooCommerce-Memberships-2.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/Teams-for-WooCommerce-Memberships-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on team seat management events |
-| As Action | ✓ | Manage team seats and member assignments |
-| Free Tier | — | Requires Pro for both Trigger and Action |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Team seat assignment and management events (refer to Bit Integrations documentation for the current full list of supported trigger events)
-
-## Action Events
-
-- Team seat and member management actions (refer to Bit Integrations documentation for the current full list of supported action events)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WooCommerce REST API at `/wp-json/wc/v3/` extended with team endpoints |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI with WooCommerce CLI support |
+| SDK | - | No external SDK; use WC REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WooCommerce, WooCommerce Memberships, and Teams for WooCommerce Memberships must all be installed and active; Bit Integrations reads them directly via WordPress hooks
-- **Note**: No API keys required; all plugins must be on the same WordPress site
+- **Type**: WooCommerce API Keys (Consumer Key + Consumer Secret)
+- **Header**: `Authorization: Basic {base64(ck:cs)}`
+- **Get token**: WooCommerce > Settings > Advanced > REST API
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Notify team owner on seat assignment
-**Trigger:** Teams for WooCommerce Memberships — Seat assigned to team member
-**Action:** Email notification or Slack webhook
-**Key fields mapped:** Team owner email, new member email, team name
-**Use case:** Alert the team owner or admin whenever a new member is added to a team seat
+### List Team Memberships
+```bash
+GET https://yoursite.com/wp-json/wc/v3/memberships/members
 
-### Recipe 2: Add new team member to CRM or email platform
-**Trigger:** Teams for WooCommerce Memberships — Seat assigned
-**Action:** HubSpot / Mailchimp — Create or update contact
-**Key fields mapped:** New member email, team name, membership plan
-**Use case:** Automatically create or tag CRM contacts when individuals join a team membership
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Grant additional access on team seat assignment
-**Trigger:** Teams for WooCommerce Memberships — Seat assigned
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** New member email, course linked to team membership
-**Use case:** Automatically enroll new team members in the LMS course associated with the team membership plan
+### Get a Single Membership
+```bash
+GET https://yoursite.com/wp-json/wc/v3/memberships/members/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Ensure WooCommerce, WooCommerce Memberships, and Teams for WooCommerce Memberships are all installed and active.
-3. Go to Bit Integrations > Create Integration.
-4. Select Teams for WooCommerce Memberships as the trigger or action.
-5. Choose the relevant seat or team management event.
-6. Map the required fields to the connected platform.
-7. Save and test with a real event (assign a test seat to a team member).
+### List Teams
+```bash
+GET https://yoursite.com/wp-json/wc/v3/memberships/teams
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get Team Members
+```bash
+GET https://yoursite.com/wp-json/wc/v3/memberships/teams/{team_id}/members
+
+Authorization: Basic {base64_credentials}
+```
+
+### Add a Member to a Team
+```bash
+POST https://yoursite.com/wp-json/wc/v3/memberships/teams/{team_id}/members
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"user_id": 42, "role": "member"}
+```
+
+## Key Fields
+
+### Team
+- `id` - Team ID
+- `name` - Team name
+- `plan_id` - Associated membership plan
+- `owner_id` - WordPress user ID of the team owner
+- `seat_count` - Total purchased seats
+- `seats_used` - Number of active members
+
+### Team Member
+- `id` - Membership record ID
+- `user_id` - WordPress user ID
+- `team_id` - Parent team ID
+- `role` - owner or member
+- `status` - active, inactive, pending
+
+## Parameters
+
+- `status` - Filter members or teams by status
+- `per_page` / `page` - Pagination controls
+- `team_id` - Scope members to a specific team
 
 ## When to Use
 
-- You sell team or group memberships and want to automate actions when seats are assigned or removed
-- You need to notify team owners or admins when team membership changes occur
-- You want to enroll individual team members in LMS courses automatically on seat assignment
-- You integrate team membership management into a broader CRM or email automation workflow
+- Automating seat assignment when a team plan is purchased
+- Notifying team owners when seats are nearly exhausted
+- Syncing team membership status to a CRM for account management
+- Reporting on team sizes and plan utilization
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce-memberships.md
-- woocommerce.md
-- woocommerce-subscriptions.md
-- learndash.md
-- memberpress.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- operations:process-doc
+- sales:account-research
+- data:analyze
+- marketing:campaign-plan

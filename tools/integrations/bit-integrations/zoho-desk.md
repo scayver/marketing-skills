@@ -1,68 +1,125 @@
 # Zoho Desk
 
-Zoho Desk is a cloud-based customer support and helpdesk platform for managing tickets, contacts, and agent workflows. Available as an Action in the Bit Integrations WordPress plugin.
+Customer support platform for tickets, contacts, accounts, agents, and help desk workflows.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ZohoDesk.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create tickets and contacts in Zoho Desk |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Zoho Desk ticket and contact fields |
-
-## Action Events
-
-- Create ticket
-- Create contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: OAuth 2.0
-- **Required**: Authorize Bit Integrations via Zoho OAuth. Select the target Zoho Desk organization and department.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Zoho-oauthtoken {access_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zoho Desk dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Support Form to Zoho Desk Ticket
-**Trigger:** WordPress support request form submission
-**Action:** Create a Zoho Desk ticket with the customer's issue, priority, and contact details
-**Use case:** Route website support requests directly into Zoho Desk for agent handling
+### List records
 
-### Recipe 2: Contact Form to Zoho Desk Contact
-**Trigger:** WordPress contact form submission
-**Action:** Create or update a Zoho Desk contact with name, email, and phone
-**Use case:** Build a Zoho Desk contact database automatically from website inquiries
+```bash
+GET https://desk.zoho.com/api/v1/records?limit=50
 
-### Recipe 3: WooCommerce Order Issue to Support Ticket
-**Trigger:** Custom WooCommerce order status or form trigger
-**Action:** Create a Zoho Desk ticket linked to the customer and order
-**Use case:** Automatically open a support ticket when an order issue is flagged via a WordPress form
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Zoho Desk as the Action.
-5. Authorize Bit Integrations with your Zoho account.
-6. Select the target organization and department.
-7. Map fields: subject, description, email, phone, department_id, priority.
-8. Save and test.
+```bash
+GET https://desk.zoho.com/api/v1/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+```
+
+### Create record
+
+```bash
+POST https://desk.zoho.com/api/v1/records
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://desk.zoho.com/api/v1/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://desk.zoho.com/api/v1/events
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When WordPress support forms should auto-create Zoho Desk tickets for agent assignment
-- When building a customer contact database in Zoho Desk from WordPress form submissions
-- When integrating WooCommerce order issues or complaints into a structured support workflow
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- freshdesk.md
-- fluent-support.md
-- zendesk-sell.md
-- zoho-crm.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- customer-service
+- revops
+- analytics

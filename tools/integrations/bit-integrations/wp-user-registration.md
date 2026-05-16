@@ -1,73 +1,119 @@
 # WP User Registration
 
-WP User Registration is a WordPress plugin for creating front-end user registration and login forms with drag-and-drop form building and role management. Available as Action in the Bit Integrations WordPress plugin.
+WordPress user registration plugin for signup forms, profiles, and account workflows.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-User-Registration.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Register user, assign role |
-| Free Tier | ✓ | Free |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Register user — create a new WordPress user via WP User Registration
-- Assign role — set a specific WordPress user role for the registered user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WP User Registration must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Register user after WooCommerce purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** WP User Registration — Register user + Assign role
-**Key fields mapped:** Customer email, first name, last name, role tied to product
-**Use case:** Automatically create a WordPress account with the correct role when a new customer completes a purchase
+### Check plugin status
 
-### Recipe 2: Register user from external form submission
-**Trigger:** Contact Form 7 / Gravity Forms — Form submitted
-**Action:** WP User Registration — Register user
-**Key fields mapped:** Email, first name, last name
-**Use case:** Turn a contact or lead form submission into a registered WordPress user
+```bash
+wp plugin status wp-user-registration
+```
 
-### Recipe 3: Assign role after membership activation
-**Trigger:** MemberPress / Restrict Content — Membership activated
-**Action:** WP User Registration — Assign role
-**Key fields mapped:** User email, role tied to membership level
-**Use case:** Upgrade a user's WordPress role when they activate a paid membership
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select WP User Registration as the action.
-4. Choose Register User or Assign Role.
-5. Map the user email, name, and other fields from your trigger source.
-6. Select the WordPress role to assign.
-7. Save and test with a real event (complete a test purchase or submit a test form).
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/wp-user-registration/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='wp-user-registration' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- You want to create WordPress user accounts automatically from purchases or form submissions
-- You need a free action integration for user registration without upgrading to Pro
-- You want to assign WordPress roles programmatically from membership or e-commerce triggers
-- You use WP User Registration's form builder and want to trigger registrations from external sources
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- user-registration.md
-- user-registration-membership.md
-- profile-builder.md
-- memberpress.md
-- woocommerce.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- business-strategy
+- email-marketing
+- customer-service

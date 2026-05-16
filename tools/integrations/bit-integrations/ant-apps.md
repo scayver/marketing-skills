@@ -1,83 +1,131 @@
 # Ant Apps
 
-Ant Apps is a business management platform offering CRM, project management, invoicing, and team collaboration tools in a unified workspace. Available as an Action in the Bit Integrations WordPress plugin.
+Business management platform offering CRM, project management, invoicing, and team collaboration tools in a unified workspace for agencies and small businesses.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Ant-Apps.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | Not available as a trigger |
-| As Action | ✓ | Creates records in Ant Apps (free tier) |
-| Free Tier | ✓ | Available on Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress form or event fields to Ant Apps fields |
-
-## Action Events
-
-- Create contact or lead record
-- Create project or task
-- Create customer record
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API with API key authentication |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: Ant Apps account > Settings > API or Integrations section
-- **Required in Bit Integrations**: Ant Apps API key
+- **Header**: `Authorization: Bearer {api_key}` or `X-API-Key: {api_key}`
+- **Get token**: Ant Apps > Settings > Integrations > API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| name | Contact or record name | Required |
-| email | Email address | Required for contact records |
-| phone | Phone number | Optional |
-| company | Company or organization name | Optional |
-| notes | Additional notes or description | Optional |
-| status | Lead or contact status | Optional |
+### Create a contact
 
-## Common Workflow Recipes
+```bash
+POST https://app.antapps.com/api/v1/contacts
 
-### Recipe 1: Contact Form to Ant Apps Lead
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, CF7, Bit Form)
-**Action:** Create lead or contact in Ant Apps
-**Use case:** Automatically add new website inquiries to Ant Apps as leads for follow-up
+Authorization: Bearer {api_key}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Order to Ant Apps Customer
-**Trigger:** WooCommerce order completed
-**Action:** Create customer record in Ant Apps
-**Use case:** Sync new buyers into Ant Apps for client relationship tracking and invoicing
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "phone": "+15551234567",
+  "company": "Acme Corp",
+  "source": "website"
+}
+```
 
-### Recipe 3: Lead Magnet Download to Ant Apps Contact
-**Trigger:** WordPress form submission on a lead magnet landing page
-**Action:** Create contact in Ant Apps with lead source tag
-**Use case:** Track lead magnet downloads as new contacts in Ant Apps for sales follow-up
+### Create a lead
 
-## Setup Steps
+```bash
+POST https://app.antapps.com/api/v1/leads
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger source (form plugin, WooCommerce, etc.).
-4. Select Ant Apps as the action.
-5. Enter your Ant Apps API key.
-6. Select the record type to create (contact, lead, customer).
-7. Map the fields from your trigger to Ant Apps fields.
-8. Save and test with a real form submission.
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "phone": "+15551234567",
+  "status": "new",
+  "notes": "Interested in enterprise plan"
+}
+```
+
+### List contacts
+
+```bash
+GET https://app.antapps.com/api/v1/contacts?page=1&per_page=50
+
+Authorization: Bearer {api_key}
+```
+
+### Create a project
+
+```bash
+POST https://app.antapps.com/api/v1/projects
+
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{"name": "Website Redesign", "client_id": 42, "status": "active"}
+```
+
+### Create an invoice
+
+```bash
+POST https://app.antapps.com/api/v1/invoices
+
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{"client_id": 42, "amount": 2500, "due_date": "2025-09-01", "items": [{"description": "Design services", "amount": 2500}]}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact ID
+- `name` - Full name (required)
+- `email` - Email address
+- `phone` - Phone number
+- `company` - Company name
+- `source` - Lead source
+
+### Lead
+- `id` - Lead ID
+- `name` - Lead name
+- `email` - Email address
+- `status` - new, contacted, qualified, lost
+- `notes` - Free-text notes
+
+### Project
+- `id` - Project ID
+- `name` - Project name
+- `client_id` - Associated contact/client ID
+- `status` - active, completed, on-hold
+
+## Parameters
+
+- `page` - Pagination page number
+- `per_page` - Results per page
+- `status` - Filter records by status
+- `client_id` - Filter projects or invoices by client
 
 ## When to Use
 
-- Capturing website leads directly into Ant Apps for sales tracking
-- Syncing WooCommerce customers to Ant Apps for invoicing and project management
-- Automating client record creation when new projects or inquiries come through WordPress forms
-- Replacing manual data entry between your WordPress site and Ant Apps workspace
+- Adding website leads directly into Ant Apps CRM from form submissions
+- Creating client records and projects when onboarding new customers
+- Generating invoices programmatically from order or service data
+- Syncing contact data from external platforms into Ant Apps
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- pipedrive.md
-- zoho-crm.md
-- google-sheets.md
-- wpforms.md
+- See Ant Apps pricing page for API limits by plan tier
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- ecommerce

@@ -1,67 +1,93 @@
 # RafflePress
 
-RafflePress is a WordPress viral giveaway and contest plugin for growing audiences, email lists, and social followings through referral-based entry campaigns. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress viral giveaway and contest plugin for growing email lists and social followings through referral-based entry campaigns and sweepstakes.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Gamification and Loyalty
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/RafflePress-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add entries to RafflePress giveaways |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user data to giveaway entry fields |
-
-## Action Events
-
-- Add entry to giveaway
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/rafflepress/v1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and RafflePress must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress REST API (Application Password)
+- **Header**: `Authorization: Bearer {application_password}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Giveaway Entry
-**Trigger:** WordPress form submission (newsletter opt-in, survey, quiz)
-**Action:** Add the submitter as an entry in an active RafflePress giveaway
-**Use case:** Reward form completions with automatic giveaway entries to increase engagement and form submissions
+### List giveaways
 
-### Recipe 2: Purchase to Bonus Giveaway Entry
-**Trigger:** WooCommerce order completed
-**Action:** Add a giveaway entry for the purchasing customer
-**Use case:** Incentivize purchases by automatically entering buyers into a giveaway or sweepstakes
+```bash
+GET https://yoursite.com/wp-json/rafflepress/v1/giveaways
 
-### Recipe 3: User Registration to Giveaway Entry
-**Trigger:** WordPress user registration
-**Action:** Add the new user as a giveaway entry
-**Use case:** Grow the user base by offering giveaway entry as a registration incentive
+Authorization: Bearer {token}
+```
 
-## Setup Steps
+### Get giveaway details
 
-1. Install Bit Integrations Pro and RafflePress on your WordPress site.
-2. Create an active giveaway in RafflePress.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select RafflePress as the Action.
-6. Select the target giveaway.
-7. Map user identifier and name fields.
-8. Save and test.
+```bash
+GET https://yoursite.com/wp-json/rafflepress/v1/giveaways/{giveaway_id}
+
+Authorization: Bearer {token}
+```
+
+### List entries for a giveaway
+
+```bash
+GET https://yoursite.com/wp-json/rafflepress/v1/giveaways/{giveaway_id}/entries
+
+Authorization: Bearer {token}
+```
+
+### Hook: On new entry
+
+```php
+add_action('rafflepress_entry_added', function($entry_id, $giveaway_id, $user_data) {
+    // Fires when a new entry is recorded
+}, 10, 3);
+```
+
+## Key Fields
+
+### Giveaway Object
+- `id` - Giveaway ID
+- `title` - Giveaway title
+- `status` - active / draft / ended
+- `start_date` - Start date
+- `end_date` - End date
+- `entry_count` - Total entries
+
+### Entry Object
+- `entry_id` - Entry ID
+- `giveaway_id` - Associated giveaway ID
+- `email` - Entrant email
+- `name` - Entrant name
+- `actions_completed` - Array of completed entry actions
+- `entry_points` - Total points earned
+
+## Parameters
+
+- `giveaway_id` - Filter by giveaway
+- `status` - Filter by giveaway status
+- `per_page` - Results per page
 
 ## When to Use
 
-- When form submissions, purchases, or registrations should automatically earn giveaway entries
-- When running a viral giveaway that should be fueled by other WordPress site actions
-- When incentivizing specific user behaviors with giveaway entry rewards
+- Running viral giveaways to grow email lists and social followings
+- Incentivizing referrals with bonus contest entries
+- Rewarding purchases or registrations with automatic giveaway entry
+- Collecting contestant data for post-giveaway marketing campaigns
 
-## Related Integrations
+## Rate Limits
 
-- gamipress.md
-- optinmonster.md
-- mailchimp.md
-- givewp.md
+- Subject to WordPress server limits; no dedicated rate limit
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- marketing:content-creation
+- marketing:email-sequence

@@ -1,68 +1,105 @@
 # Telegram
 
-Telegram is a cloud-based instant messaging platform with support for bots, channels, and groups. Available as an Action in the Bit Integrations WordPress plugin.
+Telegram is a cloud-based instant messaging platform with support for bots, channels, groups, and programmatic messaging via its Bot API.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Communication and Messaging
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Telegram.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send messages to Telegram channels or groups via a bot |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields into the Telegram message body |
-
-## Action Events
-
-- Send message to a Telegram channel or group
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST Bot API at `https://api.telegram.org/bot{token}/` |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | ✓ | Official SDKs in Python, Java, PHP, and community libs for most languages |
 
 ## Authentication
 
-- **Type**: Bot Token + Chat ID
-- **Required**: Create a Telegram bot via BotFather to get a bot token. Get the Chat ID of the target channel or group. Enter both in Bit Integrations.
+- **Type**: Bot Token
+- **URL pattern**: `https://api.telegram.org/bot{token}/{method}`
+- **Get token**: Message @BotFather on Telegram, create a bot, copy the provided token
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Telegram Notification
-**Trigger:** WordPress form submission
-**Action:** Send a Telegram message with form details to a team group or channel
-**Use case:** Alert team members via Telegram instantly when a form is submitted on the site
+### Send a Message
+```bash
+POST https://api.telegram.org/bot{token}/sendMessage
 
-### Recipe 2: WooCommerce Order to Telegram Sales Bot
-**Trigger:** WooCommerce order completed
-**Action:** Send order summary to a Telegram sales channel or admin
-**Use case:** Receive WooCommerce order notifications directly in Telegram for mobile monitoring
+Content-Type: application/json
 
-### Recipe 3: New User Registration to Telegram Admin Alert
-**Trigger:** WordPress user registration
-**Action:** Send a Telegram message to the admin with the new user's details
-**Use case:** Monitor new registrations in real time via Telegram without checking the WordPress dashboard
+{
+  "chat_id": "@yourchannel",
+  "text": "Hello from your bot!",
+  "parse_mode": "HTML"
+}
+```
 
-## Setup Steps
+### Send a Message with Markdown
+```bash
+POST https://api.telegram.org/bot{token}/sendMessage
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Telegram as the Action.
-5. Open Telegram and create a bot using BotFather (/newbot). Copy the bot token.
-6. Add the bot to your target channel or group and get the Chat ID.
-7. Enter the bot token and Chat ID in Bit Integrations.
-8. Map fields: chat_id, message text, parse_mode.
-9. Save and test.
+Content-Type: application/json
+
+{
+  "chat_id": 123456789,
+  "text": "*Bold* and _italic_ text",
+  "parse_mode": "MarkdownV2"
+}
+```
+
+### Get Bot Updates (Polling)
+```bash
+GET https://api.telegram.org/bot{token}/getUpdates?offset={update_id}&limit=100
+```
+
+### Set a Webhook
+```bash
+POST https://api.telegram.org/bot{token}/setWebhook
+
+Content-Type: application/json
+
+{"url": "https://yoursite.com/telegram-webhook"}
+```
+
+### Get Chat Info
+```bash
+GET https://api.telegram.org/bot{token}/getChat?chat_id={chat_id}
+```
+
+## Key Fields
+
+### Message
+- `message_id` - Unique message ID
+- `chat.id` - Chat or channel identifier
+- `from.id` - Sender's Telegram user ID
+- `text` - Message body
+- `date` - Unix timestamp
+
+### Update
+- `update_id` - Sequential update identifier
+- `message` - Incoming message object (if applicable)
+- `callback_query` - Button callback data (if applicable)
+
+## Parameters
+
+- `chat_id` - Target chat, group, channel username, or numeric ID
+- `parse_mode` - HTML or MarkdownV2 for rich formatting
+- `reply_to_message_id` - Thread a reply to a specific message
+- `disable_notification` - Send silently (true/false)
 
 ## When to Use
 
-- When team members prefer Telegram over email or Slack for WordPress event notifications
-- When monitoring WooCommerce orders or form submissions via mobile Telegram notifications
-- When running communities or support channels on Telegram that need WordPress event feeds
+- Sending real-time alerts or notifications to a Telegram channel
+- Delivering order confirmations, lead alerts, or system events to a team group
+- Building interactive bots for customer support or FAQ handling
+- Broadcasting marketing announcements to a subscriber channel
 
-## Related Integrations
+## Rate Limits
 
-- slack.md
-- discord.md
-- whatsapp.md
-- twilio.md
+- 30 messages/second to different chats; 1 message/second per individual chat
+- Bulk messaging to channels: no hard limit but spam detection applies
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- marketing:draft-content
+- operations:runbook
+- customer-support:draft-response

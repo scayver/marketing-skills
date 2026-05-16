@@ -1,66 +1,117 @@
 # bbPress
 
-bbPress is a lightweight, fast, and compatible WordPress forum plugin maintained by Automattic. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Lightweight and fast WordPress forum plugin maintained by Automattic — adds discussion forums, topics, and replies to any WordPress site with minimal overhead.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Community and Forum
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/BB-Press.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add users as forum members in bbPress |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user data to bbPress forum membership |
-
-## Action Events
-
-- Add user as forum member
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/wp/v2/topics/` and `/wp-json/wp/v2/replies/` |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI `wp bbp` commands |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and bbPress must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords > Add New
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Registration to bbPress Forum Access
-**Trigger:** WordPress user registration
-**Action:** Add the new user as a bbPress forum member
-**Use case:** Automatically create forum membership for every new WordPress account
+### List forum topics
 
-### Recipe 2: Membership Purchase to Private Forum Access
-**Trigger:** WooCommerce product purchase or membership activation
-**Action:** Assign the buyer as a member of a private bbPress forum
-**Use case:** Gate forum access behind a purchase and grant it automatically on payment
+```bash
+GET https://yoursite.com/wp-json/wp/v2/topics?per_page=20&orderby=date&order=desc
 
-### Recipe 3: Course Enrollment to Student Forum
-**Trigger:** LMS course enrollment
-**Action:** Add the student as a bbPress forum member for course-specific discussions
-**Use case:** Provide enrolled students with automatic access to course discussion forums
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get a single topic
 
-1. Install Bit Integrations Pro and bbPress on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select bbPress as the Action.
-5. Select the target forum or role.
-6. Map the user identifier field.
-7. Save and test.
+```bash
+GET https://yoursite.com/wp-json/wp/v2/topics/{topic_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Create a new topic
+
+```bash
+POST https://yoursite.com/wp-json/wp/v2/topics
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "title": "Discussion: Best practices",
+  "content": "What are your thoughts on...",
+  "status": "publish",
+  "bbp_forum_id": 5
+}
+```
+
+### List replies to a topic
+
+```bash
+GET https://yoursite.com/wp-json/wp/v2/replies?topic_id={topic_id}&per_page=50
+
+Authorization: Basic {base64_credentials}
+```
+
+### Assign a user to a forum role via PHP
+
+```php
+// Grant forum moderator role to a user
+bbp_set_user_role( $user_id, bbp_get_moderator_role() );
+
+// Add user as a keymaster
+bbp_set_user_role( $user_id, bbp_get_keymaster_role() );
+```
+
+## Key Fields
+
+### Topic
+- `id` - Topic post ID
+- `title` - Topic title
+- `content` - Topic body
+- `author` - Author user ID
+- `bbp_forum_id` - Parent forum ID
+- `status` - publish, spam, trash
+- `date` - Creation date
+
+### Reply
+- `id` - Reply post ID
+- `content` - Reply body
+- `author` - Author user ID
+- `topic_id` - Parent topic ID
+
+### Forum Role
+- `bbp_keymaster` - Full admin access
+- `bbp_moderator` - Moderation access
+- `bbp_participant` - Standard posting access
+- `bbp_spectator` - Read-only access
+
+## Parameters
+
+- `per_page` - Results per page (max 100)
+- `page` - Pagination page
+- `topic_id` - Filter replies by topic
+- `forum_id` - Filter topics by forum
+- `orderby` - Sort field (date, title, etc.)
 
 ## When to Use
 
-- When automating bbPress forum membership based on registration, purchase, or enrollment events
-- When gating forum access behind memberships or course enrollments with automatic provisioning
-- When using bbPress as the community forum in a WordPress membership or LMS setup
+- Programmatically creating forum topics for announcements or documentation
+- Assigning moderator roles to users on membership activation
+- Pulling topic and reply data for community activity reports
+- Automating forum access grants based on registration or purchase events
 
-## Related Integrations
+## Rate Limits
 
-- wpforo.md
-- asgaros-forum.md
-- buddypress.md
-- learndash.md
+- Subject to WordPress server limits; no platform-enforced rate limiting
+
+## Relevant Skills
+
+- content-strategy
+- crm-management

@@ -1,84 +1,80 @@
 # Quill Forms
 
-Quill Forms is a WordPress form builder that creates Typeform-style conversational forms with a smooth, one-question-at-a-time interface, improving completion rates for surveys and lead generation forms. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+WordPress form builder for creating Typeform-style conversational forms with a smooth one-question-at-a-time interface to improve completion rates.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Quill-Forms.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-native only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP action/filter hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress plugin-native
+- **Required**: Quill Forms installed and active on the same WordPress site
+- **Note**: No external credentials required
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+Quill Forms does not expose a standalone external REST API. Interact via WordPress hooks.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Hook: On form submission
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+```php
+add_action('quillforms_entry_saved', function($entry_id, $form_id, $entry_data) {
+    // $entry_data['answers'] contains all field responses
+    // Fires after the entry is stored
+}, 10, 3);
+```
 
-## Connecting to Action Platforms
+### Hook: Before entry saved
 
-After selecting Quill Forms as the trigger in Bit Integrations, connect it to any of these action platforms:
+```php
+add_filter('quillforms_before_entry_save', function($entry_data, $form_id) {
+    // Modify or inspect data before saving
+    return $entry_data;
+}, 10, 2);
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### List forms (WordPress REST)
 
-## Setup Steps
+```bash
+GET https://yoursite.com/wp-json/wp/v2/quill-forms
 
-1. Install and activate Quill Forms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a conversational form in Quill Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Quill Forms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Bearer {application_password}
+```
 
-## Field Mapping Tips
+## Key Fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Submission Data
+- `entry_id` - Database entry ID
+- `form_id` - Quill Forms form post ID
+- `answers` - Array of block ID to answer value
+- `submitted_at` - Submission timestamp
+- `user_id` - WordPress user ID if logged in
+- `source_url` - Page URL where form was submitted
+
+## Parameters
+
+- `form_id` - Target specific form
+- `entry_id` - Reference a specific submission
 
 ## When to Use
 
-- Capturing leads from conversational forms with higher completion rates
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering segmented email sequences based on multi-step form answers
-- Passing UTM data from forms into CRM contact records for attribution
+- Building conversational surveys or lead qualification questionnaires
+- Creating multi-step onboarding flows with higher completion rates
+- Collecting qualitative feedback from customers in a guided format
+- Running polls or quizzes with branching logic
 
-## Related Integrations
+## Rate Limits
 
-- tripetto.md
-- formgent.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; subject to WordPress server limits only
+
+## Relevant Skills
+
+- marketing:draft-content
+- marketing:campaign-plan
+- data:analyze

@@ -1,84 +1,92 @@
 # JetFormBuilder
 
-JetFormBuilder by Crocoblock is a Gutenberg-native WordPress form builder with advanced capabilities including post creation, user registration, and booking actions directly from form submissions. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Gutenberg-native WordPress form builder by Crocoblock with post creation, user registration, and booking actions built in.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/JetFormBuilder.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at /wp-json/jet-form-builder/v1/ |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress hooks and REST API only |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password (Basic Auth)
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
-- User registration form submitted
-- Post creation form submitted
+## Common Agent Operations
 
-## What Data Gets Passed
+### List all forms
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+```bash
+GET https://yoursite.com/wp-json/jet-form-builder/v1/forms
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic {base64(user:app_password)}
+```
 
-## Connecting to Action Platforms
+### Get form fields
 
-After selecting JetFormBuilder as the trigger in Bit Integrations, connect it to any of these action platforms:
+```bash
+GET https://yoursite.com/wp-json/jet-form-builder/v1/forms/{form_id}/fields
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic {base64(user:app_password)}
+```
 
-## Setup Steps
+### Get form records (submissions)
 
-1. Install and activate JetFormBuilder on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in JetFormBuilder and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select JetFormBuilder as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+```bash
+GET https://yoursite.com/wp-json/jet-form-builder/v1/records?form_id={form_id}
 
-## Field Mapping Tips
+Authorization: Basic {base64(user:app_password)}
+```
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Hook into form submission (PHP)
+
+```php
+add_action( 'jet-form-builder/form-handler/after-send', function( $handler ) {
+    $form_id = $handler->form_id;
+    $fields  = $handler->request_handler->get_fields();
+    // Access submitted field values
+} );
+```
+
+## Key Fields
+
+### Form Object
+- `id` - Unique form ID (WordPress post ID)
+- `title` - Form name
+- `fields` - Array of field definitions (name, type, label, required)
+
+### Record (Submission) Object
+- `id` - Record ID
+- `form_id` - ID of the submitted form
+- `user_id` - WordPress user ID if logged in (0 for guests)
+- `created_at` - Submission timestamp
+- `fields` - Key/value pairs of submitted field data
+
+## Parameters
+
+- `form_id` - Filter records by form
+- `per_page` - Number of results
+- `page` - Pagination offset
+- `status` - Filter by record status
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Building complex Gutenberg-block forms with multi-step flows
+- Capturing leads and creating WordPress posts/users directly on submission
+- Managing form submission records within WordPress
+- Building booking and registration forms with built-in post creation
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external rate limits; subject to WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- content-creation

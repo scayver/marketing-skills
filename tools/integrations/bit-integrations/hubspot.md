@@ -1,92 +1,116 @@
 # HubSpot
 
-HubSpot is an all-in-one CRM and marketing platform that helps businesses attract, engage, and delight customers through sales, marketing, and service tools. Available as an Action in the Bit Integrations WordPress plugin.
+CRM and marketing automation platform for managing contacts, deals, companies, and email campaigns.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Hubspot.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create/update contacts, add to lists, create deals, enroll in sequences |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to HubSpot fields |
-
-## Action Events
-
-- Create contact
-- Update contact
-- Add contact to list
-- Create deal
-- Add tag
-- Enroll contact in sequence
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Full REST API for CRM objects, marketing, and reporting |
+| MCP | ✓ | HubSpot MCP server available |
+| CLI | - | Not available |
+| SDK | ✓ | Official SDKs for Node, Python, PHP, Ruby |
 
 ## Authentication
 
-- **Type**: API Key (Private App Token)
-- **Where to get credentials**: HubSpot Settings > Integrations > Private Apps — create a new private app and copy the access token
-- **Required fields in Bit Integrations**: Private App Token
+- **Type**: Private App Access Token
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: HubSpot Settings > Integrations > Private Apps > Create a private app
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Create a contact
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| email | Contact email address | Required; used as unique identifier |
-| firstname | Contact first name | Optional |
-| lastname | Contact last name | Optional |
-| phone | Contact phone number | Optional |
-| company | Associated company name | Optional |
-| hs_lead_status | Lead qualification status | Optional; e.g., NEW, OPEN, IN_PROGRESS |
-| lifecyclestage | CRM lifecycle stage | Optional; e.g., lead, customer, subscriber |
-| custom properties | Any custom HubSpot property | Must exist in HubSpot before mapping |
+```bash
+POST https://api.hubapi.com/crm/v3/objects/contacts
 
-## Common Workflow Recipes
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-### Recipe 1: Contact Form to HubSpot CRM
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create contact in HubSpot
-**Key fields mapped:** First Name, Last Name, Email, Phone, Company
-**Use case:** Automatically add every website inquiry to your HubSpot CRM without manual data entry.
+{"properties": {"email": "user@example.com", "firstname": "Jane", "lastname": "Doe", "phone": "+15555550100"}}
+```
 
-### Recipe 2: WooCommerce Purchase to HubSpot Deal
-**Trigger:** WooCommerce order completed
-**Action:** Create deal in HubSpot
-**Key fields mapped:** Customer Name, Email, Order Total, Product Name
-**Use case:** Mirror every completed purchase as a closed-won deal in HubSpot for revenue tracking.
+### Search contacts
 
-### Recipe 3: Lead Magnet Download to Sequence Enrollment
-**Trigger:** Elementor form submission (lead magnet opt-in)
-**Action:** Create contact and enroll in sequence
-**Key fields mapped:** Email, First Name, lifecycle stage = lead
-**Use case:** Automatically start a nurture email sequence when someone downloads a resource from your site.
+```bash
+POST https://api.hubapi.com/crm/v3/objects/contacts/search
 
-## Setup Steps
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select HubSpot as the action.
-5. Connect your HubSpot account using your Private App Token from HubSpot Settings > Integrations > Private Apps.
-6. Select the HubSpot object type (Contact, Deal, List) you want to write to.
-7. Map the fields from your trigger to HubSpot fields.
-8. Save and submit a test entry to verify data arrives correctly.
+{"filterGroups": [{"filters": [{"propertyName": "email", "operator": "EQ", "value": "user@example.com"}]}]}
+```
+
+### Create a deal
+
+```bash
+POST https://api.hubapi.com/crm/v3/objects/deals
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"properties": {"dealname": "New Deal", "dealstage": "appointmentscheduled", "amount": "5000"}}
+```
+
+### Get all contacts
+
+```bash
+GET https://api.hubapi.com/crm/v3/objects/contacts?limit=100&properties=email,firstname,lastname
+
+Authorization: Bearer {access_token}
+```
+
+### Add contact to a static list
+
+```bash
+POST https://api.hubapi.com/contacts/v1/lists/{list_id}/add
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"vids": [12345]}
+```
+
+## Key Fields
+
+### Contact Object
+- `email` - Primary contact identifier
+- `firstname`, `lastname` - Name fields
+- `phone` - Phone number
+- `company` - Associated company name
+- `hs_lead_status` - Lead status (NEW, OPEN, IN_PROGRESS, etc.)
+- `lifecyclestage` - subscriber, lead, marketingqualifiedlead, opportunity, customer
+
+### Deal Object
+- `dealname` - Name of the deal
+- `amount` - Deal value
+- `dealstage` - Pipeline stage ID
+- `closedate` - Expected close date (Unix ms)
+- `pipeline` - Pipeline ID
+
+## Parameters
+
+- `limit` - Results per page (max 100)
+- `after` - Cursor for pagination
+- `properties` - Comma-separated list of properties to return
+- `associations` - Include associated objects
 
 ## When to Use
 
-- You want every WordPress form submission automatically added as a HubSpot contact
-- You need WooCommerce orders to create deals in HubSpot without manual entry
-- You want to trigger HubSpot sequences based on WordPress user actions
-- You need to sync lead magnet opt-ins directly into HubSpot lists for segmented follow-up
+- Managing inbound leads from forms and landing pages
+- Tracking sales pipeline and deal stages
+- Running email marketing campaigns and sequences
+- Scoring and segmenting leads by lifecycle stage
+- Reporting on marketing attribution and revenue
 
-## Related Integrations
+## Rate Limits
 
-- salesforce.md
-- pipedrive.md
-- zoho-crm.md
-- salesmate.md
+- 100 requests per 10 seconds (private apps)
+- 150,000 requests per day (varies by tier)
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- email-marketing
+- sales:pipeline-review

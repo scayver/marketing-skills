@@ -1,66 +1,84 @@
 # FlowMattic
 
-FlowMattic is a WordPress-native automation plugin that connects WordPress plugins and services without leaving the WordPress dashboard. Available as an Action in the Bit Integrations WordPress plugin.
+WordPress-native automation plugin that connects WordPress plugins and external services without leaving the WordPress dashboard.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/FlowMatic.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Pass data from Bit Integrations into a FlowMattic workflow |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map fields to FlowMattic workflow inputs |
-
-## Action Events
-
-- Trigger a FlowMattic workflow with data from a WordPress event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress action/filter hooks; internal webhook receiver |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and FlowMattic must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress admin credentials for configuration
+- **Header**: N/A — configured via WordPress admin dashboard
+- **Get token**: No external API token; webhooks use secret keys set in FlowMattic settings
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Multi-Plugin Workflow
-**Trigger:** WordPress form submission
-**Action:** FlowMattic workflow runs additional actions across multiple installed plugins
-**Use case:** Chain together plugin actions that Bit Integrations doesn't natively support, all within WordPress
+### Trigger workflow via webhook
+```bash
+POST https://yoursite.com/?flowmattic-webhook=true&key={webhook_key}
 
-### Recipe 2: WooCommerce Purchase to Membership and Email
-**Trigger:** WooCommerce order completed
-**Action:** FlowMattic workflow grants membership, sends a custom email, and logs a record
-**Use case:** Orchestrate complex post-purchase logic across multiple WordPress plugins
+Content-Type: application/json
 
-### Recipe 3: User Registration to Role and Notification
-**Trigger:** WordPress user registration
-**Action:** FlowMattic assigns a user role and sends a welcome notification via another plugin
-**Use case:** Automate user onboarding steps across plugins that Bit Integrations doesn't cover directly
+{
+  "email": "user@example.com",
+  "name": "Jane Doe",
+  "event": "signup"
+}
+```
 
-## Setup Steps
+### Listen for WordPress hook (custom action)
+```php
+// FlowMattic fires custom hooks that other plugins can listen to
+add_action('flowmattic_workflow_completed', function($workflow_id, $data) {
+    // React to completed automation
+}, 10, 2);
+```
 
-1. Install both Bit Integrations and FlowMattic on your WordPress site.
-2. In FlowMattic, create a workflow with a webhook or Bit Integrations trigger.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger source (form, WooCommerce, etc.).
-5. Select FlowMattic as the Action.
-6. Map the fields to pass to FlowMattic.
-7. Save and test.
+### REST endpoint for workflow execution
+```bash
+POST https://yoursite.com/wp-json/flowmattic/v1/run-workflow
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"workflow_id": 42, "data": {"email": "user@example.com"}}
+```
+
+## Key Fields
+
+### Webhook Payload
+- `key` - Webhook secret key set in FlowMattic
+- Any field names matching the workflow's mapped fields
+
+### Workflow
+- `workflow_id` - Internal workflow identifier
+- `trigger` - What starts the workflow (form, hook, webhook, schedule)
+- `actions` - Ordered list of automation steps
+
+## Parameters
+
+- `key` - Webhook authentication key
+- `workflow_id` - Target workflow ID
 
 ## When to Use
 
-- When you want to extend Bit Integrations automation with additional WordPress plugin actions
-- When your automation logic needs to stay entirely within WordPress without external APIs
-- When combining Bit Integrations triggers with FlowMattic's broader WordPress plugin support
+- Chain WordPress plugin events into multi-step automations
+- Receive external webhook payloads and route to WordPress plugins
+- Schedule recurring WordPress-based automations
+- Connect form submissions to email marketing without custom code
 
-## Related Integrations
+## Rate Limits
 
-- automatorwp.md
-- uncanny-automator.md
-- thrive-automator.md
-- wp-webhooks.md
+- No external API; limits are server-side only
+
+## Relevant Skills
+
+- operations:process-doc
+- operations:runbook
+- marketing:campaign-plan

@@ -1,75 +1,96 @@
 # GamiPress
 
-GamiPress is a WordPress gamification plugin for awarding points, achievements, and ranks to users based on site activity. Available as an Action (free) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WordPress gamification plugin for awarding points, achievements, and ranks to users based on site activity.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes (Action free; Trigger requires Pro)
-**Category:** Gamification and Loyalty
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/02/Gamipress1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/Gamipress1-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires on gamification events |
-| As Action | ✓ | Free; award points, achievements, and ranks |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and gamification data fields |
-
-## Trigger Events
-
-- Point awarded
-- Achievement earned
-- Rank reached
-
-## Action Events
-
-- Award points
-- Award achievement
-- Assign rank
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via GamiPress endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP functions and action hooks |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and GamiPress must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to GamiPress Points Award
-**Trigger:** WordPress form submission (quiz, survey, profile completion)
-**Action:** Award GamiPress points to the submitting user
-**Use case:** Reward users with points for completing forms, surveys, or profile setup on the site
+### Get user points
+```bash
+GET https://yoursite.com/wp-json/gamipress/v1/user-points?user_id={id}
 
-### Recipe 2: WooCommerce Purchase to Achievement Unlock
-**Trigger:** WooCommerce order completed
-**Action:** Award a GamiPress achievement (badge) to the buyer for making a purchase
-**Use case:** Gamify the shopping experience by rewarding customers with badges for purchases
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Achievement Earned to Email Notification
-**Trigger:** GamiPress achievement earned
-**Action:** Send a congratulatory email or Slack notification with the achievement details
-**Use case:** Celebrate user milestones by notifying them (and the team) when achievements are earned
+### Award points to user (PHP)
+```php
+gamipress_award_points_to_user($user_id, $points, $points_type);
+```
 
-## Setup Steps
+### Get user achievements
+```bash
+GET https://yoursite.com/wp-json/gamipress/v1/user-achievements?user_id={id}
 
-1. Install Bit Integrations and GamiPress on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select GamiPress as the Trigger and choose the event.
-4. For Action: Choose your trigger source, then select GamiPress as the Action.
-5. Select the action event and target point type, achievement, or rank.
-6. Map the user identifier field.
-7. Save and test.
+Authorization: Basic {base64_credentials}
+```
+
+### Get user ranks
+```bash
+GET https://yoursite.com/wp-json/gamipress/v1/user-ranks?user_id={id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Hook on points award (PHP)
+```php
+add_action('gamipress_award_points_to_user', function($user_id, $points, $points_type) {
+    // Trigger reward notification or sync to external system
+}, 10, 3);
+```
+
+## Key Fields
+
+### Points Entry
+- `user_id` - WordPress user ID
+- `points` - Points amount
+- `points_type` - Points type slug (e.g., "coins", "credits")
+- `reason` - Award reason
+- `date` - Award timestamp
+
+### Achievement
+- `ID` - Achievement post ID
+- `post_title` - Achievement name
+- `post_type` - Achievement type
+- `date` - Date earned
+
+### Rank
+- `ID` - Rank post ID
+- `post_title` - Rank name
+- `rank_type` - Rank type slug
+
+## Parameters
+
+- `user_id` - WordPress user ID to query
+- `points_type` - Filter by points type slug
+- `limit` / `offset` - Pagination
 
 ## When to Use
 
-- When form completions, purchases, or enrollments should award GamiPress points or achievements
-- When GamiPress gamification events should trigger email notifications, CRM updates, or external rewards
-- When building a gamified WordPress site with automated reward logic tied to user actions
+- Reward users for external actions (purchases, referrals)
+- Sync gamification milestones to email sequences
+- Display leaderboard data in external dashboards
+- Trigger notifications when users reach new ranks
 
-## Related Integrations
+## Rate Limits
 
-- automatorwp.md
-- uncanny-automator.md
-- givewp.md
-- learndash.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- product-management:metrics-review

@@ -1,70 +1,93 @@
 # StoreEngine
 
-StoreEngine is a WordPress eCommerce plugin for building and managing online stores with product listings, cart, and checkout functionality. Available as Action in the Bit Integrations WordPress plugin.
+StoreEngine is a WordPress eCommerce plugin for building and managing online stores with product listings, cart, and checkout functionality.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Store-Engine-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Store and order management actions |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Store and order management actions (refer to Bit Integrations documentation for the current full list of supported action events)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/storeengine/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: StoreEngine must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Create order from CRM closed deal
-**Trigger:** HubSpot / Zoho CRM — Deal closed won
-**Action:** StoreEngine — Create order
-**Key fields mapped:** Contact email, product or service, deal amount
-**Use case:** Automatically generate a StoreEngine order when a sales deal closes in your CRM
+### List Products
+```bash
+GET https://yoursite.com/wp-json/storeengine/v1/products
 
-### Recipe 2: Create customer from form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** StoreEngine — Create customer
-**Key fields mapped:** Email, first name, last name, phone number
-**Use case:** Register new StoreEngine customers from front-end registration or inquiry forms
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Update product from external data source
-**Trigger:** Google Sheets / webhook — Row updated or data event fired
-**Action:** StoreEngine — Update product
-**Key fields mapped:** Product ID, price, stock status
-**Use case:** Keep StoreEngine product data in sync with an external inventory or pricing system
+### Get a Single Product
+```bash
+GET https://yoursite.com/wp-json/storeengine/v1/products/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select StoreEngine as the action.
-4. Choose the appropriate action event for your workflow.
-5. Map the required fields from your trigger source.
-6. Save and test with a real event (close a test CRM deal or submit a test form).
+### List Orders
+```bash
+GET https://yoursite.com/wp-json/storeengine/v1/orders
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get a Single Order
+```bash
+GET https://yoursite.com/wp-json/storeengine/v1/orders/{id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Customers
+```bash
+GET https://yoursite.com/wp-json/storeengine/v1/customers
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Product
+- `id` - Product ID
+- `name` - Product name
+- `price` - Current price
+- `status` - publish, draft
+
+### Order
+- `id` - Order ID
+- `customer_id` - Buyer's customer record
+- `total` - Order total
+- `status` - pending, completed, refunded
+
+## Parameters
+
+- `per_page` / `page` - Pagination controls
+- `status` - Filter orders by status
+- `customer_id` - Filter orders by customer
 
 ## When to Use
 
-- You use StoreEngine for WordPress eCommerce and want orders or customers created from external triggers
-- You need to integrate StoreEngine into a CRM-based sales or fulfillment workflow
-- You want to automate product data updates from external inventory sources
-- You need StoreEngine customer records synced with form submissions or external systems
+- Syncing product catalog data to external systems
+- Triggering fulfillment workflows on order completion
+- Building customer order history reports
+- Automating post-purchase email sequences
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- easycommerce.md
-- surecart.md
-- fluentcart.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- data:analyze
+- operations:process-doc
+- sales:account-research

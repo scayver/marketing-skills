@@ -1,67 +1,88 @@
 # Integrately
 
-Integrately is a one-click automation platform that provides ready-made workflows for connecting popular apps. Available as an Action in the Bit Integrations WordPress plugin.
+One-click automation platform with 8M+ pre-built workflows for connecting popular business apps via webhooks.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Integrately.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to Integrately webhook trigger |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map any form field to the outgoing webhook payload |
-
-## Action Events
-
-- Send data to an Integrately automation via webhook trigger
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Webhook trigger endpoint for receiving data |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Webhook-based; no SDK |
 
 ## Authentication
 
-- **Type**: Webhook URL
-- **Required**: Webhook URL from an Integrately automation's webhook trigger step
+- **Type**: Webhook URL (no separate authentication header required)
+- **URL pattern**: Unique webhook URL generated per automation inside Integrately
+- **Get URL**: Integrately dashboard > Create Automation > Select "Webhook" as trigger > Copy URL
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to Marketing Platform
-**Trigger:** WordPress form submission
-**Action:** Integrately sends lead to Mailchimp, HubSpot, or another marketing platform
-**Use case:** Use Integrately's pre-built one-click automations to connect WordPress leads to your marketing stack
+### Send data to an Integrately webhook trigger
 
-### Recipe 2: New Member to Project Management Tool
-**Trigger:** Membership plugin user registration
-**Action:** Integrately creates a task or project in Asana, Trello, or ClickUp
-**Use case:** Automatically create onboarding tasks when new members join
+```bash
+POST https://hook.integrately.com/webhook/{unique_id}
 
-### Recipe 3: Support Form to Helpdesk
-**Trigger:** WordPress support form submission
-**Action:** Integrately creates a ticket in Freshdesk or Zendesk
-**Use case:** Route support requests to your helpdesk without manual processing
+Content-Type: application/json
 
-## Setup Steps
+{"email": "jane@example.com", "name": "Jane Doe", "source": "website-form"}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Integrately as the Action.
-5. In Integrately, create an automation with "Webhook" as the trigger. Copy the webhook URL.
-6. Paste the webhook URL into Bit Integrations.
-7. Map fields.
-8. Save and test.
+### Send form data with multiple fields
+
+```bash
+POST https://hook.integrately.com/webhook/{unique_id}
+
+Content-Type: application/json
+
+{
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "email": "jane@example.com",
+  "phone": "+15555550100",
+  "message": "Interested in your services"
+}
+```
+
+### Send as form-encoded data
+
+```bash
+POST https://hook.integrately.com/webhook/{unique_id}
+
+Content-Type: application/x-www-form-urlencoded
+
+email=jane%40example.com&name=Jane+Doe
+```
+
+## Key Fields
+
+### Webhook Payload
+- Any JSON key/value pair is accepted and becomes an available field in the Integrately automation
+- `email` - Typically used as the primary identifier downstream
+- `name` - Contact name
+- Field names must be consistent across requests for reliable mapping
+
+## Parameters
+
+- Webhook URL `unique_id` - Generated per automation; acts as authentication
+- JSON body - Passed as trigger fields to connected app actions
 
 ## When to Use
 
-- When you want one-click pre-built automations between WordPress and popular business apps
-- When your team prefers Integrately's simplified automation setup over more complex tools
-- When destination apps are available in Integrately but not natively in Bit Integrations
+- Routing event data to apps not directly supported by your primary tools
+- Using Integrately's pre-built one-click automation templates
+- Connecting data sources to Mailchimp, HubSpot, Google Sheets, or 1,000+ other apps
+- Building simple multi-step automations without code
 
-## Related Integrations
+## Rate Limits
 
-- zapier.md
-- pabbly.md
-- konnectzit.md
-- webhook-outgoing.md
+- Free tier: 1,000 tasks/month, 5 automations
+- Starter and above: Unlimited automations, higher task limits
+- See integrately.com/pricing for current plan details
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- crm-management

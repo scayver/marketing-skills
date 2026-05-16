@@ -1,68 +1,127 @@
-# WhatsApp
+# WhatsApp Business
 
-WhatsApp is a global messaging platform with over 2 billion users, supporting business messaging via the WhatsApp Cloud API. Available as an Action in the Bit Integrations WordPress plugin.
+WhatsApp Business (via Meta's WhatsApp Cloud API) enables businesses to send messages, notifications, and media to customers at scale using approved message templates.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Communication and Messaging
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Whatsapp.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send WhatsApp messages via WhatsApp Cloud API |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to message template variables |
-
-## Action Events
-
-- Send WhatsApp message via WhatsApp Cloud API (template-based messaging)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API via Meta Graph API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Meta Business SDK (Python, PHP, Node.js) |
 
 ## Authentication
 
-- **Type**: WhatsApp Cloud API credentials
-- **Required**: WhatsApp Business Cloud API token, Phone Number ID, and recipient phone number. Configure in Meta for Developers (developers.facebook.com). Enter credentials in Bit Integrations.
+- **Type**: Bearer Token (WhatsApp Cloud API access token)
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Meta for Developers > App Dashboard > WhatsApp > API Setup; also requires Phone Number ID and WhatsApp Business Account ID
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to WhatsApp Welcome Message
-**Trigger:** WordPress lead form submission
-**Action:** Send a WhatsApp message to the lead using a pre-approved message template
-**Use case:** Instantly follow up with leads via WhatsApp the moment they submit a form
+### Send a text message
+```
+POST https://graph.facebook.com/v18.0/{phone_number_id}/messages
 
-### Recipe 2: WooCommerce Order Confirmation via WhatsApp
-**Trigger:** WooCommerce order completed
-**Action:** Send the customer an order confirmation WhatsApp message using a template
-**Use case:** Deliver order confirmations via WhatsApp for customers who prefer messaging over email
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-### Recipe 3: Appointment Booking Reminder via WhatsApp
-**Trigger:** Booking or appointment form submission
-**Action:** Send a WhatsApp appointment confirmation and reminder to the customer
-**Use case:** Reduce no-shows by confirming and reminding customers of appointments via WhatsApp
+{
+  "messaging_product": "whatsapp",
+  "to": "15551234567",
+  "type": "text",
+  "text": {"body": "Hello! Your order has been confirmed."}
+}
+```
 
-## Setup Steps
+### Send a template message
+```
+POST https://graph.facebook.com/v18.0/{phone_number_id}/messages
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select WhatsApp as the Action.
-5. Set up a WhatsApp Business account in Meta for Developers and obtain the Cloud API token and Phone Number ID.
-6. Create and get approval for message templates in the WhatsApp Business Manager.
-7. Enter API credentials in Bit Integrations.
-8. Map fields: recipient phone, message template name, template variables.
-9. Save and test.
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{
+  "messaging_product": "whatsapp",
+  "to": "15551234567",
+  "type": "template",
+  "template": {
+    "name": "order_confirmation",
+    "language": {"code": "en_US"},
+    "components": [
+      {
+        "type": "body",
+        "parameters": [
+          {"type": "text", "text": "Jane"},
+          {"type": "text", "text": "#12345"}
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Send a media message (image)
+```
+POST https://graph.facebook.com/v18.0/{phone_number_id}/messages
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{
+  "messaging_product": "whatsapp",
+  "to": "15551234567",
+  "type": "image",
+  "image": {
+    "link": "https://example.com/product-image.jpg",
+    "caption": "Your ordered item"
+  }
+}
+```
+
+### Get message templates
+```
+GET https://graph.facebook.com/v18.0/{whatsapp_business_account_id}/message_templates
+
+Authorization: Bearer {access_token}
+```
+
+## Key Fields
+
+### Message Object
+- `messaging_product` - Always `"whatsapp"`
+- `to` - Recipient phone number (E.164 format)
+- `type` - `text`, `template`, `image`, `document`, `audio`, `video`, `location`
+- `text.body` - Message text content
+- `template.name` - Approved template name
+- `template.language.code` - Language code (e.g., `en_US`)
+
+### Template Component
+- `type` - `header`, `body`, or `button`
+- `parameters` - Array of variable values for template placeholders
+
+## Parameters
+
+- `phone_number_id` - Your WhatsApp Business phone number ID from Meta dashboard
+- `whatsapp_business_account_id` - Your WABA ID for account-level operations
+- `to` - Recipient number in E.164 format (e.g., `15551234567`)
 
 ## When to Use
 
-- When customers or leads prefer WhatsApp over email for confirmations and follow-ups
-- When sending order confirmations, appointment reminders, or lead follow-ups via WhatsApp at scale
-- When operating in markets where WhatsApp is the primary business communication channel
+- Sending transactional notifications (order confirmations, shipping updates)
+- Following up with leads immediately after form submission
+- Delivering appointment reminders to reduce no-shows
+- Broadcasting promotions to opted-in customers via approved templates
+- Customer support messaging in markets where WhatsApp dominates
 
-## Related Integrations
+## Rate Limits
 
-- twilio.md
-- telegram.md
-- slack.md
-- zoom-meeting.md
+- Free tier: 1,000 free business-initiated conversations per month per WABA
+- Paid: varies by tier (Tier 1: 1K/day, Tier 2: 10K/day, Tier 3: 100K/day)
+- See: [Meta WhatsApp Pricing](https://developers.facebook.com/docs/whatsapp/pricing)
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- marketing:email-sequence
+- customer-support:draft-response

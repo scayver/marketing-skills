@@ -1,87 +1,112 @@
 # Perfex CRM
 
-Perfex CRM is a self-hosted, open-source CRM and business management system that businesses can install on their own server, offering leads, customers, invoices, projects, and support tickets management. Available as an Action in the Bit Integrations WordPress plugin.
+Self-hosted open-source CRM for managing clients, projects, invoices, estimates, tasks, and support tickets.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Perfex-CRM.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Leads, Customers, and Contacts in Perfex CRM |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Perfex CRM fields |
-
-## Action Events
-
-- Create Lead
-- Create Customer
-- Create Contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://YOUR_DOMAIN/api/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP module system only |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Perfex CRM Settings > API — generate and copy the API key from your self-hosted Perfex installation
-- **Required fields in Bit Integrations**: API Key, Perfex CRM Instance URL
+- **Type**: API Token (Bearer)
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Perfex Admin > Setup > API > Generate Token
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### List clients
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| firstname | Contact or lead first name | Optional |
-| lastname | Contact or lead last name | Required |
-| email | Email address | Optional; used for deduplication |
-| phonenumber | Phone number | Optional |
-| company | Company or customer name | Required for Customer records |
-| lead_source | Origin of the lead | Optional; picklist value |
+```bash
+GET https://YOUR_DOMAIN/api/clients
 
-## Common Workflow Recipes
+Authorization: Bearer {api_token}
+```
 
-### Recipe 1: Contact Form to Perfex CRM Lead
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Lead in Perfex CRM
-**Key fields mapped:** First Name, Last Name, Email, Phone, Company, Lead Source = Website
-**Use case:** Automatically push website inquiries into Perfex CRM as leads so your team can track and follow up without manual entry.
+### Create client
 
-### Recipe 2: Client Intake Form to Perfex Customer
-**Trigger:** Gravity Forms or Fluent Forms client intake submission
-**Action:** Create Customer in Perfex CRM
-**Key fields mapped:** First Name, Last Name, Email, Phone, Company
-**Use case:** Add new client details from your WordPress onboarding form directly as a Perfex customer record ready for invoicing and project management.
+```bash
+POST https://YOUR_DOMAIN/api/clients
 
-### Recipe 3: Service Request to Perfex CRM Contact
-**Trigger:** Elementor service request form
-**Action:** Create Contact in Perfex CRM
-**Key fields mapped:** First Name, Last Name, Email, Phone, Company
-**Use case:** Add service requesters as Perfex contacts so support tickets and follow-up communication can be linked to their record.
+Authorization: Bearer {api_token}
+Content-Type: application/json
 
-## Setup Steps
+{"company": "Acme Corp", "firstname": "Jane", "lastname": "Doe", "email": "jane@acme.com"}
+```
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Perfex CRM as the action.
-5. Connect your Perfex CRM instance using your API key and your self-hosted Perfex instance URL.
-6. Select the object type (Lead, Customer, Contact) you want to create.
-7. Map the fields from your trigger to Perfex CRM fields.
-8. Save and submit a test entry to verify data arrives correctly.
+### List projects
+
+```bash
+GET https://YOUR_DOMAIN/api/projects
+
+Authorization: Bearer {api_token}
+```
+
+### Create invoice
+
+```bash
+POST https://YOUR_DOMAIN/api/invoices
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{"clientid": "5", "number": "INV-001", "date": "2026-05-15", "duedate": "2026-06-15"}
+```
+
+### List tasks
+
+```bash
+GET https://YOUR_DOMAIN/api/tasks
+
+Authorization: Bearer {api_token}
+```
+
+## Key Fields
+
+### Client Object
+- `userid` - Client ID
+- `company` - Company name
+- `email` - Email address
+- `phonenumber` - Phone number
+- `country` - Country
+
+### Project Object
+- `id` - Project ID
+- `name` - Project name
+- `clientid` - Associated client ID
+- `status` - Status (1=In Progress, 2=On Hold, 3=Cancelled, 4=Finished)
+- `deadline` - Project deadline
+
+### Invoice Object
+- `id` - Invoice ID
+- `clientid` - Client ID
+- `total` - Total amount
+- `status` - Payment status
+
+## Parameters
+
+- `page` - Page number
+- `limit` - Results per page
+- `search` - Search query
+- `clientid` - Filter by client
 
 ## When to Use
 
-- You use a self-hosted Perfex CRM and want your WordPress site to feed leads into it automatically
-- You want new client onboarding forms to create customer records in Perfex ready for invoicing
-- You need contact records in Perfex linked to service requests from your WordPress site
-- You prefer self-hosted open-source tools and want tight integration between your WordPress site and Perfex
+- Managing freelance or agency client relationships
+- Automating invoice creation from project milestones
+- Syncing client data with external tools
+- Tracking project and task status programmatically
 
-## Related Integrations
+## Rate Limits
 
-- onehash.md
-- jetpack-crm.md
-- propovoice-crm.md
-- insightly.md
+- Self-hosted; limits depend on server configuration
+
+## Relevant Skills
+
+- sales:pipeline-review
+- finance:financial-statements
+- operations:process-doc

@@ -1,84 +1,92 @@
-# MoxieCRM
+# Moxie CRM
 
-MoxieCRM is a lightweight CRM built specifically for solopreneurs and freelancers, combining client management, project tracking, time logging, and invoicing in a single simple interface. Available as an Action in the Bit Integrations WordPress plugin.
+Lightweight CRM built for solopreneurs and freelancers, combining client management, project tracking, time logging, and invoicing in one interface.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/MoxieCRM.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Contacts and Projects in MoxieCRM |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to MoxieCRM fields |
-
-## Action Events
-
-- Create Contact
-- Create Project
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API with API key authentication |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: MoxieCRM account settings — locate and copy the API key from your profile or integrations section
-- **Required fields in Bit Integrations**: API Key
+- **Header**: `Authorization: Bearer {api_key}`
+- **Get token**: Moxie account Settings > Integrations or API section
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### List contacts
+```bash
+GET https://app.withmoxie.com/api/v1/contacts
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| name | Full name of the contact | Required |
-| email | Email address | Required; used as unique identifier |
-| phone | Phone number | Optional |
-| company | Associated company name | Optional |
+Authorization: Bearer {api_key}
+```
 
-## Common Workflow Recipes
+### Create a contact
+```bash
+POST https://app.withmoxie.com/api/v1/contacts
 
-### Recipe 1: Inquiry Form to MoxieCRM Contact
-**Trigger:** WPForms or Contact Form 7 submission
-**Action:** Create Contact in MoxieCRM
-**Key fields mapped:** Name, Email, Phone, Company
-**Use case:** Automatically add website inquiries as MoxieCRM contacts so freelancers can track leads without switching tools.
+Authorization: Bearer {api_key}
+Content-Type: application/json
 
-### Recipe 2: Client Intake Form to MoxieCRM Project
-**Trigger:** Gravity Forms client intake form
-**Action:** Create Project in MoxieCRM
-**Key fields mapped:** Name, Email, Company, Project Name
-**Use case:** When a new client completes your intake form, automatically create a project in MoxieCRM ready for time tracking and invoicing.
+{"name": "Jane Doe", "email": "jane@example.com", "phone": "555-1234", "company": "Acme Co"}
+```
 
-### Recipe 3: Discovery Call Request to MoxieCRM Contact
-**Trigger:** Elementor discovery call request form
-**Action:** Create Contact in MoxieCRM
-**Key fields mapped:** Name, Email, Phone
-**Use case:** Capture discovery call requests from your website as MoxieCRM contacts so you can track prospects through your freelance pipeline.
+### Create a project
+```bash
+POST https://app.withmoxie.com/api/v1/projects
 
-## Setup Steps
+Authorization: Bearer {api_key}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select MoxieCRM as the action.
-5. Connect your MoxieCRM account using your API key from MoxieCRM account settings.
-6. Select the object type (Contact or Project) you want to create.
-7. Map the fields from your trigger to MoxieCRM fields.
-8. Save and submit a test entry to verify data arrives correctly.
+{"name": "Website Redesign", "contact_id": "abc123", "status": "active"}
+```
+
+### List projects
+```bash
+GET https://app.withmoxie.com/api/v1/projects
+
+Authorization: Bearer {api_key}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact UUID
+- `name` - Full name (required)
+- `email` - Email address
+- `phone` - Phone number
+- `company` - Company name
+
+### Project
+- `id` - Project UUID
+- `name` - Project name
+- `contact_id` - Associated contact ID
+- `status` - Project status (active, completed, archived)
+
+## Parameters
+
+- `page` - Page number
+- `per_page` - Results per page
+- `status` - Filter by status
 
 ## When to Use
 
-- You are a solopreneur or freelancer using MoxieCRM and want website leads captured automatically
-- You want client intake forms to create ready-to-use project records in MoxieCRM
-- You need contact creation automated so you can focus on client work instead of data entry
-- You want discovery call requests or consultation bookings to flow directly into your MoxieCRM contact list
+- Managing client contacts and freelance project records via API
+- Automating contact creation from website inquiry forms or scheduling tools
+- Creating project records programmatically when new clients are onboarded
+- Tracking billable time and generating invoices for freelance work
 
-## Related Integrations
+## Rate Limits
 
-- agiled-crm.md
-- propovoice-crm.md
-- suitedash.md
-- capsulecrm.md
+- See Moxie pricing page; contact support for API rate limit details
+
+## Relevant Skills
+
+- sales:account-research
+- sales:draft-outreach
+- operations:process-doc

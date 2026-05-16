@@ -1,66 +1,101 @@
 # AutomatorWP
 
-AutomatorWP is a WordPress automation plugin that creates automated workflows between WordPress plugins using triggers and actions. Available as an Action in the Bit Integrations WordPress plugin.
+WordPress automation plugin that creates automated workflows between WordPress plugins using triggers and actions — the Zapier for WordPress-to-WordPress integrations.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/AutomatorWP.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Pass data from Bit Integrations into an AutomatorWP automation |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map fields to AutomatorWP automation inputs |
-
-## Action Events
-
-- Trigger an AutomatorWP automation recipe with data from a WordPress event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No public external REST API |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | WordPress PHP hooks only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and AutomatorWP must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress admin access
+- **Header**: N/A — plugin managed entirely within WordPress admin
+- **Get token**: N/A — automations are configured via WordPress Admin > AutomatorWP
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to LMS Enrollment
-**Trigger:** WordPress form submission
-**Action:** AutomatorWP recipe enrolls the user in a LearnDash or LifterLMS course
-**Use case:** Automatically grant course access when a user fills out a registration or payment form
+AutomatorWP has no external REST API. Automations are built and managed through the WordPress admin interface and executed via WordPress hooks.
 
-### Recipe 2: WooCommerce Purchase to Points Award
-**Trigger:** WooCommerce order completed
-**Action:** AutomatorWP awards GamiPress points or a badge to the purchasing user
-**Use case:** Run a loyalty rewards program tied to purchases without custom code
+### Fire an AutomatorWP trigger programmatically (PHP)
 
-### Recipe 3: Membership Activation to Content Unlock
-**Trigger:** Membership plugin subscription activated
-**Action:** AutomatorWP unlocks specific posts, pages, or forum access for the member
-**Use case:** Automate content access changes when membership status changes
+```php
+// Trigger a custom AutomatorWP action from code
+do_action( 'automatorwp_user_action', array(
+    'user_id' => get_current_user_id(),
+    'action'  => 'my_custom_event',
+    'data'    => array( 'key' => 'value' ),
+));
+```
 
-## Setup Steps
+### Complete an AutomatorWP recipe for a user (PHP)
 
-1. Install both Bit Integrations and AutomatorWP on your WordPress site.
-2. In AutomatorWP, create an automation recipe with an appropriate trigger (or anonymous trigger).
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger source.
-5. Select AutomatorWP as the Action.
-6. Map fields to pass to the AutomatorWP recipe.
-7. Save and test.
+```php
+// Manually complete an automation recipe for a specific user
+automatorwp_complete_action( $action_id, $user_id, $automation_id );
+```
+
+### Check if user completed a recipe (PHP)
+
+```php
+$times_completed = automatorwp_get_user_completed_times( $user_id, $automation_id );
+```
+
+### Register a custom trigger (PHP)
+
+```php
+add_filter( 'automatorwp_triggers', function( $triggers ) {
+    $triggers['my_plugin_event'] = array(
+        'label'       => 'User does something in My Plugin',
+        'action'      => 'my_plugin_custom_hook',
+        'integration' => 'my-plugin',
+    );
+    return $triggers;
+});
+```
+
+## Key Fields
+
+### Automation (Recipe)
+- `id` - Automation ID
+- `title` - Recipe name
+- `type` - user (per user) or anonymous (site-wide)
+- `status` - active or inactive
+- `triggers` - Conditions that start the recipe
+- `actions` - Steps to execute when triggered
+- `times_per_user` - Max completions per user (0 = unlimited)
+
+### Trigger
+- `trigger_type` - Plugin-specific trigger identifier
+- `completion_count` - Number of times trigger must fire
+
+### Action
+- `action_type` - Plugin-specific action identifier
+- `args` - Action-specific configuration
+
+## Parameters
+
+- `user_id` - WordPress user ID for user-based automations
+- `automation_id` - Target recipe ID
+- `times` - Completion count threshold
 
 ## When to Use
 
-- When you want to connect Bit Integrations form triggers to AutomatorWP's wide library of WordPress plugin actions
-- When your site relies on AutomatorWP for gamification, LMS, or membership automation
-- When you need cross-plugin automation that stays entirely within WordPress
+- Automating cross-plugin workflows (LMS enrollment on purchase, badges on completion, etc.)
+- Granting access to courses, forums, or content based on user behavior
+- Running gamification workflows with GamiPress, BadgeOS, or myCRED
+- Building no-code WordPress-to-WordPress automation without custom PHP
 
-## Related Integrations
+## Rate Limits
 
-- flowmattic.md
-- uncanny-automator.md
-- thrive-automator.md
-- gamipress.md
+- No rate limits; governed by WordPress server performance and hook execution
+
+## Relevant Skills
+
+- crm-management
+- email-marketing
+- ecommerce

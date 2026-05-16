@@ -1,76 +1,104 @@
-# User Registration & Membership
+# User Registration Membership
 
-User Registration & Membership is a WordPress plugin that combines front-end user registration form building with membership management and content restriction capabilities. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+User Registration Membership is a WordPress membership addon for the User Registration plugin, adding membership plans, access control, and subscription billing to registration forms.
 
-**Role:** Trigger/Action
-**Free Tier:** No — both Trigger and Action require Pro
-**Category:** Membership and Access Control
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/04/User-Registration-Membership-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/04/User-Registration-Membership.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on user registration and membership events |
-| As Action | ✓ | Create user and manage membership assignments |
-| Free Tier | — | Requires Pro for both Trigger and Action |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- User and membership activity events (refer to Bit Integrations documentation for the current full list of supported trigger events)
-
-## Action Events
-
-- User creation and membership management actions (refer to Bit Integrations documentation for the current full list of supported action events)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/user-registration/v1/memberships/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: User Registration & Membership must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Sync new registrations to email platform
-**Trigger:** User Registration & Membership — User registered
-**Action:** Mailchimp / ConvertKit — Add subscriber
-**Key fields mapped:** User email, first name, last name, registration date
-**Use case:** Automatically add newly registered users to your email marketing list
+### List Membership Plans
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/memberships/plans
 
-### Recipe 2: Add contact to CRM on membership activation
-**Trigger:** User Registration & Membership — Membership activated
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** User email, membership plan, activation date
-**Use case:** Push new members into your CRM when their membership becomes active
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Enroll user in LMS course on membership purchase
-**Trigger:** User Registration & Membership — Membership purchased
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** User email, course tied to membership level
-**Use case:** Grant LMS course access automatically when a user purchases a membership
+### Get a Single Plan
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/memberships/plans/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select User Registration & Membership as the trigger or action.
-4. For triggers, choose the relevant user or membership event.
-5. For actions, choose the user creation or membership management action and configure the target.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (register a test user or activate a test membership).
+### List Member Subscriptions
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/memberships/subscriptions
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get a Member's Active Membership
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/memberships/subscriptions?user_id={id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Assign a Membership to a User
+```bash
+POST https://yoursite.com/wp-json/user-registration/v1/memberships/subscriptions
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "user_id": 42,
+  "plan_id": 7,
+  "status": "active"
+}
+```
+
+## Key Fields
+
+### Membership Plan
+- `id` - Plan ID
+- `name` - Plan name
+- `price` - Plan price
+- `duration` - Access duration (days or unlimited)
+- `status` - publish, draft
+
+### Subscription
+- `id` - Subscription ID
+- `user_id` - WordPress user ID
+- `plan_id` - Associated membership plan
+- `status` - active, expired, cancelled, pending
+- `start_date` - Membership start date
+- `expiry_date` - Membership expiry date
+
+## Parameters
+
+- `user_id` - Filter subscriptions by WordPress user
+- `plan_id` - Filter subscriptions by membership plan
+- `status` - Filter subscriptions by active/expired/cancelled
+- `per_page` / `page` - Pagination controls
 
 ## When to Use
 
-- You use User Registration & Membership for both form-based registration and membership gating
-- You want to sync new user registrations or membership events with email or CRM platforms
-- You need to enroll members in LMS courses based on their membership plan
-- You want a combined registration and membership plugin integrated into a broader automation workflow
+- Automating membership enrollment after payment confirmation
+- Revoking access when subscriptions expire or are cancelled
+- Syncing membership status to a CRM for segmented outreach
+- Reporting on active member counts and plan distribution
 
-## Related Integrations
+## Rate Limits
 
-- user-registration.md
-- wp-user-registration.md
-- memberpress.md
-- restrict-content.md
-- learndash.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- data:analyze
+- operations:process-doc
+- sales:account-research

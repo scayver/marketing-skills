@@ -1,82 +1,96 @@
 # Selzy
 
-Selzy is an email marketing platform offering campaign creation, subscriber list management, and automation tools for growing businesses. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing platform (formerly UniSender) offering campaign creation, subscriber list management, segmentation, and automation for growing businesses.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Selzy-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update subscriber fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.selzy.com/en/api/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK; standard REST with `api_key` param |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Selzy account settings > API section
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (query parameter)
+- **Parameter**: `api_key={your_api_key}`
+- **Get token**: Selzy account > Settings > API Access
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| List ID | The Selzy list to add the contact to | Required |
+### List subscriber lists
 
-## Common Workflow Recipes
+```bash
+GET https://api.selzy.com/en/api/getLists?api_key={api_key}&format=json
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Selzy list with welcome tag
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+### Subscribe a contact
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Selzy customer list or segment
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+```bash
+POST https://api.selzy.com/en/api/subscribe
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Selzy list for enrollment-based nurture
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+Content-Type: application/x-www-form-urlencoded
 
-## Setup Steps
+api_key={api_key}&list_ids=12345&fields[email]=jane@example.com&fields[Name]=Jane+Doe&format=json
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Selzy as the action.
-5. Connect your Selzy account using your API Key.
-6. Select the list to add contacts to.
-7. Map the email field and the name field.
-8. Save and test with a real form submission.
+### Get subscriber info
+
+```bash
+GET https://api.selzy.com/en/api/getContact?api_key={api_key}&email=jane@example.com&format=json
+```
+
+### Unsubscribe a contact
+
+```bash
+POST https://api.selzy.com/en/api/unsubscribe
+
+api_key={api_key}&list_ids=12345&contact_emails[]=jane@example.com&format=json
+```
+
+### List campaigns
+
+```bash
+GET https://api.selzy.com/en/api/getCampaigns?api_key={api_key}&format=json
+```
+
+## Key Fields
+
+### Subscriber Object
+- `id` - Subscriber ID
+- `email` - Email address
+- `fields.Name` - Full name
+- `fields.email` - Email (also stored as field)
+- `status` - new / active / unsubscribed / bounced
+- `list_ids` - Array of list IDs subscribed to
+
+### Campaign Object
+- `campaign_id` - Campaign ID
+- `name` - Campaign name
+- `status` - Draft / Scheduled / Sent
+- `send_date` - Send timestamp
+
+## Parameters
+
+- `api_key` - Required on every request
+- `list_ids` - Comma-separated list IDs
+- `format` - Response format (json or xml)
+- `email` - Filter by email address
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing email subscriber lists from web forms and landing pages
+- Sending newsletters and promotional campaigns
+- Segmenting contacts by list for targeted messaging
+- Tracking campaign performance (open rates, clicks, bounces)
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- mailerlite.md
-- getresponse.md
+- See Selzy pricing page for plan-based API limits
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report

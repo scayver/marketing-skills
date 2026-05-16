@@ -1,83 +1,112 @@
 # lemlist
 
-lemlist is a cold outreach platform that sets itself apart with personalized image and video emails, multi-channel sequences, and deliverability-focused sending for B2B sales teams. Available as an Action in the Bit Integrations WordPress plugin.
+Cold outreach platform with personalized image and video emails, multi-channel sequences, and deliverability tools for B2B sales.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Lemlist.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add lead to campaign |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add lead to campaign
-- Update lead fields
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API for campaigns, leads, and activities |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API only |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: lemlist account > Settings > Integrations > API
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (Basic Auth)
+- **Header**: `Authorization: Basic {base64(api_key:)}`  (API key as username, empty password)
+- **Alternate header**: `X-Api-Key: {api_key}` on some endpoints
+- **Get key**: lemlist Settings > Integrations > API
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Lead email address | Required |
-| First Name | Lead first name | Optional |
-| Last Name | Lead last name | Optional |
-| Company Name | Lead company name | Optional |
-| Campaign ID | The lemlist campaign to add the lead to | Required |
+### Add a lead to a campaign
 
-## Common Workflow Recipes
+```bash
+POST https://api.lemlist.com/api/campaigns/{campaign_id}/leads/{email}
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add lead to lemlist cold outreach campaign
-**Key fields mapped:** Email, First Name, Last Name, Company Name
-**Use case:** Automatically enroll leads who fill out your contact form into a personalized cold outreach sequence
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer as lead to lemlist post-purchase campaign
-**Key fields mapped:** Email, First Name, Company Name
-**Use case:** Segment buyers separately from leads for targeted post-purchase outreach sequences
+{"firstName": "Jane", "lastName": "Doe", "companyName": "Acme Corp"}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add enrolled user to lemlist onboarding outreach campaign
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger personalized outreach sequences automatically on enrollment
+### Get all campaigns
 
-## Setup Steps
+```bash
+GET https://api.lemlist.com/api/campaigns
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select lemlist as the action.
-5. Connect your lemlist account using your API Key.
-6. Select the campaign to add leads to.
-7. Map the email field and any name or company fields.
-8. Save and test with a real form submission.
+Authorization: Basic {base64(api_key:)}
+```
+
+### Get leads in a campaign
+
+```bash
+GET https://api.lemlist.com/api/campaigns/{campaign_id}/leads
+
+Authorization: Basic {base64(api_key:)}
+```
+
+### Update lead data
+
+```bash
+PATCH https://api.lemlist.com/api/leads/{email}
+
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
+
+{"companyName": "New Corp", "phone": "+15555550100"}
+```
+
+### Get lead activity
+
+```bash
+GET https://api.lemlist.com/api/activities?leadEmail={email}
+
+Authorization: Basic {base64(api_key:)}
+```
+
+## Key Fields
+
+### Lead Object
+- `email` - Primary lead identifier
+- `firstName`, `lastName` - Name fields
+- `companyName` - Company
+- `phone` - Phone number
+- `icebreaker` - Personalization variable for email copy
+- Custom variables - Any field used in campaign templates
+
+### Campaign Object
+- `_id` - Unique campaign ID
+- `name` - Campaign name
+- `status` - active | paused | draft
+- `sendingSchedule` - Days and hours for sending
+
+### Activity Object
+- `type` - emailSent | emailOpened | emailClicked | replied
+- `campaignId` - Source campaign
+- `createdAt` - Event timestamp
+
+## Parameters
+
+- `campaign_id` - Target campaign for lead operations
+- `email` - Lead identifier in URL path
+- `offset` - Pagination offset
+- `limit` - Results per page (max 100)
 
 ## When to Use
 
-- Enrolling WordPress form leads into B2B cold outreach campaigns automatically
-- Adding WooCommerce customers to personalized follow-up sales sequences
-- Running image- or video-personalized outreach from WordPress-captured lead data
-- Automating lead enrollment into multi-channel sequences without manual data entry
-- Replacing manual prospect import into lemlist campaigns
+- Running personalized cold email outreach for B2B lead generation
+- Managing multi-channel sequences (email + LinkedIn + calls)
+- Tracking email engagement (opens, clicks, replies) per lead
+- Enrolling inbound leads into automated outreach sequences
 
-## Related Integrations
+## Rate Limits
 
-- woodpecker.md
-- activecampaign.md
-- mailchimp.md
+- See lemlist.com/api documentation for current rate limits by plan
+
+## Relevant Skills
+
+- lead-generation
+- sales:draft-outreach
+- email-marketing

@@ -1,84 +1,87 @@
 # FormGent
 
-FormGent is a conversational WordPress form builder that presents forms as interactive, chat-like experiences to improve engagement and completion rates. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Conversational WordPress form builder that presents forms as interactive, chat-like experiences to improve completion rates.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Form-Gent-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress action hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress server-side hook access
+- **Header**: N/A — server-side PHP integration only
+- **Get token**: No API token required
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Capture form submission (PHP hook)
+```php
+add_action('formgent_after_submission', function($submission_id, $form_id, $answers) {
+    foreach ($answers as $key => $value) {
+        // $key = question slug, $value = answer
+    }
+    $email = $answers['email'] ?? '';
+    // Forward via wp_remote_post()
+}, 10, 3);
+```
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Access submissions via admin REST
+```bash
+GET https://yoursite.com/wp-json/formgent/v1/submissions?form_id={id}
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic {base64_credentials}
+```
 
-## Connecting to Action Platforms
+### Get form list
+```bash
+GET https://yoursite.com/wp-json/formgent/v1/forms
 
-After selecting FormGent as the trigger in Bit Integrations, connect it to any of these action platforms:
+Authorization: Basic {base64_credentials}
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+## Key Fields
 
-## Setup Steps
+### Submission
+- `submission_id` - Unique submission ID
+- `form_id` - Parent form ID
+- `answers` - Key-value map of question slugs to responses
+- `created_at` - ISO 8601 timestamp
+- `ip_address` - Submitter IP
 
-1. Install and activate FormGent on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a conversational form in FormGent and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select FormGent as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Form
+- `id` - Form ID
+- `title` - Form name
+- `status` - active, inactive
+- `questions` - Array of question objects
 
-## Field Mapping Tips
+### Question Object
+- `slug` - Question key (used as answer key)
+- `type` - text, email, multiple_choice, dropdown
+- `label` - Display text
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+## Parameters
+
+- `form_id` - Filter submissions by form
+- `per_page` / `page` - Pagination
 
 ## When to Use
 
-- Capturing leads from conversational forms with higher completion rates
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering segmented email sequences based on conversational form answers
-- Passing UTM data from forms into CRM contact records for attribution
+- Capture conversational lead gen data and send to a CRM
+- Trigger personalized follow-up emails based on answers
+- Log quiz or survey responses for analysis
+- Build interactive onboarding flows
 
-## Related Integrations
+## Rate Limits
 
-- tripetto.md
-- quill-forms.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; server-side PHP only
+
+## Relevant Skills
+
+- marketing:email-sequence
+- data:analyze
+- operations:process-doc

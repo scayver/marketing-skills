@@ -1,87 +1,119 @@
 # Klaviyo
 
-Klaviyo is a powerful email and SMS marketing platform built for eCommerce, known for deep data segmentation and behavioral triggers. Available as an Action in the Bit Integrations WordPress plugin.
+Email and SMS marketing platform built for ecommerce with deep behavioral segmentation and automated flows.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Klaviyo-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add profile to list, update profile properties |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add profile to list
-- Update profile properties
-- Subscribe contact
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Full REST API for profiles, lists, events, campaigns, flows |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official Python SDK; community SDKs for Node, PHP |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Klaviyo account > Account > Settings > API Keys > Create Private API Key
-- **Required in Bit Integrations**: Private API Key
+- **Type**: Private API Key
+- **Header**: `Authorization: Klaviyo-API-Key {api_key}`
+- **Revision header**: `revision: 2024-02-15` (required)
+- **Get key**: Klaviyo Settings > Account > API Keys > Create Private API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Phone Number | Subscriber phone number (E.164 format) | Optional |
-| List ID | The Klaviyo list to add the profile to | Required |
-| Properties | Custom profile property key-value pairs | Optional |
+### Create or update a profile
 
-## Common Workflow Recipes
+```bash
+POST https://a.klaviyo.com/api/profiles/
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add profile to Klaviyo list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Klaviyo-API-Key {api_key}
+revision: 2024-02-15
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer profile to Klaviyo customer list or segment
-**Key fields mapped:** Email, First Name, Order amount (as custom property if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"data": {"type": "profile", "attributes": {"email": "jane@example.com", "first_name": "Jane", "last_name": "Doe"}}}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Klaviyo list and apply enrollment tag as a profile property
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Subscribe a profile to a list
 
-## Setup Steps
+```bash
+POST https://a.klaviyo.com/api/lists/{list_id}/relationships/profiles/
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Klaviyo as the action.
-5. Connect your Klaviyo account using your Private API Key.
-6. Select the list to add profiles to.
-7. Map the email field and any name or custom property fields.
-8. Save and test with a real form submission.
+Authorization: Klaviyo-API-Key {api_key}
+revision: 2024-02-15
+Content-Type: application/json
+
+{"data": [{"type": "profile", "id": "{profile_id}"}]}
+```
+
+### Track a custom event
+
+```bash
+POST https://a.klaviyo.com/api/events/
+
+Authorization: Klaviyo-API-Key {api_key}
+revision: 2024-02-15
+Content-Type: application/json
+
+{"data": {"type": "event", "attributes": {"profile": {"email": "jane@example.com"}, "metric": {"name": "Completed Purchase"}, "properties": {"order_value": 99.00}}}}
+```
+
+### Get all lists
+
+```bash
+GET https://a.klaviyo.com/api/lists/
+
+Authorization: Klaviyo-API-Key {api_key}
+revision: 2024-02-15
+```
+
+### Get segments
+
+```bash
+GET https://a.klaviyo.com/api/segments/
+
+Authorization: Klaviyo-API-Key {api_key}
+revision: 2024-02-15
+```
+
+## Key Fields
+
+### Profile Object
+- `email` - Primary identifier
+- `first_name`, `last_name` - Name fields
+- `phone_number` - E.164 format for SMS
+- `properties` - Custom profile attributes (key/value)
+- `location` - Nested address object
+
+### Event Object
+- `metric` - Event name (e.g., "Viewed Product", "Completed Purchase")
+- `properties` - Event-specific data (order value, product name)
+- `time` - ISO 8601 event timestamp
+
+### List / Segment
+- `id` - Unique list/segment ID
+- `name` - Display name
+- `created` - Creation date
+
+## Parameters
+
+- `filter` - Filter expression (e.g., `equals(email,"jane@example.com")`)
+- `fields[profile]` - Comma-separated fields to return
+- `page[cursor]` - Cursor for pagination
+- `sort` - Sort field and direction
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using list properties
-- Syncing WooCommerce buyers to a Klaviyo customer list for post-purchase flows
-- Adding new members or course students to onboarding sequences
-- Capturing profile data from WordPress to power Klaviyo behavioral flows
-- Replacing manual CSV imports from WordPress to your email platform
+- Building post-purchase email and SMS flows for ecommerce stores
+- Segmenting customers by purchase behavior, LTV, or engagement
+- Tracking custom events to trigger behavioral automations
+- Growing and nurturing email and SMS subscriber lists
 
-## Related Integrations
+## Rate Limits
 
-- activecampaign.md
-- mailchimp.md
-- omnisend.md
+- 75 burst / 700 steady-state requests per minute (private key)
+- See developers.klaviyo.com for per-endpoint limits
+
+## Relevant Skills
+
+- email-marketing
+- ecommerce
+- lead-generation

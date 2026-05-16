@@ -1,86 +1,78 @@
 # Piotnet Addons For Elementor (PAFE)
 
-Piotnet Addons For Elementor (PAFE) is a WordPress plugin that extends Elementor with additional widgets and features, including a Form element for building advanced forms within Elementor layouts. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+WordPress plugin that extends Elementor with additional widgets, form elements, and marketing-focused features for building advanced pages and forms.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bitapps.pro/wp-content/uploads/2023/07/piotnetaddons.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-native only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP action/filter hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress plugin-native
+- **Required**: Elementor and PAFE installed and active on the same WordPress site
+- **Note**: No external credentials; each marketing platform integration uses its own API key configured within PAFE settings
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+PAFE does not expose a standalone REST API. Interact via WordPress REST API or PHP hooks.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Hook: On PAFE form submission
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+```php
+add_action('pafe_form_submit', function($form_id, $fields) {
+    // $form_id is the Elementor widget form ID
+    // $fields contains all submitted field values
+}, 10, 2);
+```
 
-## Connecting to Action Platforms
+### Hook: After successful submission
 
-After selecting Piotnet Addons For Elementor as the trigger in Bit Integrations, connect it to any of these action platforms:
+```php
+add_action('pafe_form_submit_success', function($record, $ajax_handler) {
+    // $record->get_formatted_data() returns field values
+}, 10, 2);
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### List Elementor posts containing PAFE forms (WordPress REST)
 
-## Setup Steps
+```bash
+GET https://yoursite.com/wp-json/wp/v2/pages?meta_key=_elementor_data
 
-1. Install and activate Elementor and Piotnet Addons For Elementor on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form using the PAFE form element in Elementor and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Piotnet Addons For Elementor as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Bearer {application_password}
+```
 
-## Field Mapping Tips
+## Key Fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Form Submission Data
+- `form_id` - Elementor widget/form ID
+- `fields` - Associative array of field ID to value
+- `page_url` - Page where the form was submitted
+- `submission_date` - Timestamp of submission
+- `user_id` - WordPress user ID if logged in
+
+## Parameters
+
+- `form_id` - Target specific PAFE form
+- `field_id` - Target a specific field within the form
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Building Elementor-powered lead capture forms with advanced conditional logic
+- Creating multi-step forms inside Elementor page designs
+- Collecting data from Elementor pages and routing to CRM or email tools via hooks
+- Extending Elementor with login, registration, and profile widgets
 
-## Related Integrations
+## Rate Limits
 
-- elementor-form.md
-- metform.md
-- essential-addons-elementor.md
-- piotnet-forms.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; subject to WordPress server limits only
+
+## Relevant Skills
+
+- marketing:draft-content
+- marketing:content-creation
+- operations:process-doc

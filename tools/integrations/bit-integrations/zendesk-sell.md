@@ -1,70 +1,125 @@
 # Zendesk Sell
 
-Zendesk Sell is a sales CRM platform for managing leads, contacts, deals, and sales pipelines with integrated communication tools. Available as an Action in the Bit Integrations WordPress plugin.
+Sales CRM for leads, contacts, deals, tasks, pipelines, and activity tracking.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Support and Helpdesk
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Zendesk-Sell.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create leads, contacts, and deals in Zendesk Sell |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Zendesk Sell lead, contact, and deal fields |
-
-## Action Events
-
-- Create lead
-- Create contact
-- Create deal
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: API Token
-- **Required**: API token from Zendesk Sell (Settings > Integrations > API). Enter the token in Bit Integrations.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zendesk Sell dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to Zendesk Sell Lead
-**Trigger:** WordPress lead capture form submission
-**Action:** Create a new lead in Zendesk Sell with name, email, phone, and company
-**Use case:** Automatically populate the Zendesk Sell lead pipeline from website lead capture forms
+### List records
 
-### Recipe 2: Contact Form to Zendesk Sell Contact
-**Trigger:** WordPress contact form submission
-**Action:** Create a Zendesk Sell contact with the submitter's details
-**Use case:** Build a Zendesk Sell contact database from all website form inquiries
+```bash
+GET https://api.getbase.com/v2/records?limit=50
 
-### Recipe 3: Quote Request to Zendesk Sell Deal
-**Trigger:** WordPress quote request form submission
-**Action:** Create a new deal in Zendesk Sell with the prospect's details and opportunity value
-**Use case:** Instantly create a tracked sales opportunity in Zendesk Sell from web quote requests
+Authorization: Bearer {api_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Zendesk Sell as the Action.
-5. In Zendesk Sell, go to Settings > Integrations > API and generate an API token.
-6. Enter the token in Bit Integrations.
-7. Select the action event (create lead, contact, or deal).
-8. Map fields: first_name, last_name, email, phone, company_name.
-9. Save and test.
+```bash
+GET https://api.getbase.com/v2/records/{record_id}
+
+Authorization: Bearer {api_token}
+```
+
+### Create record
+
+```bash
+POST https://api.getbase.com/v2/records
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://api.getbase.com/v2/records/{record_id}
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://api.getbase.com/v2/events
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When WordPress lead forms should populate the Zendesk Sell sales pipeline automatically
-- When contact form submissions should create Zendesk Sell contacts for sales follow-up
-- When web quote requests should create tracked deals in Zendesk Sell
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- freshdesk.md
-- zoho-desk.md
-- hubspot.md
-- pipedrive.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- revops
+- sales-enablement
+- analytics

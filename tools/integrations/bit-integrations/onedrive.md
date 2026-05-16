@@ -1,66 +1,95 @@
 # OneDrive
 
-OneDrive is Microsoft's cloud storage service integrated with Microsoft 365 for storing and sharing files across devices and organizations. Available as an Action in the Bit Integrations WordPress plugin.
+Microsoft cloud storage service integrated with Microsoft 365 for storing, sharing, and collaborating on files across devices and organizations.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Cloud Storage
-**Icon:** `https://bitapps.pro/wp-content/uploads/2023/07/OneDrive.png`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Upload files from WordPress to OneDrive |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map file URL, folder path, and file name |
-
-## Action Events
-
-- Upload file (from a URL to a specified OneDrive folder)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Microsoft Graph API at `https://graph.microsoft.com/v1.0/me/drive/` |
+| MCP | - | No official MCP server |
+| CLI | ✓ | Available via Microsoft 365 CLI (`m365`) |
+| SDK | ✓ | Microsoft Graph SDKs for .NET, Python, JS, and more |
 
 ## Authentication
 
-- **Type**: OAuth 2.0
-- **Required**: Authorize Bit Integrations via Microsoft OAuth. Specify the target OneDrive folder path.
+- **Type**: OAuth 2.0 (Bearer Token)
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Register app in Azure AD > grant Files.ReadWrite permissions > exchange auth code for access token via `https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token`
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Document Submission Form to OneDrive
-**Trigger:** WordPress form with document upload field
-**Action:** Upload the submitted document to a OneDrive folder
-**Use case:** Store form-submitted documents in OneDrive for organizations running on Microsoft 365
+### List files in root drive
+```bash
+GET https://graph.microsoft.com/v1.0/me/drive/root/children
 
-### Recipe 2: Application Form to OneDrive HR Drive
-**Trigger:** Job application form with resume upload
-**Action:** Upload resume to the OneDrive HR team drive
-**Use case:** Centralize incoming resumes in OneDrive for Microsoft 365-based HR teams
+Authorization: Bearer {access_token}
+```
 
-### Recipe 3: Client Deliverable Form to OneDrive Project
-**Trigger:** Client file submission form
-**Action:** Upload client files to a OneDrive shared folder or SharePoint library
-**Use case:** Collect client files via WordPress and store them in the organization's OneDrive
+### List files in a folder
+```bash
+GET https://graph.microsoft.com/v1.0/me/drive/root:/{folder_path}:/children
 
-## Setup Steps
+Authorization: Bearer {access_token}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger (form with file upload field).
-4. Select OneDrive as the Action.
-5. Click "Authorize" and sign in with your Microsoft account.
-6. Specify the target OneDrive folder path.
-7. Map fields: file URL, folder path, file name.
-8. Save and test.
+### Upload a file (simple upload)
+```bash
+PUT https://graph.microsoft.com/v1.0/me/drive/root:/{folder_path}/{filename}:/content
+
+Authorization: Bearer {access_token}
+Content-Type: application/octet-stream
+
+{file_binary_content}
+```
+
+### Create a sharing link
+```bash
+POST https://graph.microsoft.com/v1.0/me/drive/items/{item_id}/createLink
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"type": "view", "scope": "anonymous"}
+```
+
+## Key Fields
+
+### Drive Item
+- `id` - File or folder ID
+- `name` - File name
+- `size` - File size in bytes
+- `webUrl` - Browser URL for the file
+- `createdDateTime` - Creation timestamp (ISO 8601)
+- `lastModifiedDateTime` - Last modified timestamp
+- `file` - Present if item is a file (contains `mimeType`)
+- `folder` - Present if item is a folder (contains `childCount`)
+
+### Sharing Link
+- `link.webUrl` - Shareable URL
+- `link.type` - `view`, `edit`, or `embed`
+- `link.scope` - `anonymous` or `organization`
+
+## Parameters
+
+- `$select` - Comma-separated fields to return
+- `$filter` - OData filter expression
+- `$top` - Results per page (max 200)
+- `$skiptoken` - Pagination token
 
 ## When to Use
 
-- When your organization runs on Microsoft 365 and uses OneDrive as primary cloud storage
-- When WordPress form uploads should flow into OneDrive or SharePoint automatically
-- When Microsoft-ecosystem organizations need WordPress file intake connected to OneDrive
+- Storing and organizing files from form submissions in a Microsoft 365 environment
+- Sharing documents with external collaborators via generated links
+- Archiving client deliverables or HR documents in OneDrive or SharePoint
+- Automating file organization workflows in Microsoft 365 ecosystems
 
-## Related Integrations
+## Rate Limits
 
-- google-drive.md
-- dropbox.md
-- pcloud.md
+- 10,000 requests per 10 minutes per app per tenant; see Microsoft Graph throttling docs
+
+## Relevant Skills
+
+- operations:process-doc
+- operations:runbook
+- marketing:content-creation

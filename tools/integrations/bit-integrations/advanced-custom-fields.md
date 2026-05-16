@@ -1,68 +1,101 @@
-# Advanced Custom Fields
+# Advanced Custom Fields (ACF)
 
-Advanced Custom Fields (ACF) is the most widely used WordPress plugin for adding custom field groups to posts, pages, users, and other content types. Available as an Action (free and Pro) in the Bit Integrations WordPress plugin.
+The most widely used WordPress plugin for adding structured custom field groups to posts, pages, users, taxonomy terms, and other content types.
 
-**Role:** Action
-**Free Tier:** Yes (basic); Pro features require Bit Integrations Pro
-**Category:** Project Management and Productivity
-**Icon (free):** `https://bit-integrations.com/wp-content/uploads/2026/02/Advanced_Custom_Fields1.svg`
-**Icon (pro):** `https://bit-integrations.com/wp-content/uploads/2026/02/Advanced-Custom-Fields.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Update custom field values on posts or users |
-| Free Tier | ✓ | Basic ACF field updates; advanced field types may require Pro |
-| Field Mapping | ✓ | Map form fields to ACF field keys or field names |
-
-## Action Events
-
-- Update custom field value on a post
-- Update custom field value on a user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `/wp-json/acf/v3/` (ACF Pro) |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI `wp acf` commands via ACF CLI addon |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and Advanced Custom Fields (free or Pro) must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords > Add New
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Profile Form to ACF User Meta Fields
-**Trigger:** WordPress profile update form submission
-**Action:** Update ACF custom fields on the user profile (bio, company, phone, etc.)
-**Use case:** Allow users to update their ACF profile fields via a front-end form without WordPress admin access
+### Get ACF fields for a post
 
-### Recipe 2: Post Submission Form to ACF Post Meta
-**Trigger:** Front-end content submission form
-**Action:** Create or update ACF fields on a post (reviews, ratings, specifications, etc.)
-**Use case:** Populate ACF-powered post data from user-submitted forms without backend access
+```bash
+GET https://yoursite.com/wp-json/acf/v3/posts/{post_id}
 
-### Recipe 3: WooCommerce Order to Product ACF Field Update
-**Trigger:** WooCommerce order completed
-**Action:** Update an ACF field on the purchased product (e.g., stock notes, buyer count)
-**Use case:** Log purchase-related data in ACF product fields automatically on each sale
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get ACF fields for a user
 
-1. Install Bit Integrations and Advanced Custom Fields on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Advanced Custom Fields as the Action.
-5. Select the target post type or user and the specific ACF field group.
-6. Map form fields to ACF field keys or names.
-7. Save and test.
+```bash
+GET https://yoursite.com/wp-json/acf/v3/users/{user_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Update ACF field values on a post
+
+```bash
+POST https://yoursite.com/wp-json/acf/v3/posts/{post_id}
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"fields": {"field_key_abc123": "New Value", "field_key_def456": "Another Value"}}
+```
+
+### Get field group definitions
+
+```bash
+GET https://yoursite.com/wp-json/acf/v3/field-groups
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get fields in a specific group
+
+```bash
+GET https://yoursite.com/wp-json/acf/v3/field-groups/{group_id}/fields
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### ACF Field
+- `key` - Unique field key (e.g., `field_63a1b2c3d4e5f`)
+- `name` - Field name (slug-style, e.g., `phone_number`)
+- `label` - Human-readable label
+- `type` - text, textarea, number, email, url, image, file, select, checkbox, radio, date_picker, relationship, etc.
+- `value` - Current field value
+
+### Field Group
+- `id` - Group ID
+- `title` - Group title
+- `location` - Conditions for where this group appears
+- `fields` - Array of field definitions
+
+## Parameters
+
+- `post_id` - Target post ID for field reads/writes
+- `user_id` - Target user ID for user field reads/writes
+- `per_page` - Results per page
+- `page` - Pagination page
 
 ## When to Use
 
-- When form submissions should populate or update ACF custom fields on posts or users
-- When building front-end editing experiences that write to ACF-managed content
-- When WooCommerce or LMS events should update metadata stored in ACF fields
+- Reading or writing structured metadata on WordPress posts and users via REST
+- Populating custom field data from external data sources or form submissions
+- Exporting ACF field values to external analytics or CRM systems
+- Building headless WordPress applications that consume ACF-structured content
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- jetengine.md
-- pods.md
+- Subject to WordPress server limits; no platform-enforced rate limiting
+
+## Relevant Skills
+
+- content-strategy
+- crm-management

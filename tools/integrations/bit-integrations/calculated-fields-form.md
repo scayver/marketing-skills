@@ -1,85 +1,82 @@
 # Calculated Fields Form
 
-Calculated Fields Form is a WordPress form builder that specializes in forms with real-time calculations, making it ideal for building quote calculators, pricing estimators, loan calculators, and other forms where field values are computed dynamically. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+WordPress form builder plugin that creates forms with dynamically computed fields using mathematical formulas, conditional logic, and real-time calculations.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Calculated-Fields-Form.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-only plugin |
+| MCP | - | Not available |
+| CLI | - | WP-CLI can query submission database table |
+| SDK | - | Not available |
+| WordPress REST | ✓ | Standard WP REST API; custom endpoint via plugin hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress application password (for REST access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### List forms (as WordPress posts)
+```
+GET /wp-json/wp/v2/posts?post_type=cp_calculatedfieldsf&per_page=100
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+Authorization: Basic {base64_credentials}
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Calculated field results (computed totals, pricing estimates, etc.)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Query submissions via WP-CLI
+```bash
+wp db query "SELECT form_id, date_time, fields FROM wp_cp_calculated_fields_form_submits ORDER BY date_time DESC LIMIT 50;"
+```
 
-## Connecting to Action Platforms
+### Hook into form submission (PHP)
+```php
+add_action('cp_calculated_fields_form_submit', function($form_id, $fields) {
+    // $fields contains all submitted and calculated values
+}, 10, 2);
+```
 
-After selecting Calculated Fields Form as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Get a specific form's configuration
+```
+GET /wp-json/wp/v2/posts/{form_post_id}
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact with estimated deal value from calculator |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber and tag based on quote result |
-| Google Sheets | Log submission with calculated totals as spreadsheet row |
-| Slack | Send team notification on new quote request |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal with value from calculator result |
-| Telegram / WhatsApp | Instant notification of new estimate request |
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+## Key Fields
 
-1. Install and activate Calculated Fields Form on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a calculator form in Calculated Fields Form and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Calculated Fields Form as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields (including calculated result fields) to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data and calculated values arrived correctly.
+### Submission Record
+- `form_id` - WordPress post ID of the form
+- `date_time` - Timestamp of submission
+- `fields` - Serialized key/value pairs of field names and values, including computed results
+- `ip_address` - Submitter IP address
 
-## Field Mapping Tips
+### Form Post
+- `ID` - WordPress post ID
+- `post_title` - Human-readable form name
+- `post_content` - Serialized configuration with field definitions and formulas
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Map calculated result fields (quote totals, estimates) to deal value or custom fields in your CRM.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which calculator generated each lead.
-- If the action platform supports tags, tag leads based on the estimated value range for sales prioritization.
+## Parameters
+
+- `form_id` - Targets a specific form in hooks or database queries
+- `fields` - Array of submitted values keyed by field name
+- `calculated_value` - Output of a formula field (e.g., price estimate, total, score)
 
 ## When to Use
 
-- Capturing quote requests from pricing calculators and sending them to a CRM with deal value pre-filled
-- Routing estimate submissions to the right sales team based on calculated project size
-- Logging all calculator submissions to a Google Sheet with computed totals for pipeline reporting
-- Sending real-time notifications when a high-value estimate is submitted
-- Triggering a follow-up email sequence with the quote summary
-- Passing UTM data from calculator forms into CRM contact records for attribution
+- Building quote calculators, pricing estimators, or ROI tools on WordPress
+- Capturing formula outputs (loan payments, BMI, totals) alongside user inputs
+- Triggering automations when a user submits a form with a computed result
+- Logging calculator submissions with results for sales pipeline or reporting
 
-## Related Integrations
+## Rate Limits
 
-- wsform.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; performance governed by WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- content-strategy

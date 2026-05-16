@@ -1,67 +1,104 @@
 # FluentBoards
 
-FluentBoards is a WordPress-native project management plugin that provides kanban-style task and project boards directly within WordPress. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress-native kanban-style project management plugin for boards, tasks, and sprints inside WordPress.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent-Boards.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create tasks or cards in FluentBoards |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to FluentBoards task fields |
-
-## Action Events
-
-- Create task/card in a FluentBoards board
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via FluentBoards endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and FluentBoards must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Support Form to FluentBoards Task
-**Trigger:** WordPress support form submission
-**Action:** Create a task in a FluentBoards support board with the issue details
-**Use case:** Route WordPress support requests into a FluentBoards kanban board for team handling
+### List boards
+```bash
+GET https://yoursite.com/wp-json/fluent-boards/v1/boards
 
-### Recipe 2: Project Request to FluentBoards Project Card
-**Trigger:** WordPress project inquiry form submission
-**Action:** Create a FluentBoards card in the incoming projects board
-**Use case:** Track new client project requests as cards in FluentBoards without leaving WordPress
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: WooCommerce Order to Order Board Task
-**Trigger:** WooCommerce order placed
-**Action:** Create a FluentBoards task in the order fulfillment board
-**Use case:** Manage order fulfillment tasks visually in FluentBoards alongside other project work
+### Get board tasks
+```bash
+GET https://yoursite.com/wp-json/fluent-boards/v1/boards/{board_id}/tasks
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and FluentBoards on your WordPress site.
-2. In FluentBoards, create the target board and stage/column.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select FluentBoards as the Action.
-6. Select the target board and stage.
-7. Map fields to FluentBoards task fields.
-8. Save and test.
+### Create task
+```bash
+POST https://yoursite.com/wp-json/fluent-boards/v1/boards/{board_id}/tasks
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "title": "Design landing page",
+  "assignee_id": 3,
+  "due_date": "2024-06-15",
+  "stage_id": 2
+}
+```
+
+### List sprints
+```bash
+GET https://yoursite.com/wp-json/fluent-boards/v1/boards/{board_id}/sprints
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Board
+- `id` - Board ID
+- `title` - Board name
+- `description` - Board description
+- `stages` - Array of column/stage objects
+
+### Task
+- `id` - Task ID
+- `title` - Task title
+- `description` - Task details
+- `stage_id` - Current board column
+- `assignee_id` - Assigned user
+- `due_date` - Due date
+- `priority` - low, medium, high
+- `labels` - Array of labels
+
+### Sprint
+- `id` - Sprint ID
+- `title` - Sprint name
+- `start_date` / `end_date` - Sprint dates
+- `status` - active, completed, planned
+
+## Parameters
+
+- `board_id` - Target board
+- `stage_id` - Filter tasks by stage
+- `assignee_id` - Filter by assignee
+- `per_page` / `page` - Pagination
 
 ## When to Use
 
-- When your team uses FluentBoards for project management and wants WordPress form data to create tasks automatically
-- When keeping project management entirely within WordPress without external tools
-- When orders, support requests, or leads should flow into FluentBoards as trackable tasks
+- Create tasks automatically from form submissions
+- Sync project status to external reporting tools
+- Trigger Slack notifications on task completion
+- Automate sprint planning from a backlog source
 
-## Related Integrations
+## Rate Limits
 
-- asana.md
-- clickup.md
-- trello.md
-- fluent-support.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- product-management:sprint-planning
+- operations:process-doc
+- engineering:standup

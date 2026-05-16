@@ -1,87 +1,123 @@
 # Capsule CRM
 
-Capsule CRM is a simple and clean customer relationship management tool that helps small businesses manage contacts, sales pipelines, and tasks without complexity. Available as an Action in the Bit Integrations WordPress plugin.
+Simple, clean CRM for small businesses to manage contacts, sales pipelines, tasks, and opportunities without unnecessary complexity.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/CapsuleCRM1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create People, Organisations, and Opportunities in Capsule |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Capsule CRM fields |
-
-## Action Events
-
-- Create Person
-- Create Organisation
-- Create Opportunity
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v2 with JSON responses |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Unofficial community libraries available; official PHP library |
 
 ## Authentication
 
-- **Type**: API Token
-- **Where to get credentials**: Capsule My Preferences > API Authentication Token — copy the token shown in your account settings
-- **Required fields in Bit Integrations**: API Token
+- **Type**: Bearer Token (API Token)
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Capsule > My Preferences > API Authentication Token
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Create a person (contact)
+```
+POST https://api.capsulecrm.com/api/v2/people
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| firstName | Person first name | Optional |
-| lastName | Person last name | Required |
-| emailAddress | Email address | Optional; used for deduplication |
-| phoneNumber | Phone number | Optional |
-| organisationName | Associated organisation name | Optional |
-| tag | Tag to apply to the record | Optional; string label |
+Authorization: Bearer {api_token}
+Content-Type: application/json
 
-## Common Workflow Recipes
+{
+  "person": {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "emailAddresses": [{"address": "jane@example.com"}],
+    "phoneNumbers": [{"number": "+1 555 000 0000"}],
+    "organisation": {"name": "Acme Corp"}
+  }
+}
+```
 
-### Recipe 1: Contact Form to Capsule Person
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Person in Capsule CRM
-**Key fields mapped:** First Name, Last Name, Email, Phone, Organisation Name
-**Use case:** Automatically add website contacts to Capsule CRM so small business owners can track relationships without manual entry.
+### Create an opportunity
+```
+POST https://api.capsulecrm.com/api/v2/opportunities
 
-### Recipe 2: Sales Inquiry to Capsule Opportunity
-**Trigger:** Contact Form 7 sales inquiry submission
-**Action:** Create Opportunity in Capsule CRM
-**Key fields mapped:** First Name, Last Name, Email, Opportunity Name, Value, Stage
-**Use case:** Push website sales inquiries into the Capsule pipeline so your team can follow up and close deals.
+Authorization: Bearer {api_token}
+Content-Type: application/json
 
-### Recipe 3: Event Registration to Tagged Capsule Person
-**Trigger:** Elementor form event registration
-**Action:** Create Person with tag in Capsule CRM
-**Key fields mapped:** First Name, Last Name, Email, Tag = Event2024
-**Use case:** Add event registrants as tagged Capsule contacts so you can segment and follow up with attendees post-event.
+{
+  "opportunity": {
+    "name": "Website Redesign",
+    "value": {"amount": 5000, "currency": "USD"},
+    "milestone": {"id": 123},
+    "party": {"id": 456}
+  }
+}
+```
 
-## Setup Steps
+### Search for contacts
+```
+GET https://api.capsulecrm.com/api/v2/people?q=jane@example.com
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Capsule CRM as the action.
-5. Connect your Capsule account using your API Authentication Token from My Preferences.
-6. Select the object type (Person, Organisation, Opportunity) you want to create.
-7. Map the fields from your trigger to Capsule CRM fields.
-8. Save and submit a test entry to verify data arrives correctly.
+Authorization: Bearer {api_token}
+```
+
+### Create a task
+```
+POST https://api.capsulecrm.com/api/v2/tasks
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "task": {
+    "description": "Follow up on proposal",
+    "dueOn": "2026-06-01",
+    "party": {"id": 456}
+  }
+}
+```
+
+## Key Fields
+
+### Person
+- `firstName` / `lastName` - Contact name
+- `emailAddresses` - Array of `{address}` objects
+- `phoneNumbers` - Array of `{number}` objects
+- `organisation.name` - Associated company name
+- `tags` - Array of tag strings for segmentation
+
+### Opportunity
+- `name` - Opportunity title
+- `value.amount` - Deal value
+- `milestone.id` - Pipeline stage ID
+- `party.id` - ID of the associated person or organisation
+
+### Task
+- `description` - Task summary
+- `dueOn` - ISO 8601 date
+- `party.id` - Associated contact or org ID
+
+## Parameters
+
+- `q` - Full-text search query for people/organisations
+- `page` - Pagination (1-indexed)
+- `perPage` - Results per page (max 100)
+- `tag` - Filter contacts by tag
 
 ## When to Use
 
-- You run a small business and want a straightforward CRM without learning curve
-- You need website form submissions to appear in Capsule automatically for contact management
-- You want to tag website contacts differently based on which form they submitted
-- You use Capsule's pipeline to track proposals and need web leads feeding into it automatically
+- Adding website or form leads directly to Capsule as person records
+- Creating pipeline opportunities when a proposal or quote is requested
+- Tagging contacts based on lead source for segmentation
+- Managing follow-up tasks for sales outreach
 
-## Related Integrations
+## Rate Limits
 
-- zoho-bigin.md
-- nutshell-crm.md
-- clinchpad.md
-- nimble.md
+- 4,000 requests per hour
+- See [developer.capsulecrm.com](https://developer.capsulecrm.com) for current limits
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- sales-brief

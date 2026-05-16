@@ -1,68 +1,100 @@
 # Google Calendar
 
-Google Calendar is a time-management and scheduling tool for creating and sharing events and appointments. Available as an Action in the Bit Integrations WordPress plugin.
+Google's scheduling and time-management service for creating, sharing, and managing events and appointments.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Google_Calender1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create or update events in Google Calendar |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to calendar event fields |
-
-## Action Events
-
-- Create event
-- Update event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Google Calendar API v3 |
+| MCP | ✓ | Available via Google Calendar MCP |
+| CLI | - | Not available |
+| SDK | ✓ | Official client libraries for Python, Node.js, Java, PHP, Go |
 
 ## Authentication
 
 - **Type**: OAuth 2.0
-- **Required**: Authorize Bit Integrations via Google OAuth. Select the target calendar.
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Google Cloud Console > Credentials > OAuth 2.0 Client ID; scopes: `https://www.googleapis.com/auth/calendar`
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Appointment Booking Form to Google Calendar Event
-**Trigger:** Appointment or booking form submission
-**Action:** Create a Google Calendar event with the appointment date, time, and attendee details
-**Use case:** Automatically block time on the calendar when clients book through a WordPress form
+### List calendars
+```bash
+GET https://www.googleapis.com/calendar/v3/users/me/calendarList
 
-### Recipe 2: Event Registration to Calendar Reminder
-**Trigger:** Event registration form submission
-**Action:** Create a Google Calendar event for the registrant's spot at the event
-**Use case:** Give event organizers a calendar view of all registered attendees
+Authorization: Bearer {access_token}
+```
 
-### Recipe 3: Consultation Request to Team Calendar
-**Trigger:** Consultation request form submission
-**Action:** Create a Google Calendar event on the team's shared calendar with the prospect's contact info
-**Use case:** Immediately schedule consultation slots when prospects request a meeting via form
+### List events
+```bash
+GET https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events?timeMin=2024-06-01T00:00:00Z&maxResults=50
 
-## Setup Steps
+Authorization: Bearer {access_token}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Google Calendar as the Action.
-5. Click "Authorize" and sign in with your Google account.
-6. Select the target calendar.
-7. Map fields: summary, description, start datetime, end datetime, location, attendees.
-8. Save and test.
+### Create event
+```bash
+POST https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{
+  "summary": "Kickoff Meeting",
+  "start": {"dateTime": "2024-06-15T10:00:00-05:00"},
+  "end": {"dateTime": "2024-06-15T11:00:00-05:00"},
+  "attendees": [{"email": "jane@example.com"}]
+}
+```
+
+### Update event
+```bash
+PATCH https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events/{eventId}
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"status": "cancelled"}
+```
+
+## Key Fields
+
+### Event
+- `id` - Event ID
+- `summary` - Event title
+- `description` - Event details
+- `start` / `end` - DateTime or Date objects
+- `attendees` - Array of `{email, responseStatus}` objects
+- `status` - confirmed, tentative, cancelled
+- `location` - Physical or virtual location
+- `conferenceData` - Google Meet link info
+
+### Calendar
+- `id` - Calendar ID (often an email address)
+- `summary` - Calendar display name
+- `accessRole` - owner, writer, reader
+
+## Parameters
+
+- `timeMin` / `timeMax` - ISO 8601 date range filter
+- `maxResults` - Max events returned (default 250)
+- `singleEvents` - Expand recurring events (true/false)
+- `orderBy` - startTime or updated
 
 ## When to Use
 
-- When booking or appointment forms should automatically create Google Calendar events
-- When event registrations should populate a shared team calendar
-- When scheduling requests from WordPress forms need to flow into Google Calendar without manual entry
+- Book appointments from form submissions
+- Sync CRM meetings to Google Calendar
+- Automate event creation for webinars or calls
+- Monitor upcoming events for reminders
 
-## Related Integrations
+## Rate Limits
 
-- google-sheets.md
-- google-contacts.md
-- zoom-meeting.md
-- amelia.md
+- 1,000,000 quota units/day; most operations cost 1-5 units
+
+## Relevant Skills
+
+- sales:call-prep
+- operations:runbook
+- marketing:campaign-plan

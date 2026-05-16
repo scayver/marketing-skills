@@ -1,68 +1,113 @@
 # Livestorm
 
-Livestorm is a browser-based webinar and video meeting platform with strong engagement, analytics, and automation features. Available as an Action in the Bit Integrations WordPress plugin.
+Browser-based webinar and video meeting platform with registrant management, engagement tools, and analytics.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Livestorm-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Register contacts for Livestorm events |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Livestorm contact registration fields |
-
-## Action Events
-
-- Register contact for event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API for events, sessions, registrants, and attendees |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API only |
 
 ## Authentication
 
 - **Type**: API Key
-- **Required**: API key from Livestorm Organization Settings > API. Enter the key in Bit Integrations.
+- **Header**: `Authorization: {api_key}`
+- **Get key**: Livestorm dashboard > Organization Settings > API
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: WordPress Registration Form to Livestorm Event
-**Trigger:** WordPress webinar or event registration form submission
-**Action:** Register the submitter as a contact for a Livestorm event
-**Use case:** Automatically register form submitters for Livestorm webinars and send them Livestorm's confirmation and reminder emails
+### List all events
 
-### Recipe 2: WooCommerce Purchase to Livestorm Event Registration
-**Trigger:** WooCommerce order completed (webinar or training product)
-**Action:** Register the buyer for the associated Livestorm event
-**Use case:** Grant paid event access in Livestorm automatically on WooCommerce purchase
+```bash
+GET https://api.livestorm.co/v1/events
 
-### Recipe 3: Email Opt-In to Livestorm On-Demand Session
-**Trigger:** WordPress email opt-in form
-**Action:** Register the subscriber for a Livestorm on-demand session
-**Use case:** Drive webinar registrations from email opt-in campaigns without manual registration management
+Authorization: {api_key}
+Content-Type: application/vnd.api+json
+```
 
-## Setup Steps
+### Get event sessions
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Livestorm as the Action.
-5. In Livestorm, go to Organization Settings > API and copy your API key.
-6. Enter the API key in Bit Integrations.
-7. Select the target Livestorm event.
-8. Map fields: email, first_name, last_name, event_id.
-9. Save and test.
+```bash
+GET https://api.livestorm.co/v1/events/{event_id}/sessions
+
+Authorization: {api_key}
+Content-Type: application/vnd.api+json
+```
+
+### Register a contact for a session
+
+```bash
+POST https://api.livestorm.co/v1/sessions/{session_id}/people
+
+Authorization: {api_key}
+Content-Type: application/vnd.api+json
+
+{"data": {"type": "people", "attributes": {"email": "jane@example.com", "first_name": "Jane", "last_name": "Doe"}}}
+```
+
+### Get registrants for a session
+
+```bash
+GET https://api.livestorm.co/v1/sessions/{session_id}/people?filter[role]=registrant
+
+Authorization: {api_key}
+Content-Type: application/vnd.api+json
+```
+
+### Get attendees for a session
+
+```bash
+GET https://api.livestorm.co/v1/sessions/{session_id}/people?filter[role]=participant
+
+Authorization: {api_key}
+Content-Type: application/vnd.api+json
+```
+
+## Key Fields
+
+### Event Object
+- `id` - Unique event ID
+- `title` - Event name
+- `slug` - URL slug for registration page
+- `estimated_duration` - Duration in minutes
+
+### Session Object
+- `id` - Unique session ID
+- `event_id` - Parent event ID
+- `status` - created | scheduled | started | ended
+- `started_at` - Session start time (ISO 8601)
+- `registrants_count` - Number of registered people
+
+### Person (Registrant/Attendee) Object
+- `id` - Unique person ID
+- `email` - Email address
+- `first_name`, `last_name` - Name fields
+- `role` - registrant | participant | team_member
+- `participated_in` - Sessions attended
+
+## Parameters
+
+- `filter[role]` - Filter by person role (registrant, participant)
+- `page[number]` - Pagination page
+- `page[size]` - Results per page
+- `event_id` - Filter sessions by event
 
 ## When to Use
 
-- When WordPress forms should register attendees directly into Livestorm events
-- When WooCommerce purchases include access to a Livestorm webinar or training session
-- When email opt-ins should automatically enroll subscribers in Livestorm on-demand content
+- Registering contacts for webinars from landing page forms or purchases
+- Pulling attendee lists after a webinar for CRM or follow-up sequences
+- Tracking registration and attendance rates for live and on-demand events
+- Automating event registration workflows based on external triggers
 
-## Related Integrations
+## Rate Limits
 
-- demio.md
-- zoom-webinar.md
-- zoom-meeting.md
-- google-calendar.md
+- See developers.livestorm.co for current rate limits
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- content-creation

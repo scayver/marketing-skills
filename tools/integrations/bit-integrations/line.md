@@ -1,67 +1,115 @@
-# Line
+# LINE
 
-Line is a popular messaging and social platform widely used in Japan, Taiwan, Thailand, and other Asian markets. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Messaging app and platform widely used in Japan, Thailand, Taiwan, and Southeast Asia for personal and business communication.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Communication and Messaging
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Line.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; send Line Notify messages |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to message text |
-
-## Action Events
-
-- Send Line Notify message to a Line account or group
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Messaging API for push messages, group messages, and user profiles |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official SDKs for Node, Python, Java, PHP, Ruby, Go |
 
 ## Authentication
 
-- **Type**: Line Notify Access Token
-- **Required**: Line Notify access token from notify-bot.line.me. Enter the token in Bit Integrations.
+- **Type**: Channel Access Token
+- **Header**: `Authorization: Bearer {channel_access_token}`
+- **Get token**: LINE Developers console > Channel > Messaging API > Channel access token
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Line Notify Alert
-**Trigger:** WordPress form submission
-**Action:** Send a Line Notify message with form details
-**Use case:** Alert team members or admins via Line Notify when a form is submitted on a site serving Asian markets
+### Send a push message to a user
 
-### Recipe 2: WooCommerce Order to Line Notification
-**Trigger:** WooCommerce order completed
-**Action:** Send an order summary via Line Notify to the admin or team group
-**Use case:** Monitor WooCommerce orders in real time via Line for teams using Line as a primary tool
+```bash
+POST https://api.line.me/v2/bot/message/push
 
-### Recipe 3: Registration to Line Welcome Message
-**Trigger:** WordPress user registration
-**Action:** Send a Line Notify message with the new user's details
-**Use case:** Track new registrations instantly via Line for WordPress sites with Asian user bases
+Authorization: Bearer {channel_access_token}
+Content-Type: application/json
 
-## Setup Steps
+{"to": "{user_id}", "messages": [{"type": "text", "text": "Hello from our system!"}]}
+```
 
-1. Install Bit Integrations Pro on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Line as the Action.
-5. Go to notify-bot.line.me, log in, and generate a Line Notify access token for the target recipient or group.
-6. Enter the access token in Bit Integrations.
-7. Map the message text field.
-8. Save and test.
+### Send a broadcast message to all followers
+
+```bash
+POST https://api.line.me/v2/bot/message/broadcast
+
+Authorization: Bearer {channel_access_token}
+Content-Type: application/json
+
+{"messages": [{"type": "text", "text": "New announcement for all followers"}]}
+```
+
+### Send a multicast message to multiple users
+
+```bash
+POST https://api.line.me/v2/bot/message/multicast
+
+Authorization: Bearer {channel_access_token}
+Content-Type: application/json
+
+{"to": ["{user_id_1}", "{user_id_2}"], "messages": [{"type": "text", "text": "Your order is ready"}]}
+```
+
+### Get user profile
+
+```bash
+GET https://api.line.me/v2/bot/profile/{user_id}
+
+Authorization: Bearer {channel_access_token}
+```
+
+### Reply to a webhook event
+
+```bash
+POST https://api.line.me/v2/bot/message/reply
+
+Authorization: Bearer {channel_access_token}
+Content-Type: application/json
+
+{"replyToken": "{reply_token}", "messages": [{"type": "text", "text": "Thank you for your message!"}]}
+```
+
+## Key Fields
+
+### Message Object
+- `type` - text | image | sticker | flex | template | audio
+- `text` - Message text content (for text type)
+- `to` - Recipient user ID, group ID, or room ID
+
+### User Profile Object
+- `userId` - LINE user ID
+- `displayName` - User's display name
+- `pictureUrl` - Profile picture URL
+- `statusMessage` - User's status message
+- `language` - User's language setting
+
+### Webhook Event Object
+- `type` - message | follow | unfollow | join | leave | postback
+- `replyToken` - Token for replying to this specific event
+- `source` - Object with user/group/room context
+
+## Parameters
+
+- `to` - Recipient user ID (for push/multicast)
+- `replyToken` - Required for reply messages
+- `notificationDisabled` - Whether to suppress push notification
 
 ## When to Use
 
-- When operating in markets (Japan, Thailand, Taiwan) where Line is the primary messaging platform
-- When team members use Line as their primary communication tool and need WordPress event notifications
-- When WooCommerce or form events should send alerts via Line Notify
+- Sending order confirmations and notifications to LINE users in Asian markets
+- Broadcasting announcements to all LINE followers of a business account
+- Responding to customer messages via LINE Messaging API webhook
+- Delivering transactional alerts through LINE instead of SMS or email
 
-## Related Integrations
+## Rate Limits
 
-- telegram.md
-- slack.md
-- whatsapp.md
-- discord.md
+- Free tier (Developer trial): 500 push messages/month
+- Paid plans: Based on messaging plan; see line.biz for pricing
+
+## Relevant Skills
+
+- social-media
+- email-marketing
+- ecommerce

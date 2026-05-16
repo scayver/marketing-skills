@@ -1,82 +1,110 @@
 # Kirim Email
 
-Kirim Email is an Indonesian email marketing platform offering list management, campaign tools, and subscriber automation for businesses serving Southeast Asian markets. Available as an Action in the Bit Integrations WordPress plugin.
+Indonesian email marketing platform for list management, broadcast campaigns, and subscriber automation.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Kirim-Email.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add subscriber to list |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to list
-- Update subscriber fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API with API key authentication |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API only |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: Kirim Email account settings > API section
-- **Required in Bit Integrations**: API Key
+- **Header**: `Authorization: {api_key}`
+- **Get key**: Kirim Email account dashboard > Settings > API
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| List ID | The Kirim Email list to add the subscriber to | Required |
+### Add a subscriber to a list
 
-## Common Workflow Recipes
+```bash
+POST https://app.kirimemail.com/api/v1/subscriber
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Kirim Email list with welcome tag
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: {api_key}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Kirim Email customer list or segment
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"list_id": "list_abc123", "email": "jane@example.com", "name": "Jane Doe"}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Kirim Email list for enrollment-based nurture
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Get all lists
 
-## Setup Steps
+```bash
+GET https://app.kirimemail.com/api/v1/lists
 
-1. Install Bit Integrations Pro on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Kirim Email as the action.
-5. Connect your Kirim Email account using your API Key.
-6. Select the list to add subscribers to.
-7. Map the email field and the name field.
-8. Save and test with a real form submission.
+Authorization: {api_key}
+```
+
+### Update subscriber fields
+
+```bash
+PUT https://app.kirimemail.com/api/v1/subscriber/{subscriber_id}
+
+Authorization: {api_key}
+Content-Type: application/json
+
+{"name": "Jane Doe", "custom_fields": {"company": "Acme"}}
+```
+
+### Unsubscribe a contact
+
+```bash
+DELETE https://app.kirimemail.com/api/v1/subscriber/{list_id}/{email}
+
+Authorization: {api_key}
+```
+
+### Get campaign stats
+
+```bash
+GET https://app.kirimemail.com/api/v1/campaigns/{campaign_id}/stats
+
+Authorization: {api_key}
+```
+
+## Key Fields
+
+### Subscriber Object
+- `email` - Primary subscriber identifier
+- `name` - Full name
+- `list_id` - ID of the list the subscriber belongs to
+- `status` - subscribed | unsubscribed | bounced
+- `custom_fields` - Key/value pairs for custom subscriber data
+
+### List Object
+- `id` - Unique list ID
+- `name` - List name
+- `subscriber_count` - Total active subscribers
+
+### Campaign Object
+- `id` - Unique campaign ID
+- `subject` - Email subject line
+- `status` - Draft | Scheduled | Sent
+- `sent_at` - Send timestamp
+
+## Parameters
+
+- `list_id` - Target list for subscriber operations
+- `email` - Filter or identify subscriber by email
+- `page` - Pagination page number
+- `per_page` - Results per page
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions for Indonesian or Southeast Asian audiences
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing and managing email subscriber lists for Indonesian audiences
+- Sending broadcast email campaigns to segmented lists
+- Syncing subscribers from web forms or purchases to email lists
+- Running automated onboarding sequences for new subscribers
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- mailerlite.md
-- getresponse.md
+- See kirimemail.com pricing page for plan-specific limits
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- content-creation

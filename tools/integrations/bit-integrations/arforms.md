@@ -1,82 +1,89 @@
 # ARForms
 
-ARForms is a premium WordPress form builder plugin with a drag-and-drop interface, advanced field types, conditional logic, and payment gateway integrations. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Premium WordPress form builder with drag-and-drop interface, advanced field types, conditional logic, multi-step forms, and payment gateway integrations.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ARForms-150x150-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No public external REST API |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | WordPress PHP hooks only |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress admin access
+- **Header**: N/A — plugin managed entirely within WordPress admin
+- **Get token**: N/A — configure via WordPress Admin > ARForms
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+ARForms has no external REST API. Form submissions are handled server-side and can be acted on via WordPress hooks.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Hook into form submission (PHP)
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+```php
+add_action( 'arfb_after_save_entry', function( $entry_id, $form_id, $form_data ) {
+    $email = $form_data['field_email'] ?? '';
+    $name  = $form_data['field_name'] ?? '';
+    // Custom logic: send to CRM, log, etc.
+}, 10, 3 );
+```
 
-## Connecting to Action Platforms
+### Get form entries via WordPress database
 
-After selecting ARForms as the trigger in Bit Integrations, connect it to any of these action platforms:
+```php
+global $wpdb;
+$entries = $wpdb->get_results(
+    $wpdb->prepare(
+        "SELECT * FROM {$wpdb->prefix}arflb_entries WHERE form_id = %d ORDER BY created_at DESC LIMIT 50",
+        $form_id
+    )
+);
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Query entries via standard WP REST (if enabled)
 
-## Setup Steps
+```bash
+GET https://yoursite.com/wp-json/wp/v2/arforms-entries?form_id=3
 
-1. Install and activate ARForms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in ARForms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select ARForms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Basic {base64_credentials}
+```
 
-## Field Mapping Tips
+## Key Fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Form Entry
+- `entry_id` - Unique submission ID
+- `form_id` - Parent form ID
+- `form_name` - Human-readable form name
+- `created_at` - Submission timestamp
+- Field values keyed by field slug or ID (varies by form configuration)
+
+### Common Field Types
+- `text` / `email` / `phone` / `textarea` - Standard input fields
+- `dropdown` / `radio` / `checkbox` - Selection fields
+- `file` - File upload (stored URL)
+- `hidden` - Hidden fields (UTM params, page URL, referrer)
+
+## Parameters
+
+- `form_id` - Filter entries by specific form
+- `entry_id` - Retrieve a specific submission
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Processing form submissions with custom PHP logic for advanced integrations
+- Logging ARForms entries to external CRM or email platforms via hooks
+- Pulling historical submission data for reporting or migration
+- Combining ARForms with a no-code automation layer using webhook forwarding
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No rate limits; governed by WordPress server performance
+
+## Relevant Skills
+
+- lead-generation
+- crm-management
+- email-marketing

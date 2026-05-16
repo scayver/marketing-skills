@@ -1,71 +1,106 @@
 # License Manager for WooCommerce
 
-License Manager for WooCommerce is a free WordPress plugin that generates, delivers, and manages software license keys for products sold through WooCommerce. Available as Action in the Bit Integrations WordPress plugin.
+WordPress plugin that generates, delivers, and manages software license keys for products sold through WooCommerce.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/License-Manager-for-WooCommerce-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Generate license, activate license |
-| Free Tier | ✓ | Free |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Generate license — create and assign a new license key for a WooCommerce product
-- Activate license — activate an existing license key for a customer
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at /wp-json/lmfwc/v2/ |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress hooks and REST API only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: License Manager for WooCommerce must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: Consumer Key + Consumer Secret (Basic Auth)
+- **Header**: `Authorization: Basic {base64(consumer_key:consumer_secret)}`
+- **Get keys**: WooCommerce Settings > Advanced > REST API > Add Key; set permissions to Read/Write
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Generate license on WooCommerce order completion
-**Trigger:** WooCommerce — Order completed
-**Action:** License Manager for WooCommerce — Generate license
-**Key fields mapped:** Customer email, product linked to license generator
-**Use case:** Automatically generate and deliver a license key when a software or digital product is purchased
+### List license keys
 
-### Recipe 2: Activate license after customer verification
-**Trigger:** Bit Form / Gravity Forms — Verification form submitted
-**Action:** License Manager for WooCommerce — Activate license
-**Key fields mapped:** Customer email, license key field
-**Use case:** Activate a license key after a customer completes a verification or registration step
+```bash
+GET https://yoursite.com/wp-json/lmfwc/v2/licenses?per_page=50
 
-### Recipe 3: Generate license from CRM closed deal
-**Trigger:** HubSpot / Zoho CRM — Deal closed won
-**Action:** License Manager for WooCommerce — Generate license
-**Key fields mapped:** Contact email, product or software tied to the deal
-**Use case:** Issue a license key automatically when a CRM deal is marked as closed-won for software sales
+Authorization: Basic {base64(key:secret)}
+```
 
-## Setup Steps
+### Get a specific license
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select License Manager for WooCommerce as the action.
-4. Choose Generate License or Activate License.
-5. Select the product or license generator to use.
-6. Map the customer email from your trigger source.
-7. Save and test with a real event (complete a test WooCommerce order or submit a test form).
+```bash
+GET https://yoursite.com/wp-json/lmfwc/v2/licenses/{license_key}
+
+Authorization: Basic {base64(key:secret)}
+```
+
+### Create a license key
+
+```bash
+POST https://yoursite.com/wp-json/lmfwc/v2/licenses
+
+Authorization: Basic {base64(key:secret)}
+Content-Type: application/json
+
+{"licenseKey": "XXXX-YYYY-ZZZZ", "status": 2, "productId": 123, "expiresAt": "2026-12-31"}
+```
+
+### Activate a license key
+
+```bash
+GET https://yoursite.com/wp-json/lmfwc/v2/licenses/activate/{license_key}
+
+Authorization: Basic {base64(key:secret)}
+```
+
+### Validate a license key
+
+```bash
+GET https://yoursite.com/wp-json/lmfwc/v2/licenses/validate/{license_key}
+
+Authorization: Basic {base64(key:secret)}
+```
+
+## Key Fields
+
+### License Object
+- `licenseKey` - The actual license key string
+- `status` - 1=Sold | 2=Delivered | 3=Active | 4=Inactive | 5=Expired
+- `productId` - Associated WooCommerce product ID
+- `orderId` - WooCommerce order ID
+- `userId` - WordPress user ID of the licensee
+- `expiresAt` - Expiration date (Y-m-d format)
+- `timesActivated` - Number of activations used
+- `timesActivatedMax` - Maximum allowed activations
+
+### Generator Object
+- `id` - Generator ID
+- `name` - Generator name
+- `charset` - Character set for key generation
+- `chunks` - Number of character chunks
+- `chunkLength` - Length of each chunk
+- `separator` - Character used between chunks
+
+## Parameters
+
+- `per_page` - Results per page
+- `page` - Pagination offset
+- `status` - Filter by license status
+- `productId` - Filter by product
 
 ## When to Use
 
-- You sell software or digital products via WooCommerce and want licenses generated automatically on purchase
-- You need to activate license keys after a manual verification or customer registration step
-- You manage software sales via a CRM and need license generation triggered by deal closure
-- You want to automate license delivery as part of a post-purchase fulfillment workflow
+- Generating and delivering license keys on WooCommerce product purchases
+- Validating license keys in a customer portal or verification form
+- Managing software activations and deactivations
+- Tracking license expiry and sending renewal reminders
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- easy-digital-downloads.md
-- surecart.md
+- No external rate limits; subject to WordPress server capacity
+
+## Relevant Skills
+
+- ecommerce
+- affiliate-marketing

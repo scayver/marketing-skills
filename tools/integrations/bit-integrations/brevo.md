@@ -1,87 +1,125 @@
 # Brevo
 
-Brevo (formerly Sendinblue) is a multi-channel marketing platform offering email, SMS, transactional messaging, and CRM tools. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing and CRM platform for contacts, campaigns, transactional email, and automation.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Brevo-Sendinblue.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list, update attributes, add to transactional template |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update contact attributes
-- Add contact to transactional email template
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Brevo account > SMTP & API > API Keys > Generate a new API key
-- **Required in Bit Integrations**: API Key
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `api-key: {api_key}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Brevo dashboard
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| FIRSTNAME | Subscriber first name (contact attribute) | Optional |
-| LASTNAME | Subscriber last name (contact attribute) | Optional |
-| PHONE | Subscriber phone number | Optional |
-| List IDs | Numeric list IDs to add the contact to | Required |
-| Attributes | Custom contact attribute key-value pairs | Optional |
+### List records
 
-## Common Workflow Recipes
+```bash
+GET https://api.brevo.com/v3/records?limit=50
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Brevo list with welcome tag
-**Key fields mapped:** Email, FIRSTNAME, LASTNAME
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+api-key: {api_key}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Brevo customer list or segment
-**Key fields mapped:** Email, FIRSTNAME, Order amount (as custom attribute if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Get one record
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Brevo list and update enrollment-related attributes
-**Key fields mapped:** Email, FIRSTNAME, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+```bash
+GET https://api.brevo.com/v3/records/{record_id}
 
-## Setup Steps
+api-key: {api_key}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Brevo as the action.
-5. Connect your Brevo account using your API Key.
-6. Select the list to add contacts to.
-7. Map the email field and any attribute or custom fields.
-8. Save and test with a real form submission.
+### Create record
+
+```bash
+POST https://api.brevo.com/v3/records
+
+api-key: {api_key}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://api.brevo.com/v3/records/{record_id}
+
+api-key: {api_key}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://api.brevo.com/v3/events
+
+api-key: {api_key}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Sending transactional emails triggered by WordPress events
-- Replacing manual CSV imports from WordPress to your email platform
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- sendgrid.md
-- activecampaign.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- email-marketing
+- emails
+- analytics

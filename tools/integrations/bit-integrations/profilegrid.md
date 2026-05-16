@@ -1,71 +1,99 @@
 # ProfileGrid
 
-ProfileGrid is a WordPress plugin for building user groups, member directories, and community profiles with group-based access control and activity feeds. Available as Action in the Bit Integrations WordPress plugin.
+WordPress plugin for building user groups, member directories, and community profiles with group-based access control and activity feeds.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Profile-Grid.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add user to group |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Add user to group — add a WordPress user to a ProfileGrid group
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/profilegrid/v1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: ProfileGrid must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress REST API (Application Password)
+- **Header**: `Authorization: Bearer {application_password}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add user to group on WooCommerce purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** ProfileGrid — Add user to group
-**Key fields mapped:** Customer email, group linked to purchased product
-**Use case:** Automatically add buyers to a ProfileGrid community group when they purchase a product
+### List groups
 
-### Recipe 2: Add user to group on membership activation
-**Trigger:** MemberPress / Paid Memberships Pro — Membership activated
-**Action:** ProfileGrid — Add user to group
-**Key fields mapped:** User email, group tied to membership level
-**Use case:** Enroll new members in the correct ProfileGrid community group based on their membership tier
+```bash
+GET https://yoursite.com/wp-json/profilegrid/v1/groups
 
-### Recipe 3: Add user to group on form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** ProfileGrid — Add user to group
-**Key fields mapped:** Email field, target group
-**Use case:** Add users to community groups when they submit a sign-up or interest form
+Authorization: Bearer {token}
+```
 
-## Setup Steps
+### Get group members
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select ProfileGrid as the action.
-4. Choose Add User to Group and select the target group.
-5. Map the user email from your trigger source to ProfileGrid's user lookup field.
-6. Save and test with a real event (make a test purchase or submit a test form).
+```bash
+GET https://yoursite.com/wp-json/profilegrid/v1/groups/{group_id}/members
+
+Authorization: Bearer {token}
+```
+
+### Get user profile
+
+```bash
+GET https://yoursite.com/wp-json/profilegrid/v1/users/{user_id}
+
+Authorization: Bearer {token}
+```
+
+### List profile fields
+
+```bash
+GET https://yoursite.com/wp-json/profilegrid/v1/fields
+
+Authorization: Bearer {token}
+```
+
+### Hook: After user added to group
+
+```php
+add_action('pm_group_user_added', function($user_id, $group_id) {
+    // Fires when a user is added to a ProfileGrid group
+}, 10, 2);
+```
+
+## Key Fields
+
+### Group Object
+- `group_id` - Group ID
+- `group_name` - Group name
+- `group_slug` - URL slug
+- `member_count` - Number of members
+- `is_private` - Boolean privacy flag
+
+### User Profile Object
+- `user_id` - WordPress user ID
+- `display_name` - Display name
+- `email` - Email address
+- `groups` - Array of group IDs the user belongs to
+- `profile_fields` - Custom profile field values
+
+## Parameters
+
+- `group_id` - Filter by group
+- `per_page` - Results per page
+- `page` - Pagination
 
 ## When to Use
 
-- You use ProfileGrid for community groups and want group membership automated from purchases or forms
-- You bundle ProfileGrid group access with membership plans
-- You want to add users to community groups as part of a post-purchase onboarding flow
-- You need to segment your community by product, membership level, or interest area automatically
+- Building community sites with group-based access and member directories
+- Segmenting users into groups based on membership level or purchase
+- Automating group enrollment from membership or e-commerce events
+- Managing community access control programmatically
 
-## Related Integrations
+## Rate Limits
 
-- ultimate-member.md
-- peepso.md
-- memberpress.md
-- paid-memberships-pro.md
-- woocommerce.md
+- Subject to WordPress server limits; no dedicated rate limit
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- human-resources:onboarding
+- operations:process-doc

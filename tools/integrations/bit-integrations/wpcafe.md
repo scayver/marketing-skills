@@ -1,75 +1,119 @@
 # WPCafe
 
-WPCafe is a WordPress restaurant ordering and reservation plugin that enables food ordering, table reservations, and menu management directly from a WordPress site. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WordPress restaurant plugin for menus, reservations, food ordering, and cafe operations.
 
-**Role:** Trigger/Action
-**Free Tier:** No — both Trigger and Action require Pro
-**Category:** eCommerce and Payments
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/WP-Cafe.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/WP-Cafe-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on reservation and order events |
-| As Action | ✓ | Manage reservations and orders |
-| Free Tier | — | Requires Pro for both Trigger and Action |
-| Field Mapping | ✓ | Map customer and order data to connected platforms |
-
-## Trigger Events
-
-- Reservation made — fires when a customer makes a table reservation
-- Order placed — fires when a customer places a food order
-
-## Action Events
-
-- Reservation and order management actions (refer to Bit Integrations documentation for the current full list of supported action events)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WPCafe must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add customer to CRM on reservation
-**Trigger:** WPCafe — Reservation made
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** Customer email, name, reservation date and time, party size
-**Use case:** Automatically create or update a CRM contact whenever a customer makes a reservation, building a guest database for marketing
+### Check plugin status
 
-### Recipe 2: Send confirmation email via external platform on order
-**Trigger:** WPCafe — Order placed
-**Action:** Mailchimp / ActiveCampaign — Send transactional email or add to list
-**Key fields mapped:** Customer email, order details, estimated delivery time
-**Use case:** Trigger a branded order confirmation or thank-you email from your email marketing platform instead of a generic WordPress email
+```bash
+wp plugin status wpcafe
+```
 
-### Recipe 3: Notify staff via Slack on new reservation
-**Trigger:** WPCafe — Reservation made
-**Action:** Slack webhook — Post message to staff channel
-**Key fields mapped:** Customer name, reservation date, time, party size, special requests
-**Use case:** Instantly alert your front-of-house staff in Slack whenever a new table reservation is made
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select WPCafe as the trigger or action.
-4. For triggers, choose the event (e.g., Reservation Made or Order Placed).
-5. For actions, choose the appropriate reservation or order management action.
-6. Map the customer and order fields to the connected platform.
-7. Save and test with a real event (make a test reservation or place a test order).
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/wpcafe/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='wpcafe' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- You run a restaurant website with WPCafe and want guest reservation data automatically in your CRM or email platform
-- You want to send branded order confirmations or follow-up emails via an external email marketing tool
-- You need to notify staff via Slack or another channel when new reservations or orders come in
-- You want to build a guest marketing list from WPCafe reservation and order data
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- surecart.md
-- paymattic.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- ecommerce-content
+- email-marketing
+- landing-page-cro

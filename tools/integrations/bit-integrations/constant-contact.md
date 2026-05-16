@@ -1,84 +1,105 @@
 # Constant Contact
 
-Constant Contact is a long-standing email marketing platform popular with small businesses for its ease of use and list management tools. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing platform popular with small businesses for easy list management, drag-and-drop campaign creation, and reporting tools.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ConstantContact1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list, update contact |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update contact information
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v3 at api.cc.email |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official PHP SDK; community libraries for Python, Ruby |
 
 ## Authentication
 
 - **Type**: OAuth 2.0
-- **Where to get credentials**: Constant Contact developer portal (developer.constantcontact.com) — create an application to obtain API credentials
-- **Required in Bit Integrations**: OAuth 2.0 authorization flow (authorize via Bit Integrations UI)
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Create an app at [developer.constantcontact.com](https://developer.constantcontact.com) and complete the OAuth 2.0 authorization flow
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Phone Number | Subscriber phone number | Optional |
-| List Memberships | List IDs to add the contact to | Required |
+### Get all contact lists
+```
+GET https://api.cc.email/v3/contact_lists
 
-## Common Workflow Recipes
+Authorization: Bearer {access_token}
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Constant Contact list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+### Create or update a contact
+```
+POST https://api.cc.email/v3/contacts/sign_up_form
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Constant Contact customer list
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Constant Contact list for enrollment-based email nurturing
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+{
+  "email_address": "jane@example.com",
+  "first_name": "Jane",
+  "last_name": "Smith",
+  "phone_numbers": [{"phone_number": "+15550000000", "kind": "home"}],
+  "list_memberships": ["list_id_here"],
+  "create_source": "Contact"
+}
+```
 
-## Setup Steps
+### Get contact details
+```
+GET https://api.cc.email/v3/contacts?email=jane@example.com
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Constant Contact as the action.
-5. Connect your Constant Contact account using OAuth 2.0 authorization.
-6. Select the list to add contacts to.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+Authorization: Bearer {access_token}
+```
+
+### Remove contact from a list
+```
+DELETE https://api.cc.email/v3/contacts/{contact_id}/list_memberships/{list_id}
+
+Authorization: Bearer {access_token}
+```
+
+### Get campaign activity report
+```
+GET https://api.cc.email/v3/reports/email_reports/{campaign_activity_id}/tracking/opens
+
+Authorization: Bearer {access_token}
+```
+
+## Key Fields
+
+### Contact
+- `email_address` - Primary email (required)
+- `first_name` / `last_name` - Name fields
+- `phone_numbers` - Array of `{phone_number, kind}` objects (kind: home, work, mobile, other)
+- `list_memberships` - Array of list IDs to enroll the contact in
+- `create_source` - Origin label (Contact, Account)
+- `custom_fields` - Array of `{custom_field_id, value}` objects
+
+### Contact List
+- `list_id` - Unique list identifier
+- `name` - List display name
+- `membership_count` - Total active subscribers
+
+## Parameters
+
+- `email` - Filter contacts by email address (GET contacts)
+- `list_id` - Scopes list membership operations
+- `campaign_activity_id` - Required for campaign-level reporting
+- `limit` - Max results per page (max 500)
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing subscriber lists from web forms or e-commerce events
+- Segmenting customers into separate Constant Contact lists by purchase behavior
+- Pulling campaign open and click metrics for performance reporting
+- Syncing member or course enrollment data into email nurture lists
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- activecampaign.md
-- getresponse.md
+- 10,000 requests per day; burst limit of 4 requests per second
+- See [developer.constantcontact.com](https://developer.constantcontact.com) for current limits
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- content-strategy

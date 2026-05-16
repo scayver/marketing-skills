@@ -1,68 +1,107 @@
 # Demio
 
-Demio is a browser-based webinar platform designed for marketers, with automated webinars, live events, and engagement tools. Available as an Action in the Bit Integrations WordPress plugin.
+Browser-based webinar platform designed for marketers, offering live events, automated webinars, on-demand replays, and built-in engagement and analytics tools.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Demio1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Register attendees for Demio events |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Demio attendee registration fields |
-
-## Action Events
-
-- Register attendee for event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v1 at my.demio.com/api/v1 |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key + API Secret
-- **Required**: API key and API secret from Demio account settings. Enter both in Bit Integrations.
+- **Type**: API Key + API Secret (two required headers)
+- **Headers**:
+  - `Api-Key: {api_key}`
+  - `Api-Secret: {api_secret}`
+- **Get token**: Demio account > Settings > API
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Landing Page Form to Demio Webinar Registration
-**Trigger:** WordPress landing page opt-in or webinar registration form
-**Action:** Register the submitter for a Demio live or automated webinar event
-**Use case:** Convert landing page opt-ins directly into Demio webinar registrations without manual export/import
+### List all events
+```
+GET https://my.demio.com/api/v1/event
 
-### Recipe 2: WooCommerce Purchase to Demio Event Access
-**Trigger:** WooCommerce order completed (webinar product)
-**Action:** Register the buyer for the Demio event associated with the purchased product
-**Use case:** Grant paid webinar access in Demio automatically after WooCommerce purchase
+Api-Key: {api_key}
+Api-Secret: {api_secret}
+```
 
-### Recipe 3: Email Subscribe to Automated Webinar Sequence
-**Trigger:** WordPress email opt-in form submission
-**Action:** Register the subscriber for a Demio automated (on-demand) webinar
-**Use case:** Enroll email subscribers in automated webinar funnels to nurture them toward conversion
+### Get event details
+```
+GET https://my.demio.com/api/v1/event/{event_id}
 
-## Setup Steps
+Api-Key: {api_key}
+Api-Secret: {api_secret}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Demio as the Action.
-5. In Demio, go to account settings and copy your API key and API secret.
-6. Enter both in Bit Integrations.
-7. Select the target Demio event.
-8. Map fields: name, email, event_id.
-9. Save and test.
+### Register an attendee for an event
+```
+POST https://my.demio.com/api/v1/event/register
+
+Api-Key: {api_key}
+Api-Secret: {api_secret}
+Content-Type: application/json
+
+{
+  "id": "{event_id}",
+  "date_id": "{session_date_id}",
+  "name": "Jane Smith",
+  "email": "jane@example.com"
+}
+```
+
+### Get registrants for an event
+```
+GET https://my.demio.com/api/v1/event/{event_id}/participants
+
+Api-Key: {api_key}
+Api-Secret: {api_secret}
+```
+
+## Key Fields
+
+### Event
+- `id` - Unique event identifier
+- `name` - Webinar/event name
+- `status` - active / inactive
+- `type` - live, automated, or hybrid
+- `dates` - Array of scheduled session objects, each with a `date_id`
+
+### Registration
+- `id` - Event ID (required)
+- `date_id` - Session date ID (required for scheduled sessions)
+- `name` - Registrant full name (required)
+- `email` - Registrant email (required)
+- `ref_url` - Optional referral or tracking URL
+
+### Participant Record
+- `name` - Attendee name
+- `email` - Attendee email
+- `attended` - Boolean attendance status
+- `join_time` / `leave_time` - Session timestamps
+
+## Parameters
+
+- `event_id` - Targets a specific event for registration and participant queries
+- `date_id` - Targets a specific scheduled session within an event
+- `ref_url` - Referral tracking URL passed on registration
 
 ## When to Use
 
-- When WordPress registration forms should feed attendees directly into Demio events
-- When selling webinar access through WooCommerce and needing automatic Demio registration
-- When running automated webinar funnels where email opt-ins trigger Demio enrollment
+- Registering leads from a landing page or opt-in form directly into a Demio webinar
+- Granting webinar access automatically after an e-commerce purchase
+- Enrolling email subscribers in automated webinar funnels for lead nurturing
+- Pulling attendee and no-show data post-event for follow-up segmentation
 
-## Related Integrations
+## Rate Limits
 
-- zoom-webinar.md
-- livestorm.md
-- zoom-meeting.md
-- google-calendar.md
+- See [demio.com/developers](https://demio.com/developers) or contact Demio support for current limits
+
+## Relevant Skills
+
+- event-marketing
+- lead-generation
+- email-marketing

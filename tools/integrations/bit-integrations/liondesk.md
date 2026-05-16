@@ -1,85 +1,116 @@
-# LionDesk CRM
+# LionDesk
 
-LionDesk is a real estate-focused CRM platform built for agents and brokers, featuring contact management, automated drip campaigns, video texting, and transaction tracking. Available as an Action in the Bit Integrations WordPress plugin.
+Real estate-focused CRM for agents and brokers featuring contact management, drip campaigns, video texting, and transaction tracking.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Lion-Desk.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Contacts in LionDesk |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to LionDesk fields |
-
-## Action Events
-
-- Create Contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v2 for contacts, tasks, pipelines, and drip campaigns |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API only |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: LionDesk Settings > Developer / API settings — generate and copy the API key
-- **Required fields in Bit Integrations**: API Key
+- **Type**: OAuth 2.0
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: LionDesk Settings > Developer > API Keys > OAuth 2.0 credentials
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Create a contact
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| first_name | Contact first name | Optional |
-| last_name | Contact last name | Required |
-| email | Email address | Optional; used for deduplication |
-| phone | Phone number | Optional |
-| category | Contact category or type | Optional; e.g., Buyer, Seller, Lead |
-| note | Additional notes about the contact | Optional |
+```bash
+POST https://api-v2.liondesk.com/contacts
 
-## Common Workflow Recipes
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-### Recipe 1: Property Inquiry Form to LionDesk Contact
-**Trigger:** WPForms or Gravity Forms property inquiry submission
-**Action:** Create Contact in LionDesk
-**Key fields mapped:** First Name, Last Name, Email, Phone, Category = Buyer
-**Use case:** Automatically add website property inquiries as LionDesk contacts so real estate agents can trigger drip campaigns immediately.
+{"first_name": "Jane", "last_name": "Doe", "email": "jane@example.com", "phone": "+15555550100"}
+```
 
-### Recipe 2: Home Valuation Request to LionDesk Seller Contact
-**Trigger:** Elementor home valuation form
-**Action:** Create Contact in LionDesk
-**Key fields mapped:** First Name, Last Name, Email, Phone, Category = Seller, Note = valuation request
-**Use case:** Capture home valuation requests and tag contacts as sellers in LionDesk for targeted listing campaigns.
+### Get all contacts
 
-### Recipe 3: Open House Sign-In to LionDesk Contact
-**Trigger:** Fluent Forms open house sign-in form
-**Action:** Create Contact in LionDesk
-**Key fields mapped:** First Name, Last Name, Email, Phone, Note = Open House address and date
-**Use case:** Add open house attendees directly to LionDesk so agents can follow up with property-specific drip sequences.
+```bash
+GET https://api-v2.liondesk.com/contacts?limit=100&page=1
 
-## Setup Steps
+Authorization: Bearer {access_token}
+```
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select LionDesk as the action.
-5. Connect your LionDesk account using your API key from LionDesk Settings > Developer / API settings.
-6. Configure the Contact creation with your desired category and notes.
-7. Map the fields from your trigger to LionDesk fields.
-8. Save and submit a test entry to verify data arrives correctly.
+### Search contacts by email
+
+```bash
+GET https://api-v2.liondesk.com/contacts?email=jane@example.com
+
+Authorization: Bearer {access_token}
+```
+
+### Create a task
+
+```bash
+POST https://api-v2.liondesk.com/tasks
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"title": "Follow up call", "due_date": "2025-07-01", "contact_id": "abc123"}
+```
+
+### Add contact to a drip campaign
+
+```bash
+POST https://api-v2.liondesk.com/drips/{drip_id}/contacts
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"contact_id": "abc123"}
+```
+
+## Key Fields
+
+### Contact Object
+- `id` - Unique contact identifier
+- `first_name`, `last_name` - Name fields
+- `email` - Primary email address
+- `phone` - Phone number
+- `category` - Contact type (Buyer, Seller, Lead, etc.)
+- `source` - Lead source
+- `notes` - Notes about the contact
+
+### Task Object
+- `id` - Task ID
+- `title` - Task name
+- `due_date` - Due date (YYYY-MM-DD)
+- `contact_id` - Linked contact
+- `status` - open | completed
+
+### Drip Campaign
+- `id` - Campaign ID
+- `name` - Campaign name
+- `status` - active | paused
+
+## Parameters
+
+- `limit` - Results per page
+- `page` - Pagination page number
+- `email` - Filter contacts by email
+- `category` - Filter contacts by category
 
 ## When to Use
 
-- You are a real estate agent or broker using LionDesk and need website leads captured automatically
-- You want property inquiry forms to add leads directly to LionDesk drip campaigns
-- You need home buyer and seller contacts separated by category from different inquiry forms
-- You capture open house sign-ins online and want them added to LionDesk for follow-up
+- Managing real estate buyer and seller leads in a purpose-built CRM
+- Automatically enrolling new leads in drip email/SMS campaigns
+- Creating follow-up tasks from property inquiry form submissions
+- Tracking transactions and pipeline stages for real estate agents
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- capsulecrm.md
-- nimble.md
-- salesmate.md
+- See developer.liondesk.com for current rate limits
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- email-marketing

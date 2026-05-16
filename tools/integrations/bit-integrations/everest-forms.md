@@ -1,82 +1,79 @@
 # Everest Forms
 
-Everest Forms is a WordPress form builder plugin with a drag-and-drop interface, free core plugin, and premium add-ons for advanced functionality. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+WordPress form builder with drag-and-drop interface and premium add-ons for advanced form functionality.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Everest_Forms1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress action hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress server-side hook access
+- **Header**: N/A — server-side PHP integration only
+- **Get token**: No API token required
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Capture form submission (PHP hook)
+```php
+add_action('everest_forms_process_complete', function($form_data, $fields, $entry, $form_id) {
+    $email = $fields['field_id_1']['value'] ?? '';
+    $name  = $fields['field_id_0']['value'] ?? '';
+    // Forward via wp_remote_post()
+}, 10, 4);
+```
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Access entries via database
+```php
+global $wpdb;
+$entries = $wpdb->get_results(
+    "SELECT * FROM {$wpdb->prefix}evf_entries WHERE form_id = {$form_id}"
+);
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Get forms list (WP REST)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/posts?post_type=evf-form
 
-## Connecting to Action Platforms
+Authorization: Basic {base64_credentials}
+```
 
-After selecting Everest Forms as the trigger in Bit Integrations, connect it to any of these action platforms:
+## Key Fields
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Submission
+- `form_id` - ID of the Everest form
+- `entry_id` - Unique submission record
+- `fields` - Keyed array of field values
+- `date_created` - Submission timestamp
 
-## Setup Steps
+### Field Object
+- `field_id` - Internal field identifier
+- `name` - Field label
+- `value` - Submitted value
+- `type` - text, email, dropdown, checkbox, etc.
 
-1. Install and activate Everest Forms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Everest Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Everest Forms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+## Parameters
 
-## Field Mapping Tips
-
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- `form_id` - Target form to hook
+- Hook priority adjustable (default 10)
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Send leads from WordPress contact forms to a CRM
+- Trigger welcome emails on newsletter signups
+- Log support requests to a ticketing system
+- Notify team on high-priority form submissions
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; server-side PHP only
+
+## Relevant Skills
+
+- marketing:email-sequence
+- operations:process-doc

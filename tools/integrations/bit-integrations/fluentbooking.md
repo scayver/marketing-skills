@@ -1,67 +1,91 @@
 # FluentBooking
 
-FluentBooking is a WordPress appointment scheduling plugin by the Fluent team with a clean UI, calendar management, and team booking features. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress appointment scheduling plugin with calendar management, availability slots, and team booking.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/FluentBooking.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create bookings in FluentBooking |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to FluentBooking appointment fields |
-
-## Action Events
-
-- Create booking
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via FluentBooking endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and FluentBooking must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Custom Form to FluentBooking Appointment
-**Trigger:** WordPress custom intake form submission
-**Action:** Create a FluentBooking appointment with the submitter's details and service selection
-**Use case:** Accept appointment requests via a custom form and create them in FluentBooking for calendar management
+### List bookings
+```bash
+GET https://yoursite.com/wp-json/fluent-booking/v2/bookings
 
-### Recipe 2: WooCommerce Service Purchase to Booking
-**Trigger:** WooCommerce order completed (service or session product)
-**Action:** Create a FluentBooking appointment for the purchased service
-**Use case:** Automatically schedule a session in FluentBooking when a client purchases a service through WooCommerce
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Lead Form to Consultation Booking
-**Trigger:** WordPress consultation request form submission
-**Action:** Create a FluentBooking booking for the requested consultation slot
-**Use case:** Convert consultation request forms directly into scheduled FluentBooking appointments
+### Get single booking
+```bash
+GET https://yoursite.com/wp-json/fluent-booking/v2/bookings/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and FluentBooking on your WordPress site.
-2. Configure services and availability in FluentBooking.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select FluentBooking as the Action.
-6. Select the target service and host.
-7. Map form fields to booking fields.
-8. Save and test.
+### List calendars
+```bash
+GET https://yoursite.com/wp-json/fluent-booking/v2/calendars
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get available slots
+```bash
+GET https://yoursite.com/wp-json/fluent-booking/v2/calendars/{id}/slots?date=2024-06-15
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Booking
+- `id` - Booking ID
+- `calendar_id` - Source calendar
+- `status` - pending, scheduled, cancelled, completed
+- `guest_email` - Booker email
+- `guest_name` - Booker name
+- `start_time` / `end_time` - ISO 8601 timestamps
+- `meeting_notes` - Optional notes
+- `meeting_url` - Video call link (if integrated)
+
+### Calendar
+- `id` - Calendar ID
+- `title` - Calendar name
+- `host_id` - WordPress user hosting the calendar
+- `duration` - Default meeting duration (minutes)
+- `timezone` - Host timezone
+
+## Parameters
+
+- `status` - Filter bookings by status
+- `calendar_id` - Filter by calendar
+- `from` / `until` - Date range filter
+- `per_page` / `page` - Pagination
 
 ## When to Use
 
-- When custom forms or purchases should create FluentBooking appointments automatically
-- When you want appointment scheduling in the Fluent ecosystem without manual booking entry
-- When WooCommerce service purchases should immediately create a scheduled FluentBooking session
+- Sync new bookings to a CRM as leads or contacts
+- Send reminder emails before appointments
+- Log completed meetings for follow-up tasks
+- Report on booking volume and cancellation rates
 
-## Related Integrations
+## Rate Limits
 
-- amelia.md
-- simply-schedule-appointments.md
-- google-calendar.md
-- fluent-support.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- sales:call-prep
+- marketing:email-sequence
+- operations:runbook

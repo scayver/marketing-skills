@@ -1,84 +1,97 @@
 # EmailOctopus
 
-EmailOctopus is an affordable email marketing platform built on Amazon SES, offering contact list management, campaigns, and automation for budget-conscious marketers. Available as an Action in the Bit Integrations WordPress plugin.
+Affordable email marketing platform built on Amazon SES, offering list management, campaigns, and automation.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Email_Octopus1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create contact in list |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Create contact in list
-- Update contact fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v1.6 |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API-only; community libraries available |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: EmailOctopus account > Profile > API Keys > Create API Key
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (query parameter)
+- **Parameter**: `api_key={your_api_key}`
+- **Get token**: EmailOctopus Dashboard > API
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name (via fields object) | Optional |
-| Last Name | Subscriber last name (via fields object) | Optional |
-| Tags | Tags to apply to the contact | Optional |
-| List ID | The EmailOctopus list to add the contact to | Required |
+### Add contact to list
+```bash
+POST https://emailoctopus.com/api/1.6/lists/{list_id}/contacts
 
-## Common Workflow Recipes
+Content-Type: application/json
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Create contact in EmailOctopus list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+{
+  "api_key": "{your_api_key}",
+  "email_address": "user@example.com",
+  "fields": {"FirstName": "Jane", "LastName": "Doe"},
+  "status": "SUBSCRIBED"
+}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Create buyer contact in EmailOctopus customer list
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Get list contacts
+```bash
+GET https://emailoctopus.com/api/1.6/lists/{list_id}/contacts?api_key={your_api_key}&limit=100
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Create contact in EmailOctopus list with enrollment tag
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Get single contact
+```bash
+GET https://emailoctopus.com/api/1.6/lists/{list_id}/contacts/{contact_id}?api_key={your_api_key}
+```
 
-## Setup Steps
+### List campaigns
+```bash
+GET https://emailoctopus.com/api/1.6/campaigns?api_key={your_api_key}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select EmailOctopus as the action.
-5. Connect your EmailOctopus account using your API Key.
-6. Select the list to add contacts to.
-7. Map the email field and any name or tag fields.
-8. Save and test with a real form submission.
+### Get campaign report
+```bash
+GET https://emailoctopus.com/api/1.6/campaigns/{campaign_id}/reports/summary?api_key={your_api_key}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact UUID
+- `email_address` - Primary identifier
+- `fields` - Custom field map (FirstName, LastName, etc.)
+- `status` - SUBSCRIBED, UNSUBSCRIBED, PENDING
+
+### Campaign
+- `id` - Campaign UUID
+- `name` - Campaign name
+- `status` - DRAFT, SENDING, SENT
+- `created_at` - ISO 8601 timestamp
+
+### Report Summary
+- `sent` - Total emails sent
+- `opened` - Unique opens
+- `clicked` - Unique clicks
+- `bounced` - Bounces
+- `unsubscribed` - Unsubscribes
+
+## Parameters
+
+- `limit` - Max results per page (default 100, max 100)
+- `page` - Cursor-based pagination token
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions on a tight budget
-- Segmenting new subscribers by lead source using tags
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Add new subscribers to a marketing list
+- Sync contacts from a signup form
+- Pull campaign performance metrics for reporting
+- Manage subscriber status (subscribe/unsubscribe)
 
-## Related Integrations
+## Rate Limits
 
-- sendy.md
-- mailerlite.md
-- mailchimp.md
+- See EmailOctopus pricing page; varies by plan
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report

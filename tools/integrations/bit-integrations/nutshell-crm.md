@@ -1,85 +1,99 @@
 # Nutshell CRM
 
-Nutshell CRM is a user-friendly sales CRM and email marketing platform designed for small and mid-size B2B teams, combining contact management, pipeline tracking, and team collaboration tools. Available as an Action in the Bit Integrations WordPress plugin.
+User-friendly sales CRM and email marketing platform for small and mid-size B2B teams, combining contact management, pipeline tracking, and built-in email automation.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Nutshell-CRM.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create People and Leads (opportunities) in Nutshell |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Nutshell CRM fields |
-
-## Action Events
-
-- Create Person
-- Create Lead (opportunity)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | JSON-RPC REST API at `https://app.nutshell.com/api/v1/json` |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Nutshell Settings > Integrations > API — generate and copy the API key
-- **Required fields in Bit Integrations**: API Key, Account Email
+- **Type**: HTTP Basic Auth (username + API key)
+- **Header**: `Authorization: Basic {base64(email:api_key)}`
+- **Get token**: Nutshell Settings > Integrations > API Keys > Generate New Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Find contacts by email
+```bash
+POST https://app.nutshell.com/api/v1/json
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| name | Full name of the person | Required |
-| email | Email address | Optional; recommended for deduplication |
-| phone | Phone number | Optional |
-| company_name | Associated company name | Optional; links to or creates an account |
-| lead_source | Origin of the lead | Optional; e.g., Website, Referral |
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-## Common Workflow Recipes
+{"method": "findContacts", "params": {"query": {"email": "jane@example.com"}}, "id": "1"}
+```
 
-### Recipe 1: Contact Form to Nutshell Person
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Person in Nutshell CRM
-**Key fields mapped:** Name, Email, Phone, Company Name
-**Use case:** Automatically add website contacts as Nutshell people so your B2B sales team can track and follow up without manual entry.
+### Create a contact (person)
+```bash
+POST https://app.nutshell.com/api/v1/json
 
-### Recipe 2: Demo Request to Nutshell Lead
-**Trigger:** Elementor or Fluent Forms demo request form
-**Action:** Create Lead in Nutshell CRM
-**Key fields mapped:** Name, Email, Company Name, Lead Source = Website
-**Use case:** Push demo requests into the Nutshell pipeline as open leads so your sales team can respond and move them to close.
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-### Recipe 3: Partner Inquiry to Nutshell Person and Lead
-**Trigger:** Contact Form 7 partner inquiry submission
-**Action:** Create Person and Create Lead in Nutshell CRM
-**Key fields mapped:** Name, Email, Phone, Company Name, Lead Source = Partner
-**Use case:** Capture partnership inquiries as both a contact record and an open pipeline lead in Nutshell for dual tracking.
+{"method": "newContact", "params": {"contact": {"name": "Jane Doe", "email": ["jane@example.com"], "phone": ["555-1234"]}}, "id": "2"}
+```
 
-## Setup Steps
+### Create a lead
+```bash
+POST https://app.nutshell.com/api/v1/json
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Nutshell CRM as the action.
-5. Connect your Nutshell account using your API key and account email from Settings > Integrations > API.
-6. Select the object type (Person or Lead) you want to create.
-7. Map the fields from your trigger to Nutshell CRM fields.
-8. Save and submit a test entry to verify data arrives correctly.
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"method": "newLead", "params": {"lead": {"description": "Website inquiry", "contacts": [{"id": 42}], "sources": [{"id": 1}]}}, "id": "3"}
+```
+
+### Get all leads
+```bash
+POST https://app.nutshell.com/api/v1/json
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"method": "findLeads", "params": {"query": {"status": 0}}, "id": "4"}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact ID
+- `name` - Full name (or first/last split)
+- `email` - Array of email strings
+- `phone` - Array of phone strings
+- `accounts` - Array of associated account IDs
+
+### Lead
+- `id` - Lead ID
+- `description` - Lead description/notes
+- `contacts` - Array of associated contact objects
+- `value` - Expected deal value
+- `status` - Lead status (0=Open, 1=Won, 2=Lost, etc.)
+
+## Parameters
+
+- `query` - JSON filter object for find methods
+- `limit` - Results per page
+- `page` - Page number (0-indexed)
 
 ## When to Use
 
-- Your B2B sales team uses Nutshell and needs website inquiries to enter the CRM automatically
-- You want demo or consultation requests to open deals in the Nutshell pipeline without manual input
-- You need company-level account records created from B2B inquiry forms alongside person records
-- You use Nutshell email campaigns and want web leads segmented by source for targeted outreach
+- Managing B2B sales pipelines with contact and account tracking
+- Creating contacts and open leads from website inquiry forms
+- Tracking deal status and sales velocity for pipeline reporting
+- Running targeted email campaigns to segmented contact lists
 
-## Related Integrations
+## Rate Limits
 
-- pipedrive.md
-- salesflare.md
-- capsulecrm.md
-- companyhub.md
+- See Nutshell API documentation; limits apply per account plan
+
+## Relevant Skills
+
+- sales:account-research
+- sales:pipeline-review
+- sales:draft-outreach

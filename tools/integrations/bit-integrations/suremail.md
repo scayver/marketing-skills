@@ -1,83 +1,88 @@
 # SureMail
 
-SureMail is an email marketing platform offering contact list management, campaign automation, and subscriber analytics for businesses looking to streamline email outreach. Available as an Action in the Bit Integrations WordPress plugin.
+SureMail is a WordPress SMTP email delivery plugin for configuring reliable transactional email sending via external mail providers.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Sure-Mail.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update contact fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; SMTP configuration only |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: SureMail account settings > API section
-- **Required in Bit Integrations**: API Key
+- **Type**: SMTP credentials (per configured provider)
+- **Configuration**: WordPress Dashboard > SureMail > Settings > SMTP
+- **Supported providers**: Gmail (OAuth), SendGrid, Mailgun, Amazon SES, SMTP.com, and generic SMTP
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| List ID | The SureMail list to add the contact to | Required |
+SureMail does not expose a public REST API. Interaction is via WordPress hooks or SMTP provider APIs.
 
-## Common Workflow Recipes
+### Send Email via WordPress wp_mail() (PHP)
+```php
+wp_mail(
+  'recipient@example.com',
+  'Subject Line',
+  'Email body content.',
+  ['Content-Type: text/html; charset=UTF-8']
+);
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to SureMail list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+### Configure SMTP via SendGrid API (underlying provider)
+```bash
+POST https://api.sendgrid.com/v3/mail/send
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to SureMail customer list or segment
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+Authorization: Bearer {sendgrid_api_key}
+Content-Type: application/json
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to SureMail list for enrollment-based nurture
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+{
+  "personalizations": [{"to": [{"email": "user@example.com"}]}],
+  "from": {"email": "noreply@yoursite.com"},
+  "subject": "Hello",
+  "content": [{"type": "text/plain", "value": "Message body"}]
+}
+```
 
-## Setup Steps
+### Configure SMTP via Mailgun API (underlying provider)
+```bash
+POST https://api.mailgun.net/v3/{domain}/messages
 
-1. Install Bit Integrations Pro on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select SureMail as the action.
-5. Connect your SureMail account using your API Key.
-6. Select the list to add contacts to.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+Authorization: Basic {base64(api:{mailgun_api_key})}
+
+from=noreply@yoursite.com&to=user@example.com&subject=Hello&text=Message+body
+```
+
+## Key Fields
+
+### SMTP Settings
+- `host` - SMTP server hostname
+- `port` - 587 (TLS), 465 (SSL), or 25
+- `username` - SMTP username
+- `encryption` - tls or ssl
+- `from_email` - Sender address
+- `from_name` - Sender display name
+
+## Parameters
+
+- `provider` - gmail, sendgrid, mailgun, ses, smtp
+- `force_from_email` - Override all outgoing sender addresses
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Ensuring WordPress transactional emails deliver reliably
+- Routing all site emails through an authenticated SMTP provider
+- Auditing email send logs via the configured provider's dashboard
+- Reducing spam folder placement for order confirmations and notifications
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- mailerlite.md
-- activecampaign.md
+- Determined by the configured SMTP provider's plan limits
+
+## Relevant Skills
+
+- marketing:email-sequence
+- operations:process-doc
+- engineering:documentation

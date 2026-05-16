@@ -1,87 +1,94 @@
 # Omnisend
 
-Omnisend is an eCommerce-focused email and SMS marketing platform with advanced segmentation, automation workflows, and omnichannel campaign capabilities. Available as an Action in the Bit Integrations WordPress plugin.
+Ecommerce-focused email and SMS marketing platform with advanced segmentation, omnichannel automation, and built-in ecommerce event tracking.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bitapps.pro/wp-content/uploads/2023/07/omnsend.png`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create contact, add to list, apply tags |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Create contact
-- Add contact to list
-- Apply tags to contact
-- Update contact properties
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.omnisend.com/v3/` |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Omnisend account > Store Settings > Integrations & API > API Keys > Generate API Key
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (header)
+- **Header**: `X-API-KEY: {api_key}`
+- **Get token**: Omnisend account > Store Settings > Integrations & API > API Keys > Generate API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Phone | Subscriber phone number (E.164 format) | Optional |
-| Tags | Tags to apply to the contact | Optional |
-| Lists | List IDs to add the contact to | Optional |
+### Create or update a contact
+```bash
+POST https://api.omnisend.com/v3/contacts
 
-## Common Workflow Recipes
+X-API-KEY: {api_key}
+Content-Type: application/json
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Create contact in Omnisend and add to list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+{"email": "user@example.com", "firstName": "Jane", "lastName": "Doe", "tags": ["website-lead"], "status": "subscribed", "statusDate": "2026-05-15T00:00:00Z"}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Create or update contact in Omnisend with buyer tag for post-purchase flows
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Get a contact by email
+```bash
+GET https://api.omnisend.com/v3/contacts?email=user@example.com
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Create contact in Omnisend, add to enrollment list, apply enrollment tag
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+X-API-KEY: {api_key}
+```
 
-## Setup Steps
+### Track a custom event
+```bash
+POST https://api.omnisend.com/v3/events
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Omnisend as the action.
-5. Connect your Omnisend account using your API Key.
-6. Select the list and tags to apply.
-7. Map the email field and any name, phone, or tag fields.
-8. Save and test with a real form submission.
+X-API-KEY: {api_key}
+Content-Type: application/json
+
+{"email": "user@example.com", "eventName": "course_enrolled", "fields": {"course_name": "Intro to SEO"}}
+```
+
+### List campaigns
+```bash
+GET https://api.omnisend.com/v3/campaigns
+
+X-API-KEY: {api_key}
+```
+
+## Key Fields
+
+### Contact
+- `email` - Email address (required)
+- `firstName` - First name
+- `lastName` - Last name
+- `phone` - Phone number in E.164 format
+- `tags` - Array of tag strings
+- `status` - Subscription status (subscribed, nonSubscribed, unsubscribed)
+- `customProperties` - Object of custom field key-value pairs
+
+### Event
+- `email` - Contact email
+- `eventName` - Custom event name
+- `fields` - Object of event property key-value pairs
+
+## Parameters
+
+- `email` - Filter contacts by email
+- `tag` - Filter contacts by tag
+- `status` - Filter by subscription status
+- `limit` - Results per page (max 250)
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions for eCommerce stores
-- Segmenting new subscribers by lead source using tags
-- Syncing WooCommerce buyers to an Omnisend customer list for post-purchase flows
-- Adding new members or course students to onboarding sequences
-- Running omnichannel campaigns across email and SMS from one platform
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing and managing ecommerce email/SMS subscriber lists
+- Triggering post-purchase, cart abandonment, or browse abandonment automations
+- Segmenting audiences by purchase behavior, tags, or custom properties
+- Tracking custom events to trigger behavioral automation workflows
 
-## Related Integrations
+## Rate Limits
 
-- klaviyo.md
-- mailchimp.md
-- activecampaign.md
+- 400 requests per minute; see Omnisend API documentation for details
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report

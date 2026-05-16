@@ -1,74 +1,111 @@
 # Advanced Coupons
 
-Advanced Coupons is a WooCommerce extension that adds powerful coupon features including BOGO deals, shipping discounts, cart conditions, and loyalty programs to your WooCommerce store. Available as Action in the Bit Integrations WordPress plugin.
+WooCommerce extension that adds powerful coupon features including BOGO deals, cart conditions, shipping discounts, loyalty programs, and auto-apply coupons.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Advanced-Coupons.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Apply coupon to order, create coupon |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Apply coupon to order — apply a coupon code to an existing WooCommerce order
-- Create coupon — generate a new Advanced Coupons coupon code
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Extends WooCommerce REST API at `/wp-json/wc/v3/coupons` |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI WooCommerce commands apply |
+| SDK | - | No dedicated SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WooCommerce and Advanced Coupons must both be installed and active; Bit Integrations reads them directly via WordPress hooks
-- **Note**: No API keys required; all plugins must be on the same WordPress site
+- **Type**: WooCommerce API Key (Consumer Key + Consumer Secret)
+- **Header**: `Authorization: Basic {base64(consumer_key:consumer_secret)}`
+- **Get token**: WooCommerce > Settings > Advanced > REST API > Add Key
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Generate personalized coupon on first purchase
-**Trigger:** WooCommerce — Order completed (first order)
-**Action:** Advanced Coupons — Create coupon
-**Key fields mapped:** Customer email, discount type, discount value, expiry date
-**Use case:** Automatically generate a personal coupon for new customers after their first purchase to encourage repeat buying
+### Create a coupon
 
-### Recipe 2: Apply coupon on membership activation
-**Trigger:** MemberPress / Restrict Content — Membership activated
-**Action:** Advanced Coupons — Create coupon (member discount code)
-**Key fields mapped:** User email, discount percentage tied to membership level
-**Use case:** Issue exclusive member discount coupons automatically when a membership activates
+```bash
+POST https://yoursite.com/wp-json/wc/v3/coupons
 
-### Recipe 3: Apply coupon from CRM deal or loyalty trigger
-**Trigger:** HubSpot — Deal closed or contact tag applied
-**Action:** Advanced Coupons — Apply coupon or create coupon
-**Key fields mapped:** Customer email, coupon code to generate or apply
-**Use case:** Reward customers with a discount when a CRM milestone is reached, such as a loyalty anniversary or upsell qualification
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-## Setup Steps
+{
+  "code": "SAVE20",
+  "discount_type": "percent",
+  "amount": "20",
+  "individual_use": true,
+  "usage_limit": 1,
+  "expiry_date": "2025-12-31",
+  "email_restrictions": ["customer@example.com"]
+}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Ensure WooCommerce and Advanced Coupons are both installed and active.
-3. Go to Bit Integrations > Create Integration.
-4. Select Advanced Coupons as the action.
-5. Choose Apply Coupon to Order or Create Coupon.
-6. Configure the coupon parameters (discount type, value, expiry) or the order to apply it to.
-7. Map the customer email from your trigger source.
-8. Save and test with a real event (complete a test purchase or activate a test membership).
+### Get a coupon by code
+
+```bash
+GET https://yoursite.com/wp-json/wc/v3/coupons?code=SAVE20
+
+Authorization: Basic {base64_credentials}
+```
+
+### Update a coupon
+
+```bash
+PUT https://yoursite.com/wp-json/wc/v3/coupons/{coupon_id}
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"usage_limit": 5, "expiry_date": "2026-03-31"}
+```
+
+### List all coupons
+
+```bash
+GET https://yoursite.com/wp-json/wc/v3/coupons?per_page=50
+
+Authorization: Basic {base64_credentials}
+```
+
+### Delete a coupon
+
+```bash
+DELETE https://yoursite.com/wp-json/wc/v3/coupons/{coupon_id}?force=true
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Coupon
+- `code` - Coupon code string (required, unique)
+- `discount_type` - percent, fixed_cart, fixed_product
+- `amount` - Discount value as string
+- `individual_use` - Boolean; prevents combining with other coupons
+- `usage_limit` - Max total uses (null = unlimited)
+- `usage_limit_per_user` - Max uses per customer
+- `expiry_date` - Expiration date in YYYY-MM-DD format
+- `minimum_amount` - Minimum cart total required
+- `email_restrictions` - Array of emails that can use this coupon
+
+## Parameters
+
+- `code` - Filter coupons by code
+- `per_page` - Results per page (max 100)
+- `page` - Page number
+- `after` / `before` - Filter by date created
 
 ## When to Use
 
-- You want to automatically generate personal discount codes for customers after purchases or membership activations
-- You need to apply coupons programmatically as part of a loyalty or rewards workflow
-- You want to issue member-exclusive discounts when membership levels activate
-- You integrate coupon creation into a broader post-purchase or retention automation stack
+- Generating personalized single-use coupons for post-purchase retention
+- Creating loyalty reward coupons programmatically on milestones
+- Setting up BOGO or shipping discount campaigns via API
+- Restricting coupons to specific customer emails for VIP offers
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- wployalty.md
-- mycred.md
-- memberpress.md
-- restrict-content.md
+- Subject to WordPress server limits; WooCommerce imposes no additional rate limiting
+
+## Relevant Skills
+
+- ecommerce
+- email-marketing
+- affiliate-marketing

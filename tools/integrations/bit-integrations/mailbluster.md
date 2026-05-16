@@ -1,83 +1,107 @@
 # MailBluster
 
-MailBluster is a bulk email marketing platform built on Amazon SES, designed for high-volume senders who want extremely low per-email costs with reliable delivery. Available as an Action in the Bit Integrations WordPress plugin.
+Bulk email marketing platform built on Amazon SES for high-volume sending at low per-email cost with a hosted management interface.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Mail-Buster.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create or update subscriber |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Create subscriber
-- Update subscriber fields
-- Set subscription status (subscribed/unsubscribed)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API for subscribers and campaigns |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API only |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: MailBluster account settings > API section
-- **Required in Bit Integrations**: API Key
+- **Header**: `Authorization: {api_key}`
+- **Get key**: MailBluster account > Settings > API
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Subscribed | Subscription status (true = subscribed) | Optional |
+### Create a subscriber
 
-## Common Workflow Recipes
+```bash
+POST https://app.mailbluster.com/api/leads
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Create subscriber in MailBluster with subscribed status
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: {api_key}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Create or update subscriber in MailBluster with buyer status
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"email": "jane@example.com", "firstName": "Jane", "lastName": "Doe", "subscribed": true}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Create subscriber in MailBluster for enrollment-based onboarding
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Update a subscriber
 
-## Setup Steps
+```bash
+PUT https://app.mailbluster.com/api/leads/{email}
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select MailBluster as the action.
-5. Connect your MailBluster account using your API Key.
-6. Configure the subscription status.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+Authorization: {api_key}
+Content-Type: application/json
+
+{"firstName": "Jane", "subscribed": true, "fields": {"company": "Acme Corp"}}
+```
+
+### Get subscriber details
+
+```bash
+GET https://app.mailbluster.com/api/leads/{email}
+
+Authorization: {api_key}
+```
+
+### Delete a subscriber
+
+```bash
+DELETE https://app.mailbluster.com/api/leads/{email}
+
+Authorization: {api_key}
+```
+
+### Get all campaigns
+
+```bash
+GET https://app.mailbluster.com/api/campaigns
+
+Authorization: {api_key}
+```
+
+## Key Fields
+
+### Subscriber (Lead) Object
+- `email` - Primary subscriber identifier
+- `firstName`, `lastName` - Name fields
+- `subscribed` - true | false
+- `fields` - Custom field key/value pairs
+- `timezone` - Subscriber timezone
+- `countryCode` - Two-letter country code
+
+### Campaign Object
+- `id` - Unique campaign ID
+- `name` - Campaign name
+- `subject` - Email subject
+- `status` - Draft | Scheduled | Sent
+- `scheduledDateTime` - Scheduled send time
+
+## Parameters
+
+- `email` - Subscriber email as path parameter
+- `subscribed` - true to subscribe, false to unsubscribe
+- `fields` - Object of custom field key/value pairs
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions at minimal sending cost
-- Sending bulk emails via Amazon SES with a hosted management interface
-- Syncing WooCommerce buyers to a customer subscriber list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Sending high-volume email campaigns at Amazon SES rates
+- Managing large subscriber lists with custom segmentation fields
+- Building cost-effective bulk email infrastructure for SaaS or ecommerce
+- Syncing subscribers from web forms or purchases into a bulk sender
 
-## Related Integrations
+## Rate Limits
 
-- sendy.md
-- emailoctopus.md
-- mailchimp.md
+- Limited by Amazon SES sending quota for the connected account
+- See mailbluster.com documentation for API-specific rate limits
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- ecommerce

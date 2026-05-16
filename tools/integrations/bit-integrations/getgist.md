@@ -1,83 +1,106 @@
-# GetGist
+# Gist (GetGist)
 
-GetGist is a customer messaging and email marketing platform combining live chat, email automation, and CRM tools for growing SaaS and service businesses. Available as an Action in the Bit Integrations WordPress plugin.
+Customer messaging and marketing automation platform combining live chat, email, and CRM for growing businesses.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/GetGist.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create contact, add tag |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Create contact
-- Add tag to contact
-- Update contact fields
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | JavaScript SDK for browser tracking |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: GetGist account settings > API section
-- **Required in Bit Integrations**: API Key
+- **Type**: Bearer Token (API Key)
+- **Header**: `Authorization: Bearer {api_key}`
+- **Get token**: Gist App > Settings > Integrations > API
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Contact full name | Optional |
-| Phone | Contact phone number | Optional |
-| Tags | Tags to apply to the contact | Optional |
+### Create or update contact
+```bash
+POST https://api.getgist.com/contacts
 
-## Common Workflow Recipes
+Authorization: Bearer {api_key}
+Content-Type: application/json
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Create contact in GetGist and apply a welcome tag
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your contact base when visitors fill out any lead capture form
+{
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "custom_properties": {"plan": "pro", "signup_source": "landing-page"}
+}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Create contact in GetGist with buyer tag
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Get contact by email
+```bash
+GET https://api.getgist.com/contacts?email=jane@example.com
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Create contact in GetGist with enrollment tag
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+Authorization: Bearer {api_key}
+```
 
-## Setup Steps
+### Track event
+```bash
+POST https://api.getgist.com/events
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select GetGist as the action.
-5. Connect your GetGist account using your API Key.
-6. Configure the contact action and tags to apply.
-7. Map the email field and any name or tag fields.
-8. Save and test with a real form submission.
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{
+  "email": "jane@example.com",
+  "name": "Upgraded Plan",
+  "properties": {"from_plan": "basic", "to_plan": "pro"}
+}
+```
+
+### List conversations
+```bash
+GET https://api.getgist.com/conversations
+
+Authorization: Bearer {api_key}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact ID
+- `email` - Primary identifier
+- `name` - Full name
+- `signed_up_at` - Registration date
+- `custom_properties` - Custom attribute map
+- `tags` - Array of tag strings
+
+### Event
+- `name` - Event name
+- `email` - Contact email
+- `properties` - Custom attribute map
+- `created_at` - Event timestamp
+
+### Conversation
+- `id` - Conversation ID
+- `state` - open, closed, snoozed
+- `contact_id` - Linked contact
+- `created_at` - Start time
+
+## Parameters
+
+- `email` - Filter contacts by email
+- `page` / `per_page` - Pagination
 
 ## When to Use
 
-- Growing a contact base from WordPress form submissions automatically
-- Segmenting new contacts by lead source using tags
-- Syncing WooCommerce buyers to GetGist for post-purchase messaging
-- Adding new members or course students to onboarding email sequences
-- Replacing manual CSV imports from WordPress to your customer messaging platform
+- Sync new signups as contacts for behavioral automation
+- Track product events to trigger lifecycle emails
+- Manage live chat conversations from external triggers
+- Segment contacts by custom properties for campaigns
 
-## Related Integrations
+## Rate Limits
 
-- activecampaign.md
-- encharge.md
-- mailchimp.md
+- See Gist pricing page; varies by plan
+
+## Relevant Skills
+
+- marketing:email-sequence
+- sales:draft-outreach
+- customer-support:customer-research

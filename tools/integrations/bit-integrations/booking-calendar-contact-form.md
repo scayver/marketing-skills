@@ -1,84 +1,119 @@
 # Booking Calendar Contact Form
 
-Booking Calendar Contact Form is a WordPress plugin that combines a booking calendar with a built-in contact form, allowing visitors to select available dates and submit booking requests in a single form. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a booking form is submitted.
+WordPress booking and appointment form plugin for collecting date, time, and customer details.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Booking-Calender-.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on booking form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Booking form submitted (all forms or specific form selection)
-- Booking request received with selected date and time
+## Common Agent Operations
 
-## What Data Gets Passed
+### Check plugin status
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+```bash
+wp plugin status booking-calendar-contact-form
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Selected booking date and time
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### List REST routes
 
-## Connecting to Action Platforms
+```bash
+GET https://example.com/wp-json/
 
-After selecting Booking Calendar Contact Form as the trigger in Bit Integrations, connect it to any of these action platforms:
+Authorization: Basic base64(username:application_password)
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from booking data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber and trigger booking confirmation sequence |
-| Google Sheets | Log booking request as spreadsheet row |
-| Slack | Send team notification on new booking request |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record from booking |
-| Telegram / WhatsApp | Instant booking notification to phone |
+### Search posts or records
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
 
-1. Install and activate Booking Calendar Contact Form on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a booking calendar form and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Booking Calendar Contact Form as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields (including date/time fields) to the destination platform fields.
-9. Save and test by submitting a booking with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Basic base64(username:application_password)
+```
 
-## Field Mapping Tips
+### Create a WordPress post or content record
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Map the selected date and time fields to CRM properties so sales teams see the requested appointment.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- If the action platform supports tags, tag the contact with the booking type or service requested.
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/booking-calendar-contact-form/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='booking-calendar-contact-form' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- Sending booking request data to a CRM for follow-up and confirmation
-- Triggering a booking confirmation email sequence via an email marketing platform
-- Logging all booking requests in a Google Sheet for scheduling review
-- Sending real-time booking alerts to Slack or WhatsApp for the service team
-- Creating CRM deals or leads directly from booking form submissions
-- Passing UTM data from booking forms into CRM contact records for attribution
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- landing-page-cro
+- customer-service
+- analytics

@@ -1,67 +1,90 @@
 # IFTTT
 
-IFTTT (If This Then That) is a consumer automation platform that connects apps and devices via simple conditional applets. Available as an Action in the Bit Integrations WordPress plugin.
+Consumer and business automation platform that connects apps, devices, and services via simple if-this-then-that applets.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/IFTTT-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Trigger IFTTT Webhooks (Maker) service with custom event name |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map up to three values (value1, value2, value3) to the IFTTT event |
-
-## Action Events
-
-- Trigger a named IFTTT Webhooks (Maker) event with up to three data values
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Webhooks (Maker) for triggering applets; limited applet management API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Webhooks only |
 
 ## Authentication
 
-- **Type**: API Key
-- **Required**: IFTTT Webhook key (from ifttt.com/maker_webhooks/settings) and the event name configured in your IFTTT applet
+- **Type**: API Key (Webhooks key)
+- **URL pattern**: `https://maker.ifttt.com/trigger/{event}/with/key/{key}`
+- **Get key**: IFTTT account > Explore > Webhooks > Documentation
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Smart Home Device
-**Trigger:** WordPress contact form submission
-**Action:** Fire IFTTT Maker event that turns on a smart light or sends a mobile notification
-**Use case:** Get a physical or phone alert the moment someone fills out a high-value form
+### Trigger a named IFTTT event
 
-### Recipe 2: WooCommerce Sale to Social Media Post
-**Trigger:** WooCommerce order completed
-**Action:** IFTTT applet posts a celebratory update to a social platform
-**Use case:** Automatically share purchase milestones or sale announcements
+```bash
+POST https://maker.ifttt.com/trigger/{event_name}/json/with/key/{webhooks_key}
 
-### Recipe 3: User Registration to Google Sheets Log
-**Trigger:** WordPress user registration
-**Action:** IFTTT applet appends a row to a Google Sheet with name and email
-**Use case:** Maintain a simple signup log without a dedicated integration
+Content-Type: application/json
 
-## Setup Steps
+{"value1": "data_one", "value2": "data_two", "value3": "data_three"}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select IFTTT as the Action.
-5. In IFTTT, create an applet with "Webhooks > Receive a web request" as the trigger and set an event name.
-6. Copy your Maker webhook key from ifttt.com/maker_webhooks/settings.
-7. Enter the webhook key and event name in Bit Integrations.
-8. Map up to three fields to value1, value2, value3.
-9. Save and test.
+### Trigger event with GET (simple)
+
+```bash
+GET https://maker.ifttt.com/trigger/{event_name}/with/key/{webhooks_key}?value1=hello&value2=world
+```
+
+### Send event with extra fields (JSON endpoint)
+
+```bash
+POST https://maker.ifttt.com/trigger/{event_name}/json/with/key/{webhooks_key}
+
+Content-Type: application/json
+
+{"name": "Jane Doe", "email": "jane@example.com", "message": "Hello"}
+```
+
+### Test connection
+
+```bash
+GET https://maker.ifttt.com/trigger/test/with/key/{webhooks_key}
+```
+
+## Key Fields
+
+### Webhook Payload
+- `value1` - First data field passed to the applet
+- `value2` - Second data field passed to the applet
+- `value3` - Third data field passed to the applet
+
+### JSON Endpoint (extended)
+- Any JSON key/value pairs — mapped to applet ingredients by key name
+
+### Event Object
+- `event_name` - Name of the event as configured in the Webhooks applet trigger
+- `occurred_at` - Timestamp IFTTT records for the trigger
+
+## Parameters
+
+- `event_name` - Must exactly match the event name in the IFTTT applet
+- `value1`, `value2`, `value3` - Data values passed into the applet (classic endpoint)
 
 ## When to Use
 
-- When connecting WordPress to consumer apps, smart home devices, or IFTTT-exclusive integrations
-- When you need a dead-simple one-trigger-one-action automation without complex logic
-- When the destination service has an IFTTT applet but no direct Bit Integrations connector
+- Triggering smart home device actions from web events
+- Posting to social media when a specific event occurs
+- Sending mobile push notifications on external triggers
+- Connecting apps that have IFTTT support but no direct API
 
-## Related Integrations
+## Rate Limits
 
-- zapier.md
-- make.md
-- webhook-outgoing.md
+- Free tier: 3 applets, limited triggers per month
+- Pro tier: Unlimited applets, 2,000+ partner API calls/month
+- See ifttt.com/plans for current limits
+
+## Relevant Skills
+
+- social-media
+- lead-generation
+- email-marketing

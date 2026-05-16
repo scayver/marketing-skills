@@ -1,83 +1,109 @@
 # DirectIQ
 
-DirectIQ is an email marketing platform offering campaign creation, list management, and subscriber analytics for small and mid-size businesses. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing platform for small and mid-size businesses offering campaign creation, list management, subscriber segmentation, and deliverability analytics.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/DirectIQ1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update contact fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API with API key authentication |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: DirectIQ account settings > API section
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (request header or query parameter)
+- **Header**: `X-API-KEY: {api_key}` or append `?api_key={api_key}` to URL
+- **Get token**: DirectIQ account > Settings > API section
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| List ID | The DirectIQ list to add the contact to | Required |
+### List subscriber lists
+```
+GET https://api.directiq.com/v1/lists
 
-## Common Workflow Recipes
+X-API-KEY: {api_key}
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to DirectIQ list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+### Add a subscriber to a list
+```
+POST https://api.directiq.com/v1/lists/{list_id}/subscribers
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to DirectIQ customer list or segment
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+X-API-KEY: {api_key}
+Content-Type: application/json
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to DirectIQ list for enrollment-based nurture
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+{
+  "email": "jane@example.com",
+  "first_name": "Jane",
+  "last_name": "Smith"
+}
+```
 
-## Setup Steps
+### Update subscriber fields
+```
+PUT https://api.directiq.com/v1/subscribers/{subscriber_id}
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select DirectIQ as the action.
-5. Connect your DirectIQ account using your API Key.
-6. Select the list to add contacts to.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+X-API-KEY: {api_key}
+Content-Type: application/json
+
+{"first_name": "Jane", "custom_field_1": "VIP"}
+```
+
+### Unsubscribe a contact
+```
+DELETE https://api.directiq.com/v1/lists/{list_id}/subscribers/{email}
+
+X-API-KEY: {api_key}
+```
+
+### Get campaign statistics
+```
+GET https://api.directiq.com/v1/campaigns/{campaign_id}/stats
+
+X-API-KEY: {api_key}
+```
+
+## Key Fields
+
+### Subscriber
+- `email` - Email address (required)
+- `first_name` - First name
+- `last_name` - Last name
+- `list_id` - Target list identifier
+
+### List
+- `id` - List identifier
+- `name` - List display name
+- `subscriber_count` - Active subscriber count
+
+### Campaign
+- `id` - Campaign identifier
+- `name` - Campaign name
+- `status` - draft / scheduled / sent
+- `stats.opens` - Open count
+- `stats.clicks` - Click count
+
+## Parameters
+
+- `list_id` - Targets a specific subscriber list
+- `subscriber_id` - Targets a specific subscriber for updates
+- `email` - Used to identify a subscriber for unsubscribe or lookup operations
+- `campaign_id` - Targets a specific campaign for stats retrieval
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing email lists from web forms or e-commerce events
+- Segmenting customers into separate lists by behavior or product
+- Pulling campaign open and click performance for reporting
+- Syncing buyer or enrollment data into email nurture lists
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- benchmark-email.md
-- mailerlite.md
+- See [directiq.com](https://www.directiq.com) or contact support for current limits
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- content-strategy

@@ -1,75 +1,97 @@
 # FluentCart
 
-FluentCart is a modern WordPress eCommerce plugin by the WPManageNinja team, built for speed and flexibility with a streamlined checkout experience and digital product support. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+Modern WordPress ecommerce plugin by WPManageNinja built for speed, digital products, and streamlined checkout.
 
-**Role:** Trigger/Action
-**Free Tier:** No — both Trigger and Action require Pro
-**Category:** eCommerce and Payments
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent-Cart.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent-Cart-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on purchase and order events |
-| As Action | ✓ | Manage orders and customer records |
-| Free Tier | — | Requires Pro for both Trigger and Action |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Purchase and order events (refer to Bit Integrations documentation for the current full list of supported trigger events)
-
-## Action Events
-
-- Order and customer management actions (refer to Bit Integrations documentation for the current full list of supported action events)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via FluentCart endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: FluentCart must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add buyer to CRM on purchase
-**Trigger:** FluentCart — Purchase completed
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** Customer email, first name, last name, product name, order total
-**Use case:** Automatically push FluentCart buyers into your CRM with purchase details for follow-up and upsell tracking
+### List products
+```bash
+GET https://yoursite.com/wp-json/fluent-cart/v1/products
 
-### Recipe 2: Enroll buyer in LMS course on purchase
-**Trigger:** FluentCart — Purchase completed
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** Customer email, course linked to purchased product
-**Use case:** Grant LMS course access immediately when a FluentCart purchase is confirmed
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Add buyer to email marketing list
-**Trigger:** FluentCart — Purchase completed
-**Action:** Mailchimp / ActiveCampaign — Add subscriber or add tag
-**Key fields mapped:** Customer email, product name, purchase date
-**Use case:** Automatically add FluentCart buyers to the correct email list or segment for post-purchase nurturing
+### List orders
+```bash
+GET https://yoursite.com/wp-json/fluent-cart/v1/orders?status=completed
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select FluentCart as the trigger or action.
-4. For triggers, choose the relevant purchase or order event.
-5. For actions, choose the order or customer management action.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (complete a test FluentCart purchase).
+### Get single order
+```bash
+GET https://yoursite.com/wp-json/fluent-cart/v1/orders/{id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List customers
+```bash
+GET https://yoursite.com/wp-json/fluent-cart/v1/customers
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Product
+- `id` - Product ID
+- `title` - Product name
+- `price` - Sale price
+- `type` - physical, digital, subscription
+- `status` - publish, draft
+
+### Order
+- `id` - Order ID
+- `status` - pending, processing, completed, refunded, cancelled
+- `total` - Order total
+- `currency` - Currency code
+- `customer_id` - Linked customer
+- `line_items` - Products in order
+- `created_at` - ISO 8601 timestamp
+
+### Customer
+- `id` - Customer ID
+- `email` - Email address
+- `name` - Full name
+- `total_orders` - Order count
+- `total_spent` - Lifetime value
+
+## Parameters
+
+- `status` - Filter orders by status
+- `customer_id` - Filter by customer
+- `per_page` / `page` - Pagination
+- `orderby` / `order` - Sort field and direction
 
 ## When to Use
 
-- You use FluentCart as your WordPress checkout solution and want buyer data in your CRM or email platform
-- You sell courses via FluentCart and need LMS enrollment automated on purchase
-- You want to trigger post-purchase email sequences from FluentCart order events
-- You need FluentCart integrated into a broader eCommerce automation workflow
+- Sync orders to CRM or fulfillment system
+- Trigger post-purchase email sequences
+- Monitor revenue and customer lifetime value
+- Automate refund or cancellation notifications
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- surecart.md
-- easy-digital-downloads.md
-- learndash.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- small-business:sales-brief
+- marketing:email-sequence
+- data:analyze

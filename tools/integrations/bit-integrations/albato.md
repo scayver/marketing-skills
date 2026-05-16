@@ -1,67 +1,85 @@
 # Albato
 
-Albato is a no-code automation platform focused on connecting business apps popular in Eastern European and global markets. Available as an Action in the Bit Integrations WordPress plugin.
+No-code automation platform for connecting business apps — popular in Eastern European and CIS markets with a large library of Russian and regional app connectors.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Albato.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to an Albato webhook trigger |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map any form field to the outgoing webhook payload |
-
-## Action Events
-
-- Send data to an Albato automation via webhook trigger
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No public REST API for external use |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: Webhook URL
-- **Required**: Webhook URL from an Albato automation's webhook trigger step
+- **Type**: Webhook URL (inbound)
+- **Header**: N/A — Albato generates webhook URLs for each automation trigger
+- **Get token**: Albato dashboard > Automations > New automation > Choose "Webhook" as trigger > Copy URL
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to CRM
-**Trigger:** WordPress form submission
-**Action:** Albato automation creates a lead in a connected CRM
-**Use case:** Route WordPress leads into CRMs and tools supported by Albato's connector library
+Albato has no external REST API. Integrations are managed via the Albato dashboard. External systems communicate with Albato automations via webhook endpoints.
 
-### Recipe 2: Registration to Messaging App Notification
-**Trigger:** WordPress user registration
-**Action:** Albato sends a notification message to Telegram or another messaging app
-**Use case:** Alert sales or support teams instantly when new users register
+### Send data to an Albato automation (webhook trigger)
 
-### Recipe 3: WooCommerce Order to Accounting Tool
-**Trigger:** WooCommerce order completed
-**Action:** Albato automation logs order data to an accounting or finance tool
-**Use case:** Automate financial record keeping for WooCommerce sales
+```bash
+POST https://h.albato.com/wh/{automation_id}/{webhook_token}
 
-## Setup Steps
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Albato as the Action.
-5. In Albato, create an automation with "Webhook" as the trigger. Copy the webhook URL.
-6. Paste the webhook URL into Bit Integrations.
-7. Map fields.
-8. Save and test.
+{
+  "email": "user@example.com",
+  "name": "Jane Doe",
+  "source": "website-form"
+}
+```
+
+### Example: send form data and trigger downstream automation
+
+```bash
+POST https://h.albato.com/wh/{automation_id}/{webhook_token}
+
+Content-Type: application/json
+
+{
+  "contact_email": "lead@example.com",
+  "contact_name": "John Smith",
+  "phone": "+79001234567",
+  "interest": "Enterprise plan"
+}
+```
+
+## Key Fields
+
+### Webhook Payload
+- Any JSON key-value pairs — Albato maps incoming fields to destination app fields in the automation editor
+- Field names must match what was configured in the Albato automation's field mapping step
+
+### Automation
+- `automation_id` - Albato automation identifier
+- `status` - active or paused
+- `trigger` - Source app/event that starts the automation
+- `actions` - Ordered list of steps to execute
+
+## Parameters
+
+- Payload keys are custom and defined per automation in the Albato dashboard
+- No standard query parameters — all data passes via POST body
 
 ## When to Use
 
-- When your destination apps are in Albato's connector library but not natively in Bit Integrations
-- When you need automation with apps popular in markets Albato specializes in
-- When you want webhook-based WordPress automation with Albato as the orchestration layer
+- Routing data into apps popular in CIS markets (AmoCRM, Bitrix24, GetCourse, etc.)
+- Connecting services not covered by other automation platforms
+- Using Albato as an orchestration layer for multi-step workflows triggered by external webhooks
+- Bridging WordPress or other source systems to Albato's connector library
 
-## Related Integrations
+## Rate Limits
 
-- zapier.md
-- pabbly.md
-- integrately.md
-- webhook-outgoing.md
+- See Albato pricing page for automation run limits by plan tier
+
+## Relevant Skills
+
+- crm-management
+- email-marketing
+- lead-generation

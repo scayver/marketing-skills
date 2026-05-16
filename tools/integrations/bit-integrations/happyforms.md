@@ -1,82 +1,90 @@
-# Happy Forms
+# HappyForms
 
-Happy Forms is a WordPress form builder plugin known for its user-friendly interface and clean design, with a free version and premium add-ons. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+WordPress form builder plugin with a clean interface for creating contact, survey, and lead capture forms.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/HappyForms.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress plugin only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress hooks and filters only |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress admin credentials
+- **Header**: `Authorization: Basic {base64(user:app_password)}` for WP REST API
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### List form submissions via WordPress REST API
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+```bash
+GET https://yoursite.com/wp-json/wp/v2/happyforms-submissions
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic {base64(user:app_password)}
+```
 
-## Connecting to Action Platforms
+### Trigger action on form submission (PHP hook)
 
-After selecting Happy Forms as the trigger in Bit Integrations, connect it to any of these action platforms:
+```php
+add_action( 'happyforms_submission_complete', function( $form, $values ) {
+    // $form — form object with ID, title, and field config
+    // $values — associative array of submitted field values
+}, 10, 2 );
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Get all forms
 
-## Setup Steps
+```bash
+GET https://yoursite.com/wp-json/wp/v2/happyforms-forms
 
-1. Install and activate Happy Forms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Happy Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Happy Forms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Basic {base64(user:app_password)}
+```
 
-## Field Mapping Tips
+### Get a specific form's fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+```bash
+GET https://yoursite.com/wp-json/wp/v2/happyforms-forms/{form_id}
+
+Authorization: Basic {base64(user:app_password)}
+```
+
+## Key Fields
+
+### Submission Object
+- `form_id` - ID of the form that was submitted
+- `date_created` - Submission timestamp
+- `fields` - Array of field name/value pairs submitted
+- `sender_ip` - Submitter IP address
+- `page_url` - URL of the page where form was submitted
+
+### Form Object
+- `id` - Unique form identifier
+- `title` - Form name
+- `parts` - Array of field definitions (label, type, required)
+
+## Parameters
+
+- `form_id` - Filter submissions by form
+- `per_page` - Number of results (default 10, max 100)
+- `page` - Pagination offset
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from WordPress contact forms
+- Running surveys and collecting responses on-site
+- Building custom intake forms without coding
+- Connecting form submissions to downstream workflows via hooks
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external rate limits; subject to WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- content-creation

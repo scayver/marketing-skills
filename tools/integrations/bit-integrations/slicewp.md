@@ -1,72 +1,119 @@
 # SliceWP
 
-SliceWP is an affiliate management plugin for WordPress that integrates with WooCommerce and Easy Digital Downloads for referral tracking and commissions. Available as an Action (free) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WordPress affiliate management plugin for referrals, commissions, affiliates, and payouts.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes (Action free; Trigger requires Pro)
-**Category:** Affiliate Management
-**Icon (Action):** `https://bitapps.pro/wp-content/uploads/2023/07/slicewp.png`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/SliceWP.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires on affiliate and commission events |
-| As Action | ✓ | Free; register affiliates |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map form fields to SliceWP affiliate fields |
-
-## Trigger Events
-
-- Affiliate registered
-- Commission created
-
-## Action Events
-
-- Register affiliate
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and SliceWP must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Affiliate Application Form to SliceWP
-**Trigger:** WordPress affiliate application form submission
-**Action:** Register the applicant as a SliceWP affiliate
-**Use case:** Create a custom affiliate sign-up flow that automatically registers affiliates in SliceWP
+### Check plugin status
 
-### Recipe 2: New SliceWP Affiliate to Email Onboarding
-**Trigger:** SliceWP affiliate registered
-**Action:** Add the new affiliate to an email onboarding sequence
-**Use case:** Automatically welcome and onboard new affiliates with an email series
+```bash
+wp plugin status slicewp
+```
 
-### Recipe 3: Commission Created to CRM or Notification
-**Trigger:** SliceWP commission created
-**Action:** Log the commission in a Google Sheet or send a Slack notification
-**Use case:** Track affiliate commissions in a spreadsheet or notify the finance team on each new commission
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations and SliceWP on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select SliceWP as the Trigger and choose the event.
-4. For Action: Choose your trigger source, then select SliceWP as the Action.
-5. Select the action event (register affiliate).
-6. Map fields.
-7. Save and test.
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/slicewp/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='slicewp' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- When using SliceWP to manage an affiliate program and wanting automated workflows on affiliate events
-- When affiliate sign-ups or commissions should trigger email sequences or CRM updates
-- When building a lightweight affiliate management system on top of WooCommerce with SliceWP
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- affiliatewp.md
-- solid-affiliate.md
-- mailchimp.md
-- google-sheets.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- referrals
+- ecommerce-content
+- analytics

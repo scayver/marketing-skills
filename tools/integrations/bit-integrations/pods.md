@@ -1,68 +1,96 @@
 # Pods
 
-Pods is a flexible WordPress framework for creating custom content types, fields, and relationships with powerful front-end and back-end tools. Available as an Action in the Bit Integrations WordPress plugin.
+WordPress framework for creating custom content types, custom fields, and relationships with REST API support and a flexible templating system.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bitapps.pro/wp-content/uploads/2023/07/pods.png`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create or update Pods entries (pod records) |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Pods field definitions |
-
-## Action Events
-
-- Create pod entry
-- Update pod entry
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `/wp-json/pods/v1/` |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI commands via `wp pods` |
+| SDK | - | PHP framework only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and Pods must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress REST API (Application Password or JWT)
+- **Header**: `Authorization: Bearer {application_password}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Registration Form to Pods Member Profile
-**Trigger:** WordPress user registration or profile form submission
-**Action:** Create a Pods entry for the new member with extended profile fields
-**Use case:** Store extended user profile data in a Pods-managed content type beyond WordPress core user fields
+### List all pods (content types)
 
-### Recipe 2: Business Directory Form to Pods Listing
-**Trigger:** WordPress business submission form
-**Action:** Create a Pods entry in a business directory pod
-**Use case:** Populate a Pods-powered business directory from user-submitted listing forms
+```bash
+GET https://yoursite.com/wp-json/pods/v1/pods
 
-### Recipe 3: Application Form to Pods Application Record
-**Trigger:** Job or program application form submission
-**Action:** Create a Pods record in an applications pod with all submitted fields
-**Use case:** Manage applications in a Pods-powered database with custom statuses and relationships
+Authorization: Bearer {token}
+```
 
-## Setup Steps
+### List items in a pod
 
-1. Install Bit Integrations and Pods on your WordPress site.
-2. In Pods, define the target pod (content type) and its fields.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Pods as the Action.
-6. Select the target pod.
-7. Map form fields to Pods field names.
-8. Save and test.
+```bash
+GET https://yoursite.com/wp-json/pods/v1/pods/{pod_name}/items
+
+Authorization: Bearer {token}
+```
+
+### Get a single pod item
+
+```bash
+GET https://yoursite.com/wp-json/pods/v1/pods/{pod_name}/items/{item_id}
+
+Authorization: Bearer {token}
+```
+
+### Create a pod item
+
+```bash
+POST https://yoursite.com/wp-json/pods/v1/pods/{pod_name}/items
+
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{"name": "New Entry", "custom_field_1": "value", "custom_field_2": "value"}
+```
+
+### WP-CLI: List pod items
+
+```bash
+wp pods list --pod=my_pod_name
+```
+
+## Key Fields
+
+### Pod Item Object
+- `id` - Item ID
+- `name` - Item title/name
+- `slug` - URL slug
+- `status` - publish / draft / pending
+- `date_modified` - Last modified timestamp
+- Custom fields are included by their field name as defined in the pod
+
+## Parameters
+
+- `pod` - Pod name (slug) to target
+- `limit` - Number of items to return
+- `page` - Page number for pagination
+- `orderby` - Field to sort by
+- `where` - SQL-style filter condition
 
 ## When to Use
 
-- When building custom data applications with Pods and needing WordPress forms to create or update records
-- When Pods-managed content types should be populated automatically from form submissions
-- When you need relational data capabilities that standard WordPress post types don't support
+- Building custom data applications on WordPress (directories, catalogs, databases)
+- Extending WordPress post types with complex relational fields
+- Creating structured content types beyond default posts/pages
+- Programmatically reading or writing custom content via the REST API
 
-## Related Integrations
+## Rate Limits
 
-- advanced-custom-fields.md
-- jetengine.md
-- acpt.md
-- post-creation.md
+- Self-hosted WordPress; limits depend on server configuration
+
+## Relevant Skills
+
+- engineering:architecture
+- operations:process-doc
+- marketing:content-creation

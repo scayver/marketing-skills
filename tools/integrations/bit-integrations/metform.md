@@ -1,85 +1,76 @@
 # MetForm
 
-MetForm is an Elementor-based WordPress form builder that allows creating forms as Elementor widgets with a drag-and-drop interface. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Elementor-based WordPress form builder for creating forms as drag-and-drop widgets with conditional logic, multi-step support, and built-in analytics.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/MetForm.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; WordPress-native plugin only |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress plugin-native (hook-based)
+- **Access**: Form submission data is accessed via WordPress action hooks (`metform/form/action/submit`) on the same WordPress installation
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+MetForm has no external REST API. Integration is via WordPress hooks or the WP REST API for post data.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### List MetForm forms (via WP REST API)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/metform-form
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic {base64_credentials}
+```
 
-## Connecting to Action Platforms
+### Get form submissions (stored as custom post type)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/metform-entry?form_id={form_id}
 
-After selecting MetForm as the trigger in Bit Integrations, connect it to any of these action platforms:
+Authorization: Basic {base64_credentials}
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Hook into form submission (PHP — server-side)
+```php
+add_action('metform/form/action/submit', function($data, $form_id) {
+    // $data contains all submitted field values
+    // Process or forward to external API here
+}, 10, 2);
+```
 
-## Setup Steps
+## Key Fields
 
-1. Install and activate MetForm (and Elementor) on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in MetForm and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select MetForm as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Form Entry
+- `form_id` - MetForm form ID
+- `mf_name` - Submitted name field
+- `mf_email` - Submitted email field
+- `mf_phone` - Submitted phone field
+- `mf_message` - Submitted message/textarea
+- Custom fields keyed by field ID
 
-## Field Mapping Tips
+## Parameters
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- `form_id` - Filter entries by form
+- `per_page` - Results per page
+- `status` - Entry publish status
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from Elementor-built forms and routing to CRM or email platforms via hooks
+- Logging form submissions for analytics using server-side PHP integrations
+- Building multi-step forms within Elementor page builder
+- Collecting conditional-logic-based form responses for segmented follow-up
 
-## Related Integrations
+## Rate Limits
 
-- elementor-form.md
-- essential-addons-elementor.md
-- piotnet-addons-elementor.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; rate limits are WordPress server-dependent
+
+## Relevant Skills
+
+- marketing:draft-content
+- marketing:email-sequence
+- data:validate-data

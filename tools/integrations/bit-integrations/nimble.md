@@ -1,87 +1,94 @@
-# Nimble CRM
+# Nimble
 
-Nimble is a social CRM focused on relationship intelligence, automatically enriching contact records with social profile data and helping teams stay on top of follow-ups across email and social channels. Available as an Action in the Bit Integrations WordPress plugin.
+Social CRM focused on relationship intelligence, automatically enriching contact records with social profile data and helping teams manage follow-ups across email and social channels.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Nimble.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Contacts, add Tags, and create Activities in Nimble |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Nimble fields |
-
-## Action Events
-
-- Create Contact
-- Add tag
-- Create Activity
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.nimble.com/api/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Nimble Settings > API & Integrations — generate and copy the API key
-- **Required fields in Bit Integrations**: API Key
+- **Type**: Bearer Token (OAuth 2.0)
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Nimble Settings > API & Integrations > Generate API Token
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### List contacts
+```bash
+GET https://api.nimble.com/api/v1/contacts?per_page=25
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| first_name | Contact first name | Optional |
-| last_name | Contact last name | Required |
-| email | Email address | Required; used for social enrichment and deduplication |
-| phone | Phone number | Optional |
-| company_name | Associated company name | Optional |
-| tag | Tag label to apply to the contact | Optional; string |
+Authorization: Bearer {access_token}
+```
 
-## Common Workflow Recipes
+### Create a contact
+```bash
+POST https://api.nimble.com/api/v1/contact
 
-### Recipe 1: Contact Form to Nimble Contact with Tag
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Contact and add tag in Nimble
-**Key fields mapped:** First Name, Last Name, Email, Phone, Company Name, Tag = WebsiteLead
-**Use case:** Add website contacts to Nimble with a tag so you can segment and follow up with web-sourced leads separately.
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-### Recipe 2: Networking Event Form to Nimble Contact
-**Trigger:** Elementor or Fluent Forms networking event sign-up
-**Action:** Create Contact in Nimble
-**Key fields mapped:** First Name, Last Name, Email, Company Name, Tag = NetworkingEvent
-**Use case:** Capture networking event connections via a WordPress form and let Nimble enrich their profiles with social data automatically.
+{"fields": {"first name": [{"value": "Jane"}], "last name": [{"value": "Doe"}], "email": [{"value": "jane@example.com", "modifier": "work"}], "phone": [{"value": "555-1234", "modifier": "work"}]}, "tags": ["website-lead"]}
+```
 
-### Recipe 3: Inquiry Form to Nimble Contact and Activity
-**Trigger:** Contact Form 7 or WPForms inquiry submission
-**Action:** Create Contact and create Activity in Nimble
-**Key fields mapped:** First Name, Last Name, Email, Phone, Activity Type = Follow-up Call
-**Use case:** Add inquiry contacts to Nimble and immediately log a follow-up call activity so no lead is forgotten.
+### Search contacts
+```bash
+GET https://api.nimble.com/api/v1/contacts?query={"email":"jane@example.com"}
 
-## Setup Steps
+Authorization: Bearer {access_token}
+```
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Nimble as the action.
-5. Connect your Nimble account using your API key from Settings > API & Integrations.
-6. Select the action (Create Contact, Add Tag, Create Activity) you want to perform.
-7. Map the fields from your trigger to Nimble fields.
-8. Save and submit a test entry to verify data arrives correctly.
+### Create an activity
+```bash
+POST https://api.nimble.com/api/v1/activities
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"subject": "Follow-up call", "type": "call", "due_date": "2026-06-01", "contact_ids": ["abc123"]}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact UUID
+- `fields.first name` - First name (array of value objects)
+- `fields.last name` - Last name (array of value objects)
+- `fields.email` - Email addresses (array with modifier: work/personal)
+- `fields.phone` - Phone numbers (array with modifier)
+- `tags` - Array of tag strings
+
+### Activity
+- `id` - Activity UUID
+- `subject` - Activity title
+- `type` - Activity type (call, email, meeting, etc.)
+- `due_date` - Due date (ISO 8601)
+- `contact_ids` - Array of associated contact IDs
+
+## Parameters
+
+- `per_page` - Results per page (max 100)
+- `page` - Page number
+- `query` - JSON filter object for search
 
 ## When to Use
 
-- You rely on Nimble for relationship intelligence and want website contacts enriched automatically with social data
-- You want to tag website leads differently based on the form they submitted for segmented outreach
-- You use Nimble's activity tracking and want follow-up tasks created automatically with new contacts
-- You work heavily in email and social channels and want Nimble as your central contact hub for web leads
+- Enriching contact records with social profile data automatically
+- Managing relationship follow-ups across email, social, and CRM from one place
+- Creating CRM contacts and activities from web inquiries or event registrations
+- Tagging and segmenting contacts by lead source for targeted outreach
 
-## Related Integrations
+## Rate Limits
 
-- copper-crm.md
-- capsulecrm.md
-- hubspot.md
-- liondesk.md
+- 200 requests per minute; see Nimble API documentation for details
+
+## Relevant Skills
+
+- sales:account-research
+- sales:draft-outreach
+- marketing:campaign-plan

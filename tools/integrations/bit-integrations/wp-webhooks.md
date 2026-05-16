@@ -1,66 +1,119 @@
 # WP Webhooks
 
-WP Webhooks is a WordPress plugin that turns your site into a webhook sender and receiver, enabling event-driven integrations with external services. Available as an Action in the Bit Integrations WordPress plugin.
+WordPress automation plugin for sending and receiving webhook payloads.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-Webhooks.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data from Bit Integrations to a WP Webhooks outgoing webhook |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map fields to WP Webhooks webhook payload |
-
-## Action Events
-
-- Fire a WP Webhooks outgoing webhook action with data from a WordPress event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native + webhook URL configuration
-- **Required**: WP Webhooks must be installed and active. Configure outgoing webhook URL in WP Webhooks settings. No external API credentials required.
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to External Webhook Endpoint
-**Trigger:** WordPress form submission
-**Action:** WP Webhooks sends the data to a configured external webhook URL or service
-**Use case:** Use WP Webhooks' advanced payload configuration options to send structured data to any endpoint
+### Check plugin status
 
-### Recipe 2: WooCommerce Event to Notification Service
-**Trigger:** WooCommerce order status changed
-**Action:** WP Webhooks fires a webhook to notify a custom notification or logging service
-**Use case:** Keep external monitoring or notification systems updated on WooCommerce order events
+```bash
+wp plugin status wp-webhooks
+```
 
-### Recipe 3: User Role Change to External System
-**Trigger:** WordPress user role update (via form or automation)
-**Action:** WP Webhooks sends user data to an external membership or access control system
-**Use case:** Synchronize WordPress user roles with external platforms in real time
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install both Bit Integrations and WP Webhooks on your WordPress site.
-2. In WP Webhooks, configure an outgoing webhook with the desired endpoint URL and payload.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger source.
-5. Select WP Webhooks as the Action.
-6. Map fields.
-7. Save and test.
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/wp-webhooks/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='wp-webhooks' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- When you need advanced webhook payload customization that WP Webhooks provides
-- When you want to manage outgoing webhook configurations centrally in WP Webhooks
-- When combining Bit Integrations event detection with WP Webhooks' delivery features
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- webhook-outgoing.md
-- webhook-incoming.md
-- n8n.md
-- custom-api.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- revops
+- analytics
+- business-strategy

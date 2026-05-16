@@ -1,71 +1,80 @@
 # New User Approve
 
-New User Approve is a WordPress plugin that holds new user registrations in a pending state until an administrator manually approves them, giving site owners control over who joins. Available as Action in the Bit Integrations WordPress plugin.
+WordPress plugin that holds new user registrations in a pending state until an administrator manually approves or denies them, giving site owners gated access control.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/New-User-Approve.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Approve user |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Approve user — programmatically approve a pending WordPress user registration held by New User Approve
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; WordPress hook-based only |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: New User Approve must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress plugin-native (hook-based)
+- **Access**: Approval and denial actions are triggered via WordPress action hooks on the same WordPress installation; no external credentials required
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Auto-approve user after payment confirmation
-**Trigger:** WooCommerce — Order completed
-**Action:** New User Approve — Approve user
-**Key fields mapped:** Customer email matched to pending user
-**Use case:** Automatically approve a pending registration when the corresponding payment is confirmed, removing the need for manual admin approval
+New User Approve has no external REST API. Programmatic access is via WordPress action hooks or the WP REST API for user management.
 
-### Recipe 2: Auto-approve user after membership activation
-**Trigger:** MemberPress — Membership purchased
-**Action:** New User Approve — Approve user
-**Key fields mapped:** User email matched to pending registration
-**Use case:** Approve new member accounts immediately when they purchase a membership, bypassing the manual review queue
+### Approve a pending user (via WP REST API)
+```bash
+POST https://yoursite.com/wp-json/wp/v2/users/{user_id}
 
-### Recipe 3: Approve user after CRM qualification
-**Trigger:** HubSpot / Zoho CRM — Contact status updated or deal closed
-**Action:** New User Approve — Approve user
-**Key fields mapped:** Contact email matched to pending user
-**Use case:** Grant site access to a pending registrant once a CRM-based qualification step is completed (e.g., a sales call or onboarding task)
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
 
-## Setup Steps
+{"meta": {"new_user_approve_status": "approved"}}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select New User Approve as the action.
-4. Choose Approve User.
-5. Map the user email from your trigger source to identify the pending user to approve.
-6. Save and test with a real event (register a test user and trigger an approval).
+### List pending users (via WP REST API)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/users?roles=subscriber&meta_key=new_user_approve_status&meta_value=pending
+
+Authorization: Basic {base64_credentials}
+```
+
+### Hook into approval event (PHP — server-side)
+```php
+add_action('new_user_approve_approve_user', function($user_id) {
+    // Fires when a user is approved — send to CRM, email list, etc.
+});
+
+add_action('new_user_approve_deny_user', function($user_id) {
+    // Fires when a user is denied
+});
+```
+
+## Key Fields
+
+### User Meta
+- `new_user_approve_status` - Approval status: `pending`, `approved`, `denied`
+- `user_id` - WordPress user ID
+- `user_email` - User email address
+- `user_registered` - Registration timestamp
+
+## Parameters
+
+- `meta_key` - Filter by meta field key
+- `meta_value` - Filter by meta field value
+- `roles` - Filter users by role
 
 ## When to Use
 
-- You require admin approval for new registrations but want approval automated for paying customers
-- You use a vetting process (payment, CRM qualification, form submission) before granting site access
-- You want to remove the manual approval bottleneck for specific user types while keeping review for others
-- You integrate paid or gated access workflows where approval should follow a completed payment or verification step
+- Gating community or membership site registrations behind manual admin review
+- Automating approval for users who complete a specific purchase or verification step
+- Sending CRM notifications or email welcome sequences immediately after approval
+- Building vetting workflows where approval follows a form submission or payment event
 
-## Related Integrations
+## Rate Limits
 
-- user-registration.md
-- wp-user-registration.md
-- memberpress.md
-- woocommerce.md
-- profile-builder.md
+- No external API; limited by WordPress server capacity
+
+## Relevant Skills
+
+- operations:process-doc
+- marketing:email-sequence
+- human-resources:onboarding

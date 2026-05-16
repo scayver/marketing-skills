@@ -1,87 +1,112 @@
 # Freshsales
 
-Freshsales is a CRM platform by Freshworks that combines AI-powered contact management, deal tracking, and built-in phone and email tools for sales teams. Available as an Action in the Bit Integrations WordPress plugin.
+CRM platform by Freshworks with AI-powered contact management, deal tracking, and built-in phone and email tools.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Freshsales1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Contacts, Leads, and Deals in Freshsales |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Freshsales fields |
-
-## Action Events
-
-- Create Contact
-- Create Lead
-- Create Deal
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API (Freshsales Suite) |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | API-only |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Freshsales Settings > API Settings — copy the API key listed under your profile
-- **Required fields in Bit Integrations**: API Key, Freshsales Domain (your-domain.myfreshworks.com)
+- **Type**: Bearer Token (API Key)
+- **Header**: `Authorization: Token token={api_key}`
+- **Get token**: Freshsales > Settings > API Settings > Your API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### List contacts
+```bash
+GET https://YOUR_DOMAIN.myfreshworks.com/crm/sales/api/contacts?per_page=50
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| first_name | Contact first name | Optional |
-| last_name | Contact last name | Required |
-| email | Email address | Required; used as unique identifier |
-| mobile_number | Mobile phone number | Optional |
-| company_name | Associated company name | Optional |
-| lead_source | Source of the lead | Optional; picklist value (e.g., Web, Referral) |
+Authorization: Token token={api_key}
+```
 
-## Common Workflow Recipes
+### Create contact
+```bash
+POST https://YOUR_DOMAIN.myfreshworks.com/crm/sales/api/contacts
 
-### Recipe 1: Contact Form to Freshsales Lead
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Lead in Freshsales
-**Key fields mapped:** First Name, Last Name, Email, Mobile Number, Company Name, Lead Source = Web
-**Use case:** Automatically route every website inquiry into Freshsales as a new lead for your sales team.
+Authorization: Token token={api_key}
+Content-Type: application/json
 
-### Recipe 2: Free Trial Sign-Up to Freshsales Contact
-**Trigger:** Elementor or Fluent Forms free trial form
-**Action:** Create Contact in Freshsales
-**Key fields mapped:** First Name, Last Name, Email, Company Name
-**Use case:** Add trial sign-ups as Freshsales contacts so your team can reach out and convert them to paid customers.
+{
+  "contact": {
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane@example.com",
+    "mobile_number": "+1234567890"
+  }
+}
+```
 
-### Recipe 3: Service Inquiry to Freshsales Deal
-**Trigger:** Gravity Forms service inquiry submission
-**Action:** Create Deal in Freshsales
-**Key fields mapped:** First Name, Last Name, Email, Company, Deal Name, Stage
-**Use case:** Push high-intent service inquiries directly into the Freshsales pipeline as open deals.
+### List deals
+```bash
+GET https://YOUR_DOMAIN.myfreshworks.com/crm/sales/api/deals
 
-## Setup Steps
+Authorization: Token token={api_key}
+```
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Freshsales as the action.
-5. Connect your Freshsales account using your API key from Settings > API Settings, along with your Freshsales domain.
-6. Select the object type (Contact, Lead, Deal) you want to create.
-7. Map the fields from your trigger to Freshsales fields.
-8. Save and submit a test entry to verify data arrives correctly.
+### Create deal
+```bash
+POST https://YOUR_DOMAIN.myfreshworks.com/crm/sales/api/deals
+
+Authorization: Token token={api_key}
+Content-Type: application/json
+
+{
+  "deal": {
+    "name": "Acme Corp Renewal",
+    "amount": 5000,
+    "contact_id": 123,
+    "deal_stage_id": 2
+  }
+}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact ID
+- `first_name` / `last_name` - Name
+- `email` - Email address
+- `mobile_number` - Phone number
+- `owner_id` - Assigned sales rep
+- `lead_source_id` - Source of lead
+- `created_at` - ISO 8601 timestamp
+
+### Deal
+- `id` - Deal ID
+- `name` - Deal name
+- `amount` - Deal value
+- `deal_stage_id` - Current pipeline stage
+- `contact_id` - Primary contact
+- `account_id` - Linked account
+- `close_date` - Expected close date
+
+## Parameters
+
+- `per_page` - Results per page (max 100)
+- `page` - Page number
+- `sort` / `sort_type` - Sort field and direction
+- `filter_id` - Saved filter ID
 
 ## When to Use
 
-- Your sales team uses Freshsales and needs website leads captured automatically
-- You want to avoid duplicate lead entry when your site receives inquiries
-- You use Freshworks products (Freshdesk, Freshservice) and want CRM data centralized in Freshsales
-- You need deal records created from high-value form submissions like quote or demo requests
+- Add leads from web forms directly to Freshsales CRM
+- Update deal stages from external payment events
+- Sync account data from billing systems
+- Trigger outreach sequences on deal stage changes
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- copper-crm.md
-- salesmate.md
-- insightly.md
+- 1000 API calls/hour; see Freshsales pricing for plan limits
+
+## Relevant Skills
+
+- sales:account-research
+- sales:pipeline-review
+- sales:draft-outreach

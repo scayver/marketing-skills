@@ -1,71 +1,107 @@
 # LearnPress
 
-LearnPress is a free WordPress LMS plugin for creating and selling courses with lessons, quizzes, and basic course management. Available as Action in the Bit Integrations WordPress plugin.
+Free WordPress LMS plugin for creating and selling online courses with lessons, quizzes, and student management.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** LMS and Course Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Learn-Press.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Enroll user in course |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Enroll user in course — add a WordPress user to a LearnPress course
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at /wp-json/learnpress/v1/ |
+| MCP | - | Not available |
+| CLI | - | WP-CLI support available |
+| SDK | - | WordPress hooks and REST API only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: LearnPress must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password (Basic Auth)
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Enroll user after WooCommerce purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** LearnPress — Enroll user in course
-**Key fields mapped:** Customer email, product linked to course
-**Use case:** Automatically enroll a buyer in the LearnPress course tied to a WooCommerce product
+### List all courses
 
-### Recipe 2: Enroll user after form submission
-**Trigger:** Bit Form / Contact Form 7 — Form submitted
-**Action:** LearnPress — Enroll user in course
-**Key fields mapped:** Email field, course selection
-**Use case:** Allow manual or gated enrollment via a form without requiring payment
+```bash
+GET https://yoursite.com/wp-json/learnpress/v1/courses?per_page=50
 
-### Recipe 3: Enroll user on membership activation
-**Trigger:** Paid Memberships Pro / MemberPress — Membership activated
-**Action:** LearnPress — Enroll user in course
-**Key fields mapped:** User email, membership level mapped to course
-**Use case:** Bundle LearnPress course access with a membership plan
+Authorization: Basic {base64(user:app_password)}
+```
 
-## Setup Steps
+### Get a course's curriculum
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select LearnPress as the action.
-4. Choose Enroll User in Course and select the target course.
-5. Map the user email from your trigger source to LearnPress's user field.
-6. Save and test with a real event (complete a test purchase or form submission).
+```bash
+GET https://yoursite.com/wp-json/learnpress/v1/courses/{course_id}/curriculum
+
+Authorization: Basic {base64(user:app_password)}
+```
+
+### Get students enrolled in a course
+
+```bash
+GET https://yoursite.com/wp-json/learnpress/v1/courses/{course_id}/students
+
+Authorization: Basic {base64(user:app_password)}
+```
+
+### Enroll a user in a course (PHP hook)
+
+```php
+do_action( 'learnpress/user/enrolled-course', $user_id, $course_id, $order_id );
+// Or use the LP_User_Item class:
+$user = learn_press_get_user( $user_id );
+$user->enroll_course( $course_id );
+```
+
+### Get course orders
+
+```bash
+GET https://yoursite.com/wp-json/learnpress/v1/orders?per_page=50
+
+Authorization: Basic {base64(user:app_password)}
+```
+
+## Key Fields
+
+### Course Object
+- `id` - Unique course ID
+- `name` - Course title
+- `status` - publish | draft
+- `price` - Course price (string)
+- `students` - Number of enrolled students
+
+### Student Object
+- `id` - WordPress user ID
+- `email` - Student email
+- `display_name` - Display name
+- `enrolled_courses` - Array of enrolled course IDs
+
+### Order Object
+- `id` - Order ID
+- `user_id` - Purchasing user
+- `status` - pending | processing | completed | refunded
+- `total` - Order total
+- `items` - Array of courses purchased
+
+## Parameters
+
+- `per_page` - Number of results (max 100)
+- `page` - Pagination offset
+- `status` - Filter by publish/draft
+- `course_id` - Filter students or orders by course
 
 ## When to Use
 
-- You use LearnPress for course delivery but manage enrollment through WooCommerce or membership plugins
-- You want to automate enrollment from form submissions or external triggers
-- You need to bundle LearnPress courses with membership plans
-- You want to enroll users in courses as part of a broader onboarding flow
+- Listing and managing course content on a WordPress LMS
+- Enrolling users in courses triggered by purchases or form submissions
+- Reporting on student progress and course completions
+- Automating course access as part of membership or onboarding workflows
 
-## Related Integrations
+## Rate Limits
 
-- learndash.md
-- lifterlms.md
-- tutorlms.md
-- memberpress.md
-- woocommerce.md
+- No external rate limits; subject to WordPress server capacity
+
+## Relevant Skills
+
+- course-creation
+- email-marketing
+- ecommerce

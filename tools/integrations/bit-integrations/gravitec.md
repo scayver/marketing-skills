@@ -1,67 +1,125 @@
 # Gravitec
 
-Gravitec is a web push notification service for sending browser-based push notifications to website visitors and subscribers. Available as an Action in the Bit Integrations WordPress plugin.
+Web push notification platform for audience engagement, alerts, and reactivation campaigns.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Communication and Messaging
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Gravitec.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send web push notifications via Gravitec |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map fields to notification title, body, URL, and icon |
-
-## Action Events
-
-- Send push notification to Gravitec subscribers
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: API Key
-- **Required**: API key from your Gravitec account dashboard. Enter the key in Bit Integrations.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Gravitec dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: New Post Published to Push Notification
-**Trigger:** WordPress post published (via form, WP Post action, or hook)
-**Action:** Send a Gravitec push notification to subscribers announcing the new content
-**Use case:** Notify web push subscribers instantly when new blog posts or content are published
+### List records
 
-### Recipe 2: WooCommerce Sale to Promotional Push
-**Trigger:** WooCommerce coupon or sale event
-**Action:** Send a push notification with the promotion details and URL
-**Use case:** Alert opted-in subscribers of time-sensitive sales or discounts via browser push
+```bash
+GET https://api.gravitec.com/v1/records?limit=50
 
-### Recipe 3: Form Submission Confirmation to Push Notification
-**Trigger:** WordPress event registration or webinar sign-up form
-**Action:** Send a push notification confirming the registration with event details
-**Use case:** Deliver an immediate browser push confirmation to users who register for events
+Authorization: Bearer {api_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Gravitec as the Action.
-5. Log in to your Gravitec account and copy your API key from the dashboard.
-6. Enter the API key in Bit Integrations.
-7. Map fields: title, body, url, icon.
-8. Save and test.
+```bash
+GET https://api.gravitec.com/v1/records/{record_id}
+
+Authorization: Bearer {api_token}
+```
+
+### Create record
+
+```bash
+POST https://api.gravitec.com/v1/records
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://api.gravitec.com/v1/records/{record_id}
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://api.gravitec.com/v1/events
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When WordPress events should trigger browser push notifications to opted-in site visitors
-- When announcing new content, promotions, or events via web push to Gravitec subscribers
-- When supplementing email marketing with web push notifications triggered by WordPress events
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- slack.md
-- telegram.md
-- discord.md
-- onesignal.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- customer-service
+- social-content-planner
+- email-marketing

@@ -1,77 +1,121 @@
 # Dokan
 
-Dokan is a WordPress multivendor marketplace plugin that transforms WooCommerce stores into platforms where multiple vendors can manage their own storefronts and products. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WordPress multivendor marketplace plugin that extends WooCommerce to enable multiple vendors to manage their own storefronts, products, orders, and withdrawals from a single WordPress site.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** eCommerce and Payments
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/DokanMaker-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/DokanMaker.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on vendor registration, product publishing, and new order events |
-| As Action | ✓ | Create or update vendor records |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Vendor registered — fires when a new vendor signs up on the marketplace
-- Vendor product published — fires when a vendor publishes a new product
-- New order to vendor — fires when a new order is placed for a vendor's product
-
-## Action Events
-
-- Create vendor — create a new vendor account on the Dokan marketplace
-- Update vendor — update an existing vendor's profile or settings
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at /wp-json/dokan/v1/ extending WooCommerce REST API |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level operations |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Dokan must be installed and active with WooCommerce; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress application password or WooCommerce consumer key/secret
+- **Header (app password)**: `Authorization: Basic {base64(username:app_password)}`
+- **Header (WC keys)**: `Authorization: Basic {base64(consumer_key:consumer_secret)}`
+- **Get credentials**: WordPress Admin > Users > Profile > Application Passwords, or WooCommerce > Settings > Advanced > REST API
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add new vendor to CRM on registration
-**Trigger:** Dokan — Vendor registered
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** Vendor email, store name, registration date
-**Use case:** Automatically create a CRM record for every new vendor who joins the marketplace for onboarding and relationship management
+### List all vendors
+```
+GET /wp-json/dokan/v1/stores
 
-### Recipe 2: Notify marketplace admin on new vendor product
-**Trigger:** Dokan — Vendor product published
-**Action:** Email notification or Slack webhook
-**Key fields mapped:** Vendor name, product name, product URL
-**Use case:** Alert marketplace admins when a vendor publishes a new product for quality review or promotion
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Create vendor from CRM application
-**Trigger:** HubSpot / Gravity Forms — Deal closed or form submitted (vendor application)
-**Action:** Dokan — Create vendor
-**Key fields mapped:** Applicant email, store name, contact details
-**Use case:** Automatically create a Dokan vendor account when a vendor application is approved via a CRM or form
+### Get a specific vendor's store
+```
+GET /wp-json/dokan/v1/stores/{vendor_id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Ensure Dokan and WooCommerce are both installed and active.
-3. Go to Bit Integrations > Create Integration.
-4. Select Dokan as the trigger or action.
-5. For triggers, choose the event (e.g., Vendor Registered) and configure any filters.
-6. For actions, choose Create Vendor or Update Vendor and map the required fields.
-7. Save and test with a real event (register a test vendor or publish a test product).
+### Get products for a vendor
+```
+GET /wp-json/dokan/v1/products?author={vendor_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get orders for a vendor
+```
+GET /wp-json/dokan/v1/orders?seller_id={vendor_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get vendor withdrawal requests
+```
+GET /wp-json/dokan/v1/withdrawal?seller_id={vendor_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Create a withdrawal request for a vendor
+```
+POST /wp-json/dokan/v1/withdrawal
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "amount": 150.00,
+  "method": "paypal"
+}
+```
+
+## Key Fields
+
+### Vendor (Store)
+- `id` - WordPress user ID of the vendor
+- `store_name` - Vendor's store display name
+- `email` - Vendor email address
+- `store_url` - Vendor store slug/URL
+- `payment` - Object with vendor's configured payout method
+- `enabled` - Whether the vendor's store is active
+
+### Product
+- `id` - WooCommerce product ID
+- `name` - Product name
+- `price` - Current selling price
+- `status` - publish / draft / pending
+- `author` - Vendor user ID
+
+### Order
+- `id` - WooCommerce order ID
+- `status` - Order status (processing, completed, etc.)
+- `seller_id` - Vendor user ID
+- `total` - Order total amount
+
+### Withdrawal
+- `amount` - Withdrawal amount
+- `method` - Payment method (paypal, bank_transfer, etc.)
+- `status` - pending / approved / cancelled
+
+## Parameters
+
+- `vendor_id` / `seller_id` / `author` - Filter results by vendor user ID
+- `status` - Filter by store, product, order, or withdrawal status
+- `per_page` - Number of results per page (max 100)
+- `page` - Pagination page number
 
 ## When to Use
 
-- You run a multivendor marketplace and want new vendor data automatically in your CRM or email platform
-- You need to notify admins when vendors take specific actions like publishing products
-- You want to create vendor accounts programmatically from application forms or CRM approvals
-- You need to integrate Dokan vendor lifecycle events into a broader business automation workflow
+- Onboarding new vendors by syncing their registration data to a CRM
+- Monitoring new product listings from vendors for quality review workflows
+- Pulling vendor revenue and order data for commission reconciliation
+- Sending automated notifications when vendor withdrawals are requested or approved
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- woocommerce-memberships.md
-- surecart.md
+- Governed by WordPress REST API server limits; no Dokan-specific published limits
+
+## Relevant Skills
+
+- ecommerce
+- affiliate-marketing
+- crm-management

@@ -1,73 +1,95 @@
 # User Registration
 
-User Registration is a WordPress plugin by WPEverest for building custom user registration and login forms with profile fields, role assignment, and payment add-ons. Available as Action in the Bit Integrations WordPress plugin.
+User Registration is a WordPress plugin by WPEverest for building custom user registration and login forms with profile fields, role assignment, and payment add-ons.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/User-Registration.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create WordPress user, assign role |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Create WordPress user — register a new user on the WordPress site via User Registration
-- Assign role — assign a specific WordPress user role to the new or existing user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/user-registration/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI with WP user commands |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: User Registration (by WPEverest) must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Create user and assign role on membership purchase
-**Trigger:** MemberPress / WooCommerce — Membership purchased or order completed
-**Action:** User Registration — Create WordPress user + Assign role
-**Key fields mapped:** Customer email, first name, last name, role tied to product
-**Use case:** Automatically create a WordPress account with the correct role when a new member purchases
+### List Forms
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/forms
 
-### Recipe 2: Create user from form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** User Registration — Create WordPress user
-**Key fields mapped:** Email, first name, last name, custom fields
-**Use case:** Convert a form submission into a registered WordPress user automatically
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Assign role after course completion
-**Trigger:** LearnDash / TutorLMS — Course completed
-**Action:** User Registration — Assign role
-**Key fields mapped:** User email, graduation or certified role
-**Use case:** Promote a student to a new role with different site permissions upon completing a course
+### Get a Single Form
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/forms/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select User Registration as the action.
-4. Choose Create WordPress User or Assign Role.
-5. Map the user email, name, and any custom fields from your trigger source.
-6. Select the role to assign.
-7. Save and test with a real event (submit a test form or complete a test purchase).
+### List Registrations (Submitted Entries)
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/registrations
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get a Single Registration
+```bash
+GET https://yoursite.com/wp-json/user-registration/v1/registrations/{id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get Registered Users (via WP core)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/users
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Form
+- `id` - Form ID
+- `title` - Form name
+- `fields` - Array of field configurations
+- `status` - publish, draft
+
+### Registration
+- `id` - Registration entry ID
+- `form_id` - Originating form
+- `user_id` - Created WordPress user ID
+- `status` - pending, approved, rejected
+- `fields` - Key-value map of submitted values
+- `created_at` - ISO 8601 submission timestamp
+
+## Parameters
+
+- `form_id` - Filter registrations by form
+- `status` - Filter registrations by approval status
+- `per_page` / `page` - Pagination controls
 
 ## When to Use
 
-- You want to create WordPress accounts automatically from external form submissions or purchases
-- You need to assign user roles programmatically based on membership or course events
-- You use User Registration's profile form builder and want to populate fields from external triggers
-- You want to automate the WordPress account creation step in a broader onboarding workflow
+- Triggering welcome emails or onboarding sequences on registration
+- Routing new registrations to a CRM for lead nurturing
+- Automating user approval or rejection based on field values
+- Reporting on registration volume and form performance
 
-## Related Integrations
+## Rate Limits
 
-- wp-user-registration.md
-- user-registration-membership.md
-- profile-builder.md
-- memberpress.md
-- learndash.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:email-sequence
+- data:analyze
+- operations:process-doc
+- customer-support:customer-research

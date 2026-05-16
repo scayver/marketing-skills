@@ -1,87 +1,125 @@
 # Copper CRM
 
-Copper CRM is a Google Workspace-native CRM that lives inside Gmail and Google Calendar, designed for teams that run their business on Google apps. Available as an Action in the Bit Integrations WordPress plugin.
+Google Workspace-native CRM that lives inside Gmail and Google Calendar, designed for teams that manage sales relationships entirely within Google apps.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/CopperCRM1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create People, Opportunities, and Companies in Copper |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Copper fields |
-
-## Action Events
-
-- Create Person
-- Create Opportunity
-- Create Company
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v1 at api.copper.com |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Unofficial community libraries; Copper-maintained Postman collection |
 
 ## Authentication
 
-- **Type**: API Key + Email
-- **Where to get credentials**: Copper Settings > Integrations > API Keys — generate an API key; also requires the email address of the Copper account
-- **Required fields in Bit Integrations**: API Key, Account Email Address
+- **Type**: API Key + User Email (three required headers)
+- **Headers**:
+  - `X-PW-AccessToken: {api_key}`
+  - `X-PW-Application: developer_api`
+  - `X-PW-UserEmail: {your_copper_account_email}`
+- **Get token**: Copper > Settings > Integrations > API Keys
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Search for a person by email
+```
+POST https://api.copper.com/developer_api/v1/people/search
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| name | Full name of the person or company | Required |
-| email | Email address | Optional; used for deduplication |
-| phone | Phone number | Optional |
-| company_name | Associated company name | Optional |
-| pipeline_id | Target pipeline ID | Optional; for Opportunity records |
-| pipeline_stage_id | Pipeline stage ID | Optional; for Opportunity records |
+X-PW-AccessToken: {api_key}
+X-PW-Application: developer_api
+X-PW-UserEmail: {account_email}
+Content-Type: application/json
 
-## Common Workflow Recipes
+{"emails": [{"email": "jane@example.com"}]}
+```
 
-### Recipe 1: Contact Form to Copper Person
-**Trigger:** WPForms or Contact Form 7 submission
-**Action:** Create Person in Copper CRM
-**Key fields mapped:** Name, Email, Phone, Company Name
-**Use case:** Automatically add website contacts to Copper so Gmail-based sales teams can follow up without leaving their inbox.
+### Create a person
+```
+POST https://api.copper.com/developer_api/v1/people
 
-### Recipe 2: Proposal Request to Copper Opportunity
-**Trigger:** Gravity Forms proposal request submission
-**Action:** Create Opportunity in Copper
-**Key fields mapped:** Name, Email, Company Name, Pipeline, Stage
-**Use case:** Push proposal requests into a Copper pipeline so your team can track them from inquiry to close inside Gmail.
+X-PW-AccessToken: {api_key}
+X-PW-Application: developer_api
+X-PW-UserEmail: {account_email}
+Content-Type: application/json
 
-### Recipe 3: Event Sign-Up to Copper Person and Company
-**Trigger:** Elementor form event registration
-**Action:** Create Person and Create Company in Copper
-**Key fields mapped:** Name, Email, Phone, Company Name
-**Use case:** Capture event attendees as both people and company records in Copper for post-event sales outreach.
+{
+  "name": "Jane Smith",
+  "emails": [{"email": "jane@example.com", "category": "work"}],
+  "phone_numbers": [{"number": "+1 555 000 0000", "category": "work"}],
+  "company_name": "Acme Corp"
+}
+```
 
-## Setup Steps
+### Create an opportunity
+```
+POST https://api.copper.com/developer_api/v1/opportunities
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Copper CRM as the action.
-5. Connect your Copper account using your API key and account email address from Copper Settings > Integrations > API Keys.
-6. Select the object type (Person, Opportunity, Company) you want to create.
-7. Map the fields from your trigger to Copper fields.
-8. Save and submit a test entry to verify data arrives correctly.
+X-PW-AccessToken: {api_key}
+X-PW-Application: developer_api
+X-PW-UserEmail: {account_email}
+Content-Type: application/json
+
+{
+  "name": "Website Project",
+  "primary_contact_id": 12345,
+  "pipeline_id": 67890,
+  "pipeline_stage_id": 11111,
+  "monetary_value": 5000
+}
+```
+
+### List pipeline stages
+```
+GET https://api.copper.com/developer_api/v1/pipeline_stages
+
+X-PW-AccessToken: {api_key}
+X-PW-Application: developer_api
+X-PW-UserEmail: {account_email}
+```
+
+## Key Fields
+
+### Person
+- `name` - Full name (required)
+- `emails` - Array of `{email, category}` objects
+- `phone_numbers` - Array of `{number, category}` objects
+- `company_name` - Associated company name (string)
+- `custom_fields` - Array of `{custom_field_definition_id, value}` objects
+
+### Opportunity
+- `name` - Opportunity title
+- `primary_contact_id` - ID of the associated person
+- `pipeline_id` - Target pipeline
+- `pipeline_stage_id` - Target pipeline stage
+- `monetary_value` - Deal amount (numeric)
+- `close_date` - Unix timestamp of expected close
+
+### Company
+- `name` - Company name (required)
+- `email_domain` - Primary email domain
+
+## Parameters
+
+- `page_number` - 1-indexed pagination
+- `page_size` - Results per page (max 200)
+- `sort_by` - Field to sort results by
+- `sort_direction` - `asc` or `desc`
 
 ## When to Use
 
-- Your team manages relationships primarily through Gmail and wants CRM data there automatically
-- You want WordPress form submissions to appear in Copper without leaving the Google Workspace environment
-- You need new leads to enter your Copper pipeline directly from your website
-- You use Google Calendar heavily and want contact data available alongside meetings
+- Adding new contacts to Copper directly from web form submissions
+- Creating pipeline opportunities when a proposal or quote is requested
+- Searching for existing contacts before creating duplicates
+- Syncing lead data captured outside Gmail into the Google Workspace CRM workflow
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- freshsales.md
-- insightly.md
-- nimble.md
+- 600 requests per minute
+- See [developer.copper.com](https://developer.copper.com) for current limits
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- sales-brief

@@ -1,67 +1,89 @@
 # FluentSMTP
 
-FluentSMTP is a WordPress SMTP plugin that replaces the default WordPress mail function with a configured transactional email sending service for reliable email delivery. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress SMTP plugin that replaces the default wp_mail() function with a configured transactional sending service for reliable email delivery.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** WordPress Core and Utility
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/FluentSMTP.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; send email via FluentSMTP's configured sending service |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to email to, subject, and body |
-
-## Action Events
-
-- Send email via FluentSMTP configured SMTP connection
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress wp_mail() filter hooks |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: FluentSMTP must be installed and configured with a sending service (SendGrid, Mailgun, SES, Gmail SMTP, etc.). Bit Integrations routes outgoing email through FluentSMTP automatically.
+- **Type**: SMTP credentials or API key from connected sending service
+- **Header**: N/A — credentials entered in WordPress admin settings
+- **Get token**: FluentSMTP Settings > Connections; credentials come from chosen mail provider (SendGrid, Mailgun, SES, etc.)
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Custom Transactional Email
-**Trigger:** WordPress form submission
-**Action:** Send a custom transactional email via FluentSMTP with form field data merged into the message
-**Use case:** Send highly deliverable transactional confirmation or notification emails triggered by form submissions, routing through FluentSMTP's configured provider
+### Send email via WordPress (PHP)
+```php
+wp_mail(
+    'recipient@example.com',
+    'Subject Line',
+    '<p>HTML body content</p>',
+    ['Content-Type: text/html; charset=UTF-8']
+);
+// FluentSMTP intercepts and routes through configured provider
+```
 
-### Recipe 2: WooCommerce Order to Custom Order Email
-**Trigger:** WooCommerce order status change
-**Action:** Send a customized order notification email via FluentSMTP to the customer or admin
-**Use case:** Replace or supplement WooCommerce's default order emails with custom Bit Integrations-triggered emails routed through FluentSMTP
+### Check email logs (PHP)
+```php
+// FluentSMTP logs are stored in the database
+global $wpdb;
+$logs = $wpdb->get_results(
+    "SELECT * FROM {$wpdb->prefix}fluentsmtp_logs ORDER BY created_at DESC LIMIT 50"
+);
+```
 
-### Recipe 3: User Registration to Welcome Email
-**Trigger:** WordPress user registration
-**Action:** Send a personalized welcome email via FluentSMTP
-**Use case:** Deliver custom welcome emails with improved deliverability via FluentSMTP on every new WordPress registration
+### Hook before email is sent
+```php
+add_filter('wp_mail', function($args) {
+    // Modify to/from/subject/body before FluentSMTP sends
+    return $args;
+});
+```
 
-## Setup Steps
+### Hook after email is sent
+```php
+add_action('fluentsmtp/email_sent', function($response, $data) {
+    // Log success or trigger follow-up action
+}, 10, 2);
+```
 
-1. Install Bit Integrations Pro and FluentSMTP on your WordPress site.
-2. Configure FluentSMTP with your preferred sending service (SendGrid, Mailgun, SES, etc.).
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select FluentSMTP as the Action.
-6. Configure email to, from, subject, and body fields.
-7. Map form fields into the email subject and body.
-8. Save and test.
+## Key Fields
+
+### Email Log Record
+- `id` - Log entry ID
+- `to` - Recipient address(es)
+- `from` - Sender address
+- `subject` - Email subject
+- `body` - Email body (HTML)
+- `status` - sent, failed
+- `response` - Provider response message
+- `created_at` - Send timestamp
+
+## Parameters
+
+- No external API parameters; configuration done in WordPress admin
+- Supported providers: SendGrid, Mailgun, Amazon SES, Postmark, SparkPost, Gmail, Outlook, and others
 
 ## When to Use
 
-- When Bit Integrations-triggered emails need to be routed through FluentSMTP for improved deliverability
-- When replacing WordPress's default wp_mail with a configured transactional provider for automation emails
-- When custom transactional emails should be sent with form field data merged into the message body
+- Ensure WordPress transactional emails reach the inbox
+- Log and audit all outgoing WordPress emails
+- Route emails through a specific sending domain
+- Debug email delivery failures via the built-in log
 
-## Related Integrations
+## Rate Limits
 
-- fluentsmtp.md
-- sendgrid.md
-- mailchimp.md
-- fluent-support.md
+- Limits depend on the connected sending service provider
+
+## Relevant Skills
+
+- operations:runbook
+- engineering:debug
+- marketing:email-sequence

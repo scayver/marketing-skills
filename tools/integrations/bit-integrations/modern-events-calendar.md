@@ -1,67 +1,92 @@
 # Modern Events Calendar
 
-Modern Events Calendar is a feature-rich WordPress event management plugin with booking, front-end submission, and multiple calendar views. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Feature-rich WordPress event management plugin with booking, ticket sales, front-end submission, and multiple calendar views.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Modern-Events-Calender.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; register bookings in Modern Events Calendar |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to Modern Events Calendar booking fields |
-
-## Action Events
-
-- Register booking
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via `/wp-json/mec/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Modern Events Calendar must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: External Registration Form to MEC Booking
-**Trigger:** WordPress registration form submission
-**Action:** Register the attendee as a booking in Modern Events Calendar
-**Use case:** Use a custom WordPress form to collect registrations and pass them into MEC's booking system
+### List events
+```bash
+GET https://yoursite.com/wp-json/mec/v1/events
 
-### Recipe 2: WooCommerce Ticket Purchase to MEC Booking
-**Trigger:** WooCommerce order completed (event ticket)
-**Action:** Create a booking in Modern Events Calendar for the purchased event
-**Use case:** Sync WooCommerce ticket sales with MEC's attendee booking records automatically
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Membership Signup to Exclusive Event Booking
-**Trigger:** Membership plugin activation
-**Action:** Create a Modern Events Calendar booking for a member-only event
-**Use case:** Automatically register new members for exclusive events as a membership benefit
+### Get event details
+```bash
+GET https://yoursite.com/wp-json/mec/v1/events/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and Modern Events Calendar on your WordPress site.
-2. Create the target event in Modern Events Calendar.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Modern Events Calendar as the Action.
-6. Select the target event.
-7. Map form fields to booking fields.
-8. Save and test.
+### Create a booking
+```bash
+POST https://yoursite.com/wp-json/mec/v1/bookings
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"event_id": 101, "first_name": "Jane", "last_name": "Doe", "email": "jane@example.com", "tickets": [{"ticket_id": 1, "quantity": 2}]}
+```
+
+### List bookings for an event
+```bash
+GET https://yoursite.com/wp-json/mec/v1/bookings?event_id={id}
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Event
+- `id` - Event post ID
+- `title` - Event title
+- `start` - Start datetime (ISO 8601)
+- `end` - End datetime (ISO 8601)
+- `location` - Venue name and address
+- `tickets` - Array of ticket type objects
+
+### Booking
+- `id` - Booking ID
+- `event_id` - Associated event ID
+- `first_name` - Attendee first name
+- `last_name` - Attendee last name
+- `email` - Attendee email
+- `status` - Booking status (confirmed, pending, cancelled)
+
+## Parameters
+
+- `per_page` - Results per page
+- `page` - Page number
+- `event_id` - Filter bookings by event
 
 ## When to Use
 
-- When external forms should register attendees into Modern Events Calendar's booking system
-- When WooCommerce ticket sales should create corresponding MEC booking records
-- When membership activations should trigger automatic event bookings for members
+- Publishing and managing events on a WordPress site with booking capability
+- Automating attendee registration from external form submissions or purchases
+- Querying event booking data for attendee reports or CRM sync
+- Building event-based marketing workflows triggered by registrations
 
-## Related Integrations
+## Rate Limits
 
-- the-events-calendar.md
-- eventin.md
-- amelia.md
-- google-calendar.md
+- Limited by WordPress server capacity; no built-in rate limiting
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- marketing:email-sequence
+- operations:runbook

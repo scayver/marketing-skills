@@ -1,67 +1,89 @@
 # Popup Maker
 
-Popup Maker is a flexible WordPress popup plugin for creating targeted popups, slide-ins, and overlays for lead capture and announcements. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Flexible WordPress popup plugin for creating targeted popups, slide-ins, and overlays for lead capture, announcements, and conversion optimization.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Popups and Lead Capture
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/PopupMaker.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; trigger popup display via Popup Maker |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map event data to popup display conditions |
-
-## Action Events
-
-- Trigger popup display
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-native only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP action/filter hooks |
 
 ## Authentication
 
 - **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Popup Maker must be installed and active on the same WordPress site. No external credentials needed.
+- **Required**: Popup Maker installed and active on the same WordPress site
+- **Note**: No external credentials; plugin is fully self-contained
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Thank-You Popup
-**Trigger:** WordPress form submission
-**Action:** Trigger a Popup Maker thank-you or confirmation popup for the user
-**Use case:** Show a personalized thank-you popup immediately after a form is submitted
+Popup Maker does not expose a standalone external API. Manage popups via WordPress hooks and JavaScript triggers.
 
-### Recipe 2: Login to Welcome Back Popup
-**Trigger:** WordPress user login
-**Action:** Display a Popup Maker welcome back popup with personalized content
-**Use case:** Greet returning members with a targeted popup showing new content or offers
+### Hook: On popup open
 
-### Recipe 3: Purchase to Upsell Popup
-**Trigger:** WooCommerce order completed
-**Action:** Display a Popup Maker upsell or cross-sell popup to the buyer
-**Use case:** Show a post-purchase offer popup to increase average order value
+```php
+add_action('pum_popup_open', function($popup_id) {
+    // Fires when a popup is opened for a user
+});
+```
 
-## Setup Steps
+### Hook: On popup close
 
-1. Install Bit Integrations Pro and Popup Maker on your WordPress site.
-2. Create the target popup in Popup Maker.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Popup Maker as the Action.
-6. Select the popup to display.
-7. Configure trigger conditions.
-8. Save and test.
+```php
+add_action('pum_popup_close', function($popup_id) {
+    // Fires when a popup is closed
+});
+```
+
+### JavaScript: Open a popup programmatically
+
+```javascript
+PUM.open(popup_id);
+```
+
+### Hook: On form submission inside popup
+
+```php
+add_action('pum_sub_form_success', function($data) {
+    // $data contains subscriber email and name
+    // Fires when the built-in subscribe form is submitted
+});
+```
+
+## Key Fields
+
+### Popup Object
+- `ID` - WordPress post ID of the popup
+- `post_title` - Popup name
+- `popup_settings` - Array of display conditions and triggers
+- `popup_theme` - Associated theme ID
+
+### Subscriber Data (built-in form)
+- `email` - Subscriber email
+- `fname` - First name
+- `lname` - Last name
+- `popup_id` - Popup that captured the subscriber
+
+## Parameters
+
+- `popup_id` - Target a specific popup by WordPress post ID
+- `trigger` - Display trigger (click, time delay, scroll, exit intent)
 
 ## When to Use
 
-- When WordPress events (form submission, purchase, login) should trigger targeted Popup Maker overlays
-- When building conditional popup display logic tied to user actions on the site
-- When thank-you, upsell, or announcement popups should be triggered by Bit Integrations workflows
+- Displaying targeted popups based on user behavior (scroll depth, exit intent, time on page)
+- Capturing email subscribers with popup opt-in forms
+- Showing announcements, promotions, or cookie consent overlays
+- Triggering popups programmatically from WordPress events via JavaScript
 
-## Related Integrations
+## Rate Limits
 
-- optinmonster.md
-- hustle.md
-- thrive-leads.md
-- convert-pro.md
+- No external API; subject to WordPress server limits only
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- marketing:draft-content
+- marketing:email-sequence

@@ -1,86 +1,76 @@
 # Spectra
 
-Spectra (by Brainstorm Force, formerly known as Ultimate Addons for Gutenberg) is a Gutenberg block suite for WordPress that includes a Form block for building and embedding forms within the block editor. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Spectra (by Brainstorm Force) is a WordPress Gutenberg block plugin that extends the block editor with design blocks, forms, and page-building components.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Spectra.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API for form entries via WP core endpoints |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### List Form Submissions (via WP Posts)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/posts?type=uagb-forms
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+Authorization: Basic {base64_credentials}
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Read Form Entry Metadata
+```bash
+GET https://yoursite.com/wp-json/wp/v2/posts/{entry_id}
 
-## Connecting to Action Platforms
+Authorization: Basic {base64_credentials}
+```
 
-After selecting Spectra as the trigger in Bit Integrations, connect it to any of these action platforms:
+### List Custom Blocks (Post Meta)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/pages/{page_id}?context=edit
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Register Webhook for Form Submissions
+Spectra's Form block supports native webhook delivery — configure the webhook URL inside the form block settings in the block editor. No REST call required.
 
-1. Install and activate Spectra on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a page with the Spectra Form block and publish it.
-4. Go to Bit Integrations > Create Integration.
-5. Select Spectra as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+## Key Fields
 
-## Field Mapping Tips
+### Form Entry
+- `id` - WordPress post ID of the entry
+- `meta.uagb_form_id` - Unique identifier of the originating form
+- `meta.uagb_fields` - Serialized array of submitted field values
+- `date` - ISO 8601 submission timestamp
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+## Parameters
+
+- `per_page` / `page` - Pagination for list endpoints
+- `type` - Post type filter (use plugin's registered CPT)
+- `context` - `edit` for full field data including meta
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from Gutenberg-native forms without a third-party form plugin
+- Reading form submission data for CRM sync or reporting
+- Auditing page layouts and block configurations programmatically
+- Triggering downstream automations on form completion
 
-## Related Integrations
+## Rate Limits
 
-- essential-blocks.md
-- kadence-blocks-form.md
-- coblocks.md
-- gutena-forms.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:draft-content
+- marketing:content-creation
+- data:explore-data
+- operations:process-doc

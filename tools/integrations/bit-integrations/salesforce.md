@@ -1,90 +1,118 @@
 # Salesforce
 
-Salesforce is the world's leading enterprise CRM platform, providing tools for sales, service, marketing, and analytics across teams of all sizes. Available as an Action in the Bit Integrations WordPress plugin.
+Enterprise CRM platform providing sales, service, marketing, and analytics tools with a flexible object model and extensive API surface.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Salesforce-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Leads, Contacts, Opportunities; update existing records |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Salesforce fields |
-
-## Action Events
-
-- Create Lead
-- Create Contact
-- Create Opportunity
-- Update record
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/` |
+| MCP | - | Not available |
+| CLI | ✓ | Salesforce CLI (`sf` / `sfdx`) |
+| SDK | ✓ | Official SDKs for Java, Python, Node.js, .NET, PHP |
 
 ## Authentication
 
-- **Type**: OAuth 2.0
-- **Where to get credentials**: Salesforce Setup > App Manager > New Connected App — enable OAuth, set callback URL, and note Consumer Key and Secret
-- **Required fields in Bit Integrations**: OAuth connection via Connected App (Consumer Key, Consumer Secret, environment URL)
+- **Type**: OAuth 2.0 (Connected App)
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Salesforce Setup > App Manager > New Connected App, then POST to `/services/oauth2/token`
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Query records (SOQL)
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| FirstName | Lead or contact first name | Optional |
-| LastName | Lead or contact last name | Required |
-| Email | Email address | Required; used as unique identifier |
-| Phone | Phone number | Optional |
-| Company | Company or account name | Required for Lead object |
-| LeadSource | Origin of the lead | Optional; picklist value (e.g., Web, Phone) |
-| Status | Lead status | Optional; e.g., Open, Working, Converted |
-| OwnerId | Assigned Salesforce user ID | Optional; defaults to connected user |
+```bash
+GET https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/query?q=SELECT+Id,Name,Email+FROM+Contact+LIMIT+100
 
-## Common Workflow Recipes
+Authorization: Bearer {access_token}
+```
 
-### Recipe 1: Contact Form to Salesforce Lead
-**Trigger:** WPForms or Contact Form 7 submission
-**Action:** Create Lead in Salesforce
-**Key fields mapped:** FirstName, LastName, Email, Phone, Company, LeadSource = Web
-**Use case:** Push every website inquiry directly into Salesforce as a new lead for your sales team to follow up.
+### Create a Lead
 
-### Recipe 2: WooCommerce Order to Salesforce Contact
-**Trigger:** WooCommerce order completed
-**Action:** Create Contact in Salesforce
-**Key fields mapped:** FirstName, LastName, Email, Phone, Company
-**Use case:** Automatically create or update Salesforce contact records when customers complete purchases.
+```bash
+POST https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Lead
 
-### Recipe 3: Event Registration to Salesforce Opportunity
-**Trigger:** Gravity Forms event registration submission
-**Action:** Create Opportunity in Salesforce
-**Key fields mapped:** FirstName, LastName, Email, Company, Opportunity Name, Stage
-**Use case:** Turn webinar or event sign-ups into pipeline opportunities in Salesforce for post-event follow-up.
+Authorization: Bearer {access_token}
+Content-Type: application/json
 
-## Setup Steps
+{"FirstName": "Jane", "LastName": "Doe", "Email": "jane@example.com", "Company": "Acme Corp", "LeadSource": "Web"}
+```
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Salesforce as the action.
-5. Connect your Salesforce account using OAuth 2.0 via your Connected App credentials.
-6. Select the Salesforce object (Lead, Contact, Opportunity) you want to write to.
-7. Map the fields from your trigger to Salesforce fields.
-8. Save and submit a test entry to verify data arrives correctly.
+### Create a Contact
+
+```bash
+POST https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Contact
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"FirstName": "Jane", "LastName": "Doe", "Email": "jane@example.com", "AccountId": "001Xx000003GYkQ"}
+```
+
+### Create an Opportunity
+
+```bash
+POST https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Opportunity
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"Name": "Acme Deal Q2", "StageName": "Prospecting", "CloseDate": "2026-06-30", "AccountId": "001Xx000003GYkQ", "Amount": 25000}
+```
+
+### Update a record
+
+```bash
+PATCH https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Lead/{record_id}
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"Status": "Working"}
+```
+
+## Key Fields
+
+### Lead Object
+- `Id` - Salesforce record ID
+- `FirstName` / `LastName` - Name fields
+- `Email` - Email address
+- `Company` - Company name
+- `LeadSource` - Source (Web, Phone, etc.)
+- `Status` - Open / Working / Converted
+
+### Contact Object
+- `Id` - Record ID
+- `AccountId` - Associated Account ID
+- `Email` - Email address
+- `Phone` - Phone number
+
+### Opportunity Object
+- `Name` - Opportunity name
+- `StageName` - Pipeline stage
+- `CloseDate` - Expected close date
+- `Amount` - Deal value
+
+## Parameters
+
+- SOQL `WHERE` clause for filtering
+- `fields` - Comma-separated field list in queries
+- `limit` - Max records returned (max 2000 per query)
 
 ## When to Use
 
-- Your sales team works in Salesforce and you need WordPress form data to flow in automatically
-- You want to create Salesforce Leads from every website inquiry without manual entry
-- You need WooCommerce customer data synced to Salesforce Contacts
-- You want to push event registrations or quote requests into the Salesforce pipeline as Opportunities
+- Enterprise sales pipeline management and reporting
+- Syncing leads from external sources into Salesforce
+- Automating opportunity creation from marketing events
+- Running SOQL queries for custom analytics and reporting
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- pipedrive.md
-- zoho-crm.md
-- freshsales.md
+- API call limits vary by edition (e.g., Essentials: 100K calls/day, Enterprise: 1M calls/day)
+- See Salesforce Platform API limits documentation
+
+## Relevant Skills
+
+- sales:pipeline-review
+- sales:forecast
+- data:sql-queries

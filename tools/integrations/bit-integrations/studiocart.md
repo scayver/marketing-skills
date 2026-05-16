@@ -1,71 +1,94 @@
 # StudioCart
 
-StudioCart is a WordPress checkout plugin designed for coaches, course creators, and service businesses, with order bumps, upsells, and simple payment form creation. Available as Action in the Bit Integrations WordPress plugin.
+StudioCart is a WordPress checkout and sales plugin designed for coaches, course creators, and service businesses, with order bumps, upsells, and payment form creation.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/StudioCart.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create order, add customer |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Create order — generate a new order record in StudioCart
-- Add customer — add a customer to StudioCart
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/studiocart/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: StudioCart must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Create StudioCart order from CRM deal
-**Trigger:** HubSpot / Zoho CRM — Deal closed won
-**Action:** StudioCart — Create order
-**Key fields mapped:** Contact email, product or service tied to the deal, order amount
-**Use case:** Automatically generate a StudioCart order record when a deal is closed in your CRM
+### List Products
+```bash
+GET https://yoursite.com/wp-json/studiocart/v1/products
 
-### Recipe 2: Add customer from form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** StudioCart — Add customer
-**Key fields mapped:** Email, first name, last name, phone
-**Use case:** Create StudioCart customer records from lead or booking form submissions
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Create order after external payment confirmation
-**Trigger:** WooCommerce / SureCart — Order completed
-**Action:** StudioCart — Create order
-**Key fields mapped:** Customer email, product name, order total
-**Use case:** Mirror or log orders in StudioCart when purchases are made through a different checkout system
+### Get a Single Product
+```bash
+GET https://yoursite.com/wp-json/studiocart/v1/products/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select StudioCart as the action.
-4. Choose Create Order or Add Customer.
-5. Map the required fields from your trigger source (email, name, product, amount).
-6. Save and test with a real event (close a CRM deal or submit a test form).
+### List Orders
+```bash
+GET https://yoursite.com/wp-json/studiocart/v1/orders
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get Order Details
+```bash
+GET https://yoursite.com/wp-json/studiocart/v1/orders/{id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Customers
+```bash
+GET https://yoursite.com/wp-json/studiocart/v1/customers
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Product
+- `id` - Product ID
+- `name` - Product name
+- `price` - Base price
+- `type` - one-time, subscription, payment-plan
+
+### Order
+- `id` - Order ID
+- `customer_email` - Buyer's email address
+- `product_id` - Purchased product
+- `total` - Amount charged
+- `status` - complete, pending, refunded, cancelled
+
+## Parameters
+
+- `per_page` / `page` - Pagination controls
+- `status` - Filter orders by status
+- `product_id` - Filter orders by product
 
 ## When to Use
 
-- You use StudioCart as your checkout solution for coaching or course products and want orders created from external triggers
-- You need to keep StudioCart customer records in sync with form submissions or CRM data
-- You want to create StudioCart order records programmatically as part of a fulfillment or reporting workflow
-- You run a multi-platform setup and need StudioCart integrated with external sales or CRM tools
+- Triggering CRM updates or onboarding sequences on purchase
+- Syncing order data to accounting or fulfillment tools
+- Building revenue dashboards from checkout data
+- Automating upsell or cross-sell follow-ups
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- surecart.md
-- easy-digital-downloads.md
-- learndash.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:email-sequence
+- sales:pipeline-review
+- data:analyze
+- operations:process-doc

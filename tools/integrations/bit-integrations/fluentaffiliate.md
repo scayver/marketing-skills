@@ -1,67 +1,96 @@
 # FluentAffiliate
 
-FluentAffiliate is a WordPress affiliate management plugin by the Fluent team, designed for simplicity and deep integration with other Fluent plugins. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress affiliate management plugin for running affiliate programs, tracking commissions, and managing payouts.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Affiliate Management
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent-Affiliate-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; manage affiliates in FluentAffiliate |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to FluentAffiliate affiliate fields |
-
-## Action Events
-
-- Create affiliate account
-- Update affiliate status
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via FluentAffiliate endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and FluentAffiliate must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Partner Application Form to FluentAffiliate
-**Trigger:** WordPress affiliate or partner application form
-**Action:** Create a FluentAffiliate account for the applicant
-**Use case:** Automate the affiliate onboarding process from a custom WordPress application form
+### List affiliates
+```bash
+GET https://yoursite.com/wp-json/fluent-affiliate/v2/affiliates
 
-### Recipe 2: WooCommerce Customer to Affiliate Invitation
-**Trigger:** WooCommerce order completed (customer qualifies for affiliate program)
-**Action:** Create a FluentAffiliate account for the qualifying customer
-**Use case:** Convert loyal customers into affiliates automatically based on purchase behavior
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: CRM Event to Affiliate Account Creation
-**Trigger:** CRM deal closed or contact tagged as partner
-**Action:** Create a FluentAffiliate account for the new partner
-**Use case:** Bridge CRM partner management with FluentAffiliate account provisioning
+### Get affiliate details
+```bash
+GET https://yoursite.com/wp-json/fluent-affiliate/v2/affiliates/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and FluentAffiliate on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select FluentAffiliate as the Action.
-5. Select the action event.
-6. Map form fields to FluentAffiliate affiliate fields.
-7. Save and test.
+### List commissions
+```bash
+GET https://yoursite.com/wp-json/fluent-affiliate/v2/commissions?status=approved
+
+Authorization: Basic {base64_credentials}
+```
+
+### List payouts
+```bash
+GET https://yoursite.com/wp-json/fluent-affiliate/v2/payouts
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Affiliate
+- `id` - Affiliate ID (WordPress user ID)
+- `display_name` - Affiliate name
+- `email` - Email address
+- `status` - active, inactive, pending
+- `referral_code` - Unique referral slug
+- `balance` - Unpaid commission balance
+
+### Commission
+- `id` - Commission ID
+- `affiliate_id` - Earning affiliate
+- `amount` - Commission amount
+- `status` - pending, approved, rejected, paid
+- `order_id` - Source order
+- `created_at` - Timestamp
+
+### Payout
+- `id` - Payout ID
+- `affiliate_id` - Paid affiliate
+- `amount` - Payout amount
+- `method` - PayPal, bank transfer, etc.
+- `paid_at` - Payment date
+
+## Parameters
+
+- `status` - Filter by commission or payout status
+- `affiliate_id` - Filter by specific affiliate
+- `per_page` / `page` - Pagination
 
 ## When to Use
 
-- When using FluentAffiliate in the Fluent ecosystem and wanting automated affiliate onboarding
-- When converting customers or partners into affiliates programmatically from form events
-- When the affiliate program management is handled by FluentAffiliate alongside other Fluent tools
+- Automate payout notifications to affiliates
+- Sync affiliate data to a CRM for relationship management
+- Generate commission reports for accounting
+- Monitor affiliate performance and top earners
 
-## Related Integrations
+## Rate Limits
 
-- affiliatewp.md
-- slicewp.md
-- wc-affiliate.md
-- fluent-support.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- sales:pipeline-review
+- finance:financial-statements
+- marketing:performance-report

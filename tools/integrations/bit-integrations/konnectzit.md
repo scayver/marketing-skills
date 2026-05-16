@@ -1,67 +1,86 @@
 # KonnectzIT
 
-KonnectzIT is a visual automation platform for connecting apps and automating workflows with a lifetime deal pricing model. Available as an Action in the Bit Integrations WordPress plugin.
+Visual automation platform for connecting 1,000+ apps and automating multi-step workflows, popular for its lifetime deal pricing.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/KonnectzIT.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to KonnectzIT webhook |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map any form field to the outgoing webhook payload |
-
-## Action Events
-
-- Send data to a KonnectzIT flow via webhook trigger
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Webhook trigger endpoint for receiving data |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Webhook-based; no SDK |
 
 ## Authentication
 
-- **Type**: Webhook URL
-- **Required**: Webhook URL from a KonnectzIT flow's webhook trigger step
+- **Type**: Webhook URL (no separate authentication header)
+- **URL pattern**: Unique webhook URL generated per flow in KonnectzIT
+- **Get URL**: KonnectzIT dashboard > Create Flow > Select "Webhook" trigger > Copy URL
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Contact Form to Email List
-**Trigger:** WordPress contact form submission
-**Action:** KonnectzIT flow subscribes the contact to an email marketing list
-**Use case:** Grow email lists automatically from WordPress form submissions
+### Send data to a KonnectzIT flow
 
-### Recipe 2: Registration to CRM Contact
-**Trigger:** WordPress user registration
-**Action:** KonnectzIT creates a CRM contact with user details
-**Use case:** Keep your CRM in sync with WordPress registrations without manual import
+```bash
+POST https://hooks.konnectzit.com/hooks/{unique_id}
 
-### Recipe 3: Order to Fulfillment Notification
-**Trigger:** WooCommerce order placed
-**Action:** KonnectzIT sends order details to a fulfillment or inventory system
-**Use case:** Automate post-purchase workflows for product delivery
+Content-Type: application/json
 
-## Setup Steps
+{"email": "jane@example.com", "name": "Jane Doe", "source": "contact-form"}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select KonnectzIT as the Action.
-5. In KonnectzIT, create a new flow and add a "Webhook" trigger. Copy the webhook URL.
-6. Paste the webhook URL into Bit Integrations.
-7. Map fields.
-8. Save and test.
+### Send order data to trigger a fulfillment flow
+
+```bash
+POST https://hooks.konnectzit.com/hooks/{unique_id}
+
+Content-Type: application/json
+
+{
+  "order_id": "WC-1234",
+  "customer_email": "jane@example.com",
+  "product_name": "Online Course",
+  "amount": "99.00"
+}
+```
+
+### Send user registration event
+
+```bash
+POST https://hooks.konnectzit.com/hooks/{unique_id}
+
+Content-Type: application/json
+
+{"user_id": 42, "email": "newuser@example.com", "username": "jane_doe", "registered_at": "2025-06-01T10:00:00Z"}
+```
+
+## Key Fields
+
+### Webhook Payload
+- Any JSON key/value pair is accepted and becomes an available field in the flow
+- `email` - Typically used as the primary identifier
+- `name` - Contact or user name
+- Field names must be consistent across calls for reliable downstream mapping
+
+## Parameters
+
+- Webhook URL `unique_id` - Generated per flow; acts as the authentication token
+- JSON body - All fields passed become available as trigger data in connected actions
 
 ## When to Use
 
-- When you own a KonnectzIT lifetime deal and want to connect WordPress to other apps
-- When destination apps are supported in KonnectzIT but not natively in Bit Integrations
-- When you need affordable multi-step automation triggered from WordPress events
+- Routing WordPress or ecommerce events to 1,000+ connected apps
+- Building multi-step automations with filters, delays, and data transforms
+- Connecting apps not natively supported by your primary integration tool
+- Running cost-effective automations with a one-time lifetime deal plan
 
-## Related Integrations
+## Rate Limits
 
-- zapier.md
-- pabbly.md
-- integrately.md
-- webhook-outgoing.md
+- Free tier: Limited tasks/month
+- Paid plans: Higher task limits; see konnectzit.com/pricing for details
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- ecommerce

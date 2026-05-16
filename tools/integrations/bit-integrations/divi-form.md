@@ -1,83 +1,84 @@
-# Divi Form
+# Divi Form (Divi Builder Contact Form Module)
 
-Divi Builder by Elegant Themes is one of the most popular WordPress page builders, and its Contact Form module allows embedding forms directly within Divi layouts. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+The built-in Contact Form module in Divi Builder (by Elegant Themes), allowing forms to be embedded within any Divi page layout using the visual drag-and-drop editor.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Divi_Form1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress-only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | Not available |
+| WordPress REST | - | No dedicated REST endpoint; use PHP hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress application password (for any WP REST access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Hook into Divi Contact Form submission (PHP)
+```php
+add_filter('et_pb_contact_form_submit_notification_subject', function($subject, $contact_form) {
+    return $subject;
+}, 10, 2);
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+add_action('et_pb_contact_form_submit', function($contact_form_info, $fields) {
+    // $fields contains submitted field values keyed by field label
+}, 10, 2);
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Intercept via wp_mail (alternative approach)
+```php
+add_filter('wp_mail', function($args) {
+    // Identify Divi form emails by subject or to address
+    // Parse $args['message'] to extract field values
+    return $args;
+});
+```
 
-## Connecting to Action Platforms
+### List Divi-built pages via REST
+```
+GET /wp-json/wp/v2/pages?per_page=100
 
-After selecting Divi Form as the trigger in Bit Integrations, connect it to any of these action platforms:
+Authorization: Basic {base64_credentials}
+```
+Then inspect `content.raw` for `[et_pb_contact_form` shortcodes or `et_pb_contact_form` block markup.
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+## Key Fields
 
-## Setup Steps
+### Submission Data
+- Field values are keyed by the field's custom `field_id` attribute as set in the Divi module settings
+- Default fields: `et_pb_contact_name`, `et_pb_contact_email`, `et_pb_contact_message`
+- Custom fields use the ID set in the Divi Builder field options
 
-1. Install and activate Divi Builder on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a page with a Contact Form module in Divi and publish it.
-4. Go to Bit Integrations > Create Integration.
-5. Select Divi Form as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Contact Form Module Settings
+- `form_field` - Repeating child modules defining each input
+- `email` - Notification recipient address
+- `success_message` - Confirmation text shown after submit
+- `use_redirect` - Whether to redirect after submission
+- `redirect_url` - URL to redirect to on success
 
-## Field Mapping Tips
+## Parameters
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- `contact_form_info` - Object passed to `et_pb_contact_form_submit` with form metadata
+- `fields` - Associative array of submitted field values in PHP hook callbacks
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from contact or inquiry forms built inside Divi page layouts
+- Triggering CRM or email list automations when a Divi form is submitted
+- Logging Divi form submissions to external systems via PHP hooks
+- Building simple lead capture pages using the Divi visual builder without separate form plugins
 
-## Related Integrations
+## Rate Limits
 
-- divi-form-builder.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; performance governed by WordPress server and hosting configuration
+
+## Relevant Skills
+
+- lead-generation
+- content-strategy

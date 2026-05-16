@@ -1,82 +1,75 @@
 # NEX-Forms
 
-NEX-Forms is a premium WordPress form builder plugin with a drag-and-drop interface, advanced field types, conditional logic, and built-in analytics for tracking form performance. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Premium WordPress form builder with drag-and-drop interface, advanced field types, conditional logic, and built-in submission analytics.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/NEX-Forum-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; WordPress hook-based only |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress plugin-native (hook-based)
+- **Access**: Form submission data is accessed via WordPress action hooks on the same WordPress installation; no external credentials required
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+NEX-Forms has no external REST API. Submissions are stored as custom post types and accessed via WordPress hooks or WP REST API.
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### List NEX-Forms submissions (via WP REST API)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/nx-forms-entry
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic {base64_credentials}
+```
 
-## Connecting to Action Platforms
+### Get a specific submission
+```bash
+GET https://yoursite.com/wp-json/wp/v2/nx-forms-entry/{entry_id}
 
-After selecting NEX-Forms as the trigger in Bit Integrations, connect it to any of these action platforms:
+Authorization: Basic {base64_credentials}
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Hook into form submission (PHP — server-side)
+```php
+add_action('nex_forms_after_successful_save', function($form_id, $entry_id, $form_data) {
+    // $form_data contains all submitted field values
+    // Forward to external API or service here
+}, 10, 3);
+```
 
-## Setup Steps
+## Key Fields
 
-1. Install and activate NEX-Forms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in NEX-Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select NEX-Forms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Form Entry
+- `form_id` - NEX-Forms form ID
+- `entry_id` - Submission entry ID
+- Field values keyed by field name (e.g., `first_name`, `email`, `message`)
+- `submission_date` - Submission timestamp
+- `page_url` - URL where the form was submitted
 
-## Field Mapping Tips
+## Parameters
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- `form_id` - Filter entries by form
+- `per_page` - Results per page
+- `date_from` / `date_to` - Date range filters
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from advanced WordPress forms and routing to CRM or email platforms
+- Building forms with conditional logic for segmented data collection
+- Logging submissions with built-in analytics to track conversion rates per form
+- Triggering server-side automations via PHP hooks on form submission
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; limited by WordPress server capacity
+
+## Relevant Skills
+
+- marketing:draft-content
+- marketing:email-sequence
+- data:validate-data

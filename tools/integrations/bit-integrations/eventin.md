@@ -1,67 +1,96 @@
 # Eventin
 
-Eventin is a comprehensive event management plugin for WordPress that handles event listings, schedules, ticketing, and attendee registration. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress event management plugin for event listings, schedules, ticketing, and attendee registration.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Eventin.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; register attendees for Eventin events |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to Eventin attendee registration fields |
-
-## Action Events
-
-- Register attendee for an event
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via Eventin endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Eventin must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password or consumer key/secret
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: External Form to Eventin Event Registration
-**Trigger:** WordPress form submission (a form separate from Eventin's own registration)
-**Action:** Register the submitter as an Eventin attendee
-**Use case:** Use a custom-designed WordPress form to collect attendee details and pass them into Eventin for event management
+### List events
+```bash
+GET https://yoursite.com/wp-json/eventin/v2/events
 
-### Recipe 2: WooCommerce Ticket Purchase to Eventin Registration
-**Trigger:** WooCommerce order completed (event ticket product)
-**Action:** Register the buyer as an Eventin event attendee
-**Use case:** Sync WooCommerce ticket sales with Eventin's attendee management automatically
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Membership Activation to Premium Event Access
-**Trigger:** Membership plugin subscription activated
-**Action:** Register the member as an attendee in an exclusive Eventin event
-**Use case:** Grant event access as a membership benefit automatically on subscription activation
+### Get single event
+```bash
+GET https://yoursite.com/wp-json/eventin/v2/events/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and Eventin on your WordPress site.
-2. Create the target event in Eventin.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Eventin as the Action.
-6. Select the target event.
-7. Map form fields to attendee registration fields.
-8. Save and test.
+### List attendees for event
+```bash
+GET https://yoursite.com/wp-json/eventin/v2/attendees?event_id={id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Create attendee / ticket
+```bash
+POST https://yoursite.com/wp-json/eventin/v2/attendees
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "event_id": 42,
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "ticket_id": 5
+}
+```
+
+## Key Fields
+
+### Event
+- `id` - Event post ID
+- `title` - Event name
+- `start_date` / `end_date` - ISO 8601 dates
+- `location` - Venue details
+- `tickets` - Array of ticket types
+
+### Attendee
+- `id` - Attendee ID
+- `event_id` - Parent event
+- `name` - Registrant name
+- `email` - Registrant email
+- `ticket_id` - Ticket type purchased
+- `status` - approved, pending, cancelled
+
+## Parameters
+
+- `event_id` - Filter attendees by event
+- `status` - Filter by attendee status
+- `per_page` / `page` - Pagination
 
 ## When to Use
 
-- When external WordPress forms should register attendees into Eventin-managed events
-- When WooCommerce ticket sales should sync with Eventin attendee records
-- When membership activations should grant access to Eventin events automatically
+- Sync event attendees to an email marketing list
+- Trigger confirmation emails on registration
+- Report on ticket sales and attendee counts
+- Automate waitlist management
 
-## Related Integrations
+## Rate Limits
 
-- the-events-calendar.md
-- modern-events-calendar.md
-- zoom-webinar.md
-- amelia.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- operations:runbook

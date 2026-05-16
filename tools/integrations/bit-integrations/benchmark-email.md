@@ -1,83 +1,112 @@
 # Benchmark Email
 
-Benchmark Email is a straightforward email marketing platform offering list management, drag-and-drop campaign creation, and contact automation. Available as an Action in the Bit Integrations WordPress plugin.
+Email marketing platform offering drag-and-drop campaign creation, list management, marketing automation, landing pages, and contact engagement reporting.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Benchmark1-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update subscriber fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://clientapi.benchmarkemail.com/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: Benchmark Email account > Account > Integrations > API Key
-- **Required in Bit Integrations**: API Key
+- **Header**: `AuthToken: {api_key}`
+- **Get token**: Benchmark Email > Account > Integrations > API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| List ID | The contact list to add the subscriber to | Required |
+### Add a contact to a list
 
-## Common Workflow Recipes
+```bash
+POST https://clientapi.benchmarkemail.com/Contact/{list_id}/ContactDetails
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Benchmark Email list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+AuthToken: {api_key}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Benchmark Email customer list or segment
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{
+  "Contact": {
+    "Email": "jane@example.com",
+    "FirstName": "Jane",
+    "LastName": "Doe",
+    "Phone": "5551234567"
+  }
+}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Benchmark Email list for enrollment-based nurture
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Get all contact lists
 
-## Setup Steps
+```bash
+GET https://clientapi.benchmarkemail.com/Contact/?status=1
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Benchmark Email as the action.
-5. Connect your Benchmark Email account using your API Key.
-6. Select the list to add contacts to.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+AuthToken: {api_key}
+```
+
+### Get contacts in a list
+
+```bash
+GET https://clientapi.benchmarkemail.com/Contact/{list_id}/ContactDetails?pageSize=50&pageNumber=1
+
+AuthToken: {api_key}
+```
+
+### Update a contact
+
+```bash
+PUT https://clientapi.benchmarkemail.com/Contact/{list_id}/ContactDetails/{contact_id}
+
+AuthToken: {api_key}
+Content-Type: application/json
+
+{"Contact": {"FirstName": "Jane", "Phone": "5559876543"}}
+```
+
+### Unsubscribe a contact
+
+```bash
+DELETE https://clientapi.benchmarkemail.com/Contact/{list_id}/ContactDetails/{contact_id}
+
+AuthToken: {api_key}
+```
+
+## Key Fields
+
+### Contact
+- `Email` - Email address (required, unique per list)
+- `FirstName` - First name
+- `LastName` - Last name
+- `Phone` - Phone number
+- `Company` - Company name
+- Custom fields - Additional merge fields defined on the list
+
+### Contact List
+- `id` - List ID
+- `Name` - List name
+- `Status` - 1 = active
+
+## Parameters
+
+- `pageSize` - Results per page (default 20)
+- `pageNumber` - Pagination page
+- `status` - Filter lists by status (1 = active)
+- `list_id` - Target contact list ID
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Adding subscribers from web forms to segmented Benchmark Email lists
+- Syncing e-commerce customers to a dedicated buyer list for post-purchase campaigns
+- Managing list membership for course or membership site enrollments
+- Reporting on list growth and contact engagement metrics
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- mailerlite.md
-- brevo.md
+- See Benchmark Email pricing page for API call limits by plan tier
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- ecommerce

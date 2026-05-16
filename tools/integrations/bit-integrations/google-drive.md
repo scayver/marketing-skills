@@ -1,69 +1,107 @@
 # Google Drive
 
-Google Drive is Google's cloud storage and file management platform for storing, sharing, and collaborating on files online. Available as an Action in the Bit Integrations WordPress plugin.
+Google's cloud storage platform for storing, sharing, and collaborating on files and folders online.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Cloud Storage
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Google_Drive1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Upload files, create folders, and move files in Google Drive |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map file URL from form upload, folder ID, and file name |
-
-## Action Events
-
-- Upload file (from a URL to a specified Google Drive folder)
-- Create folder
-- Move file
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Google Drive API v3 |
+| MCP | ✓ | Available via Google Drive MCP |
+| CLI | - | Not available |
+| SDK | ✓ | Official client libraries for Python, Node.js, Java, PHP, Go |
 
 ## Authentication
 
 - **Type**: OAuth 2.0
-- **Required**: Authorize Bit Integrations via Google OAuth. Select the target Google Drive folder.
+- **Header**: `Authorization: Bearer {access_token}`
+- **Get token**: Google Cloud Console > Credentials; scopes: `https://www.googleapis.com/auth/drive`
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: File Upload Form to Google Drive
-**Trigger:** WordPress form submission with a file upload field
-**Action:** Upload the submitted file to a specified Google Drive folder
-**Use case:** Store form-uploaded documents (resumes, contracts, ID scans) directly in Google Drive for organized access
+### List files
+```bash
+GET https://www.googleapis.com/drive/v3/files?q=mimeType!='application/vnd.google-apps.folder'&fields=files(id,name,mimeType,modifiedTime)
 
-### Recipe 2: WooCommerce Order to Drive Invoice Folder
-**Trigger:** WooCommerce order completed with attached invoice file
-**Action:** Upload the invoice PDF to a Google Drive folder organized by date or customer
-**Use case:** Automatically archive WooCommerce invoices in Google Drive for accounting
+Authorization: Bearer {access_token}
+```
 
-### Recipe 3: Media Submission Form to Drive Gallery
-**Trigger:** WordPress media submission form
-**Action:** Upload submitted images or videos to a Google Drive folder
-**Use case:** Collect and organize media files from contributors or clients via a WordPress form
+### Upload file
+```bash
+POST https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart
 
-## Setup Steps
+Authorization: Bearer {access_token}
+Content-Type: multipart/related; boundary=boundary123
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger (form with file upload field).
-4. Select Google Drive as the Action.
-5. Click "Authorize" and sign in with your Google account.
-6. Select the target Google Drive folder or create a new one.
-7. Map fields: file URL (from form upload field), file name, folder ID.
-8. Save and test.
+--boundary123
+Content-Type: application/json
+
+{"name": "report.pdf", "parents": ["folder_id"]}
+--boundary123
+Content-Type: application/pdf
+
+{binary_file_content}
+--boundary123--
+```
+
+### Create folder
+```bash
+POST https://www.googleapis.com/drive/v3/files
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"name": "Q2 Reports", "mimeType": "application/vnd.google-apps.folder"}
+```
+
+### Share file
+```bash
+POST https://www.googleapis.com/drive/v3/files/{fileId}/permissions
+
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"role": "reader", "type": "user", "emailAddress": "jane@example.com"}
+```
+
+## Key Fields
+
+### File
+- `id` - File ID
+- `name` - File name
+- `mimeType` - File type
+- `size` - File size in bytes
+- `parents` - Array of parent folder IDs
+- `modifiedTime` - ISO 8601 last modified
+- `webViewLink` - Browser URL
+- `owners` - Array of owner objects
+
+### Permission
+- `id` - Permission ID
+- `role` - owner, organizer, fileOrganizer, writer, commenter, reader
+- `type` - user, group, domain, anyone
+- `emailAddress` - Recipient email (for user/group type)
+
+## Parameters
+
+- `q` - Query string for filtering (Drive query language)
+- `fields` - Fields to return in response
+- `pageSize` - Results per page (max 1000)
+- `pageToken` - Pagination cursor
 
 ## When to Use
 
-- When WordPress forms with file uploads should store files directly in Google Drive
-- When automating document archival from WooCommerce or form submissions
-- When teams need uploaded files organized in Google Drive without manual downloading and uploading
+- Store generated reports or exports in Drive automatically
+- Organize uploaded files into project folders
+- Share documents with clients after form submission
+- Back up content from other platforms to Drive
 
-## Related Integrations
+## Rate Limits
 
-- dropbox.md
-- onedrive.md
-- google-sheets.md
-- google-contacts.md
+- 1000 requests/100 seconds per user; 20000 requests/100 seconds per project
+
+## Relevant Skills
+
+- operations:process-doc
+- data:analyze
+- marketing:content-creation

@@ -1,90 +1,140 @@
 # ActiveCampaign
 
-ActiveCampaign is a customer experience automation platform combining email marketing, CRM, and sales automation. Available as an Action in the Bit Integrations WordPress plugin.
+Customer experience automation platform combining email marketing, marketing automation, CRM, and sales automation in one tool.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ActiveCampaign1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contacts, apply tags, add to automations, create deals |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to list
-- Add contact to automation
-- Apply tag to contact
-- Create deal in CRM pipeline
-- Update subscriber fields
-- Apply tags or segments
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API v3 at `https://{account}.api-us1.com/api/3/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official Python, PHP, Ruby, Node wrappers available |
 
 ## Authentication
 
 - **Type**: API Key
-- **Where to get credentials**: ActiveCampaign account > Settings > Developer > API Access (API URL + API Key)
-- **Required in Bit Integrations**: API Key and Account URL
+- **Header**: `Api-Token: {api_key}`
+- **Get token**: ActiveCampaign > Settings > Developer > API Access
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| Phone | Subscriber phone number | Optional |
-| Tags | Comma-separated tags to apply | Optional |
-| Lists | List IDs to add the contact to | Optional |
-| Field Values | Custom field key-value pairs | Optional |
+### Create or update a contact
 
-## Common Workflow Recipes
+```bash
+POST https://{account}.api-us1.com/api/3/contacts
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to ActiveCampaign list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Api-Token: {api_key}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to ActiveCampaign customer list or segment
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{
+  "contact": {
+    "email": "user@example.com",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "phone": "+15551234567"
+  }
+}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to ActiveCampaign list and apply enrollment tag, then add to automation
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Add contact to a list
 
-## Setup Steps
+```bash
+POST https://{account}.api-us1.com/api/3/contactLists
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select ActiveCampaign as the action.
-5. Connect your ActiveCampaign account using your API Key and Account URL.
-6. Select the list, audience, or group to add subscribers to.
-7. Map the email field and any name or tag fields.
-8. Save and test with a real form submission.
+Api-Token: {api_key}
+Content-Type: application/json
+
+{"contactList": {"list": 2, "contact": 45, "status": 1}}
+```
+
+### Apply a tag to a contact
+
+```bash
+POST https://{account}.api-us1.com/api/3/contactTags
+
+Api-Token: {api_key}
+Content-Type: application/json
+
+{"contactTag": {"contact": 45, "tag": 12}}
+```
+
+### Add contact to an automation
+
+```bash
+POST https://{account}.api-us1.com/api/3/contactAutomations
+
+Api-Token: {api_key}
+Content-Type: application/json
+
+{"contactAutomation": {"contact": 45, "automation": 3}}
+```
+
+### Create a deal in the CRM
+
+```bash
+POST https://{account}.api-us1.com/api/3/deals
+
+Api-Token: {api_key}
+Content-Type: application/json
+
+{
+  "deal": {
+    "title": "New Lead",
+    "contact": 45,
+    "pipeline": 1,
+    "stage": 2,
+    "value": 5000,
+    "currency": "usd"
+  }
+}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact ID
+- `email` - Email address (required, unique)
+- `firstName`, `lastName` - Name fields
+- `phone` - Phone number
+- `fieldValues` - Array of custom field values
+
+### List
+- `id` - List ID
+- `name` - List name
+- `status` - 1 = active, 0 = unsubscribed
+
+### Tag
+- `id` - Tag ID
+- `tag` - Tag name string
+
+### Deal
+- `id` - Deal ID
+- `title` - Deal name
+- `value` - Deal value in cents
+- `pipeline`, `stage` - CRM pipeline and stage IDs
+
+## Parameters
+
+- `limit` - Results per page (max 100)
+- `offset` - Pagination offset
+- `filters[email]` - Filter contacts by email
+- `filters[tag]` - Filter contacts by tag ID
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using tags
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Triggering CRM deal creation from WordPress form data
-- Replacing manual CSV imports from WordPress to your email platform
+- Adding form leads directly to segmented email lists
+- Tagging contacts by behavior or lead source for targeted campaigns
+- Triggering onboarding automations on signup or purchase
+- Managing sales pipeline deals from inbound leads
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- klaviyo.md
-- hubspot.md
+- 5 requests per second per account
+- See ActiveCampaign pricing page for API call limits by plan
+
+## Relevant Skills
+
+- email-marketing
+- crm-management
+- lead-generation

@@ -1,85 +1,116 @@
 # Mailjet
 
-Mailjet is a cloud-based email delivery and marketing platform offering transactional email, marketing campaigns, and contact list management. Available as an Action in the Bit Integrations WordPress plugin.
+Cloud-based transactional email and marketing campaign platform with contact management and real-time sending analytics.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Mailjet.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to list, update contact properties |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to list
-- Update contact properties
-- Manage list memberships
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API for sending, contacts, lists, and campaigns |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official SDKs for Python, PHP, Node, Ruby, Go, Java |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Mailjet account > Account Settings > REST API > API Key Management (API Key + API Secret)
-- **Required in Bit Integrations**: API Key and API Secret
+- **Type**: API Key + Secret Key (Basic Auth)
+- **Header**: `Authorization: Basic {base64(api_key:secret_key)}`
+- **Get keys**: Mailjet account > Account Settings > REST API > API Key Management
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| Is Excluded From Campaigns | Opt-out flag | Optional |
-| Properties | Custom contact property key-value pairs | Optional |
-| Contacts Lists | List IDs to add the contact to | Optional |
+### Send a transactional email
 
-## Common Workflow Recipes
+```bash
+POST https://api.mailjet.com/v3.1/send
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Mailjet list with welcome tag
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Basic {base64(api_key:secret_key)}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Mailjet customer list or segment
-**Key fields mapped:** Email, Name, Order amount (as custom property if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"Messages": [{"From": {"Email": "from@example.com", "Name": "Sender"}, "To": [{"Email": "jane@example.com"}], "Subject": "Hello", "TextPart": "Hello Jane"}]}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Mailjet list with enrollment property
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Add a contact to a list
 
-## Setup Steps
+```bash
+POST https://api.mailjet.com/v3/REST/listrecipient
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Mailjet as the action.
-5. Connect your Mailjet account using your API Key and API Secret.
-6. Select the contact list to add subscribers to.
-7. Map the email field and any name or custom property fields.
-8. Save and test with a real form submission.
+Authorization: Basic {base64(api_key:secret_key)}
+Content-Type: application/json
+
+{"IsUnsubscribed": false, "ContactAlt": "jane@example.com", "ListID": 12345}
+```
+
+### Create or update a contact
+
+```bash
+PUT https://api.mailjet.com/v3/REST/contact/{email}
+
+Authorization: Basic {base64(api_key:secret_key)}
+Content-Type: application/json
+
+{"IsExcludedFromCampaigns": false, "Name": "Jane Doe"}
+```
+
+### Get all contact lists
+
+```bash
+GET https://api.mailjet.com/v3/REST/contactslist
+
+Authorization: Basic {base64(api_key:secret_key)}
+```
+
+### Get campaign stats
+
+```bash
+GET https://api.mailjet.com/v3/REST/campaignstatistics/{campaign_id}
+
+Authorization: Basic {base64(api_key:secret_key)}
+```
+
+## Key Fields
+
+### Message Object (Send)
+- `From` - Sender email and name object
+- `To` - Array of recipient objects (Email, Name)
+- `Subject` - Email subject line
+- `TextPart` - Plain text body
+- `HTMLPart` - HTML body
+- `TemplateID` - Mailjet template ID
+
+### Contact Object
+- `Email` - Primary identifier
+- `Name` - Display name
+- `IsExcludedFromCampaigns` - Opt-out flag (boolean)
+- `Properties` - Custom contact properties
+
+### List Object
+- `ID` - Unique list ID
+- `Name` - List name
+- `SubscriberCount` - Active subscriber count
+
+## Parameters
+
+- `CountOnly` - Return count only (1 or 0)
+- `Limit` - Results per page (max 1000)
+- `Offset` - Pagination offset
+- `Sort` - Sort field and direction
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Sending transactional emails (order confirmations, password resets) reliably
+- Managing marketing contact lists and running broadcast campaigns
+- Using pre-built email templates for consistent campaign design
+- Tracking email delivery, open, and click rates in real time
 
-## Related Integrations
+## Rate Limits
 
-- brevo.md
-- sendgrid.md
-- mailchimp.md
+- Free tier: 6,000 emails/month, 200/day
+- Paid plans: Based on monthly sending volume
+- API: 300 requests/minute
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- ecommerce

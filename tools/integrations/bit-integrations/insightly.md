@@ -1,87 +1,114 @@
 # Insightly
 
-Insightly is a CRM and project management platform that helps teams manage contacts, leads, opportunities, and post-sale project delivery in one place. Available as an Action in the Bit Integrations WordPress plugin.
+CRM and project management platform for managing contacts, leads, opportunities, and post-sale project delivery.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Insightly-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Contacts, Leads, Opportunities, and Projects in Insightly |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Insightly fields |
-
-## Action Events
-
-- Create Contact
-- Create Lead
-- Create Opportunity
-- Create Project
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Full REST API for contacts, leads, opportunities, projects, tasks |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Community SDKs for Python, Ruby, .NET |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Insightly User Settings (avatar menu) > API key — copy the key shown on the page
-- **Required fields in Bit Integrations**: API Key
+- **Type**: API Key via HTTP Basic Auth
+- **Header**: `Authorization: Basic {base64(api_key:)}`  (API key as username, empty password)
+- **Get key**: Insightly dashboard > User Settings (avatar) > API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Get contacts
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| FIRST_NAME | Contact or lead first name | Optional |
-| LAST_NAME | Contact or lead last name | Required |
-| EMAIL_ADDRESS | Email address | Optional; recommended for deduplication |
-| PHONE | Phone number | Optional |
-| ORGANISATION_NAME | Associated organization name | Optional |
+```bash
+GET https://api.insightly.com/v3.1/Contacts?top=100&skip=0
 
-## Common Workflow Recipes
+Authorization: Basic {base64(api_key:)}
+```
 
-### Recipe 1: Contact Form to Insightly Lead
-**Trigger:** WPForms or Contact Form 7 submission
-**Action:** Create Lead in Insightly
-**Key fields mapped:** First Name, Last Name, Email, Phone, Organization Name
-**Use case:** Capture every website inquiry as an Insightly lead so your sales team can qualify and convert them.
+### Create a contact
 
-### Recipe 2: Project Inquiry to Insightly Opportunity
-**Trigger:** Gravity Forms project inquiry form
-**Action:** Create Opportunity in Insightly
-**Key fields mapped:** First Name, Last Name, Email, Opportunity Name, Stage
-**Use case:** Turn project scope requests from your website into Insightly pipeline opportunities for tracking and quoting.
+```bash
+POST https://api.insightly.com/v3.1/Contacts
 
-### Recipe 3: Client Onboarding Form to Insightly Project
-**Trigger:** Fluent Forms client onboarding submission
-**Action:** Create Project in Insightly
-**Key fields mapped:** First Name, Last Name, Email, Project Name, Status
-**Use case:** Automatically create a post-sale project record in Insightly when a new client submits an onboarding form.
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
 
-## Setup Steps
+{"FIRST_NAME": "Jane", "LAST_NAME": "Doe", "EMAIL_ADDRESS": "jane@example.com"}
+```
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select Insightly as the action.
-5. Connect your Insightly account using your API key from User Settings > API key.
-6. Select the object type (Contact, Lead, Opportunity, Project) you want to create.
-7. Map the fields from your trigger to Insightly fields.
-8. Save and submit a test entry to verify data arrives correctly.
+### Create a lead
+
+```bash
+POST https://api.insightly.com/v3.1/Leads
+
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
+
+{"FIRST_NAME": "Jane", "LAST_NAME": "Doe", "EMAIL": "jane@example.com", "ORGANISATION_NAME": "Acme Co"}
+```
+
+### Create an opportunity
+
+```bash
+POST https://api.insightly.com/v3.1/Opportunities
+
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
+
+{"OPPORTUNITY_NAME": "New Project", "STAGE_ID": 1, "PIPELINE_ID": 1}
+```
+
+### Create a task
+
+```bash
+POST https://api.insightly.com/v3.1/Tasks
+
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
+
+{"TITLE": "Follow up call", "DUE_DATE": "2025-06-01T09:00:00Z", "ASSIGNED_USER_ID": 123456}
+```
+
+## Key Fields
+
+### Contact / Lead Object
+- `CONTACT_ID` / `LEAD_ID` - Unique identifier
+- `FIRST_NAME`, `LAST_NAME` - Name fields
+- `EMAIL_ADDRESS` - Primary email
+- `PHONE` - Phone number
+- `ORGANISATION_NAME` - Company name
+- `LEAD_SOURCE` - Origin of the lead
+
+### Opportunity Object
+- `OPPORTUNITY_NAME` - Name
+- `STAGE_ID` - Current pipeline stage
+- `PIPELINE_ID` - Associated pipeline
+- `BID_AMOUNT` - Estimated value
+- `CLOSE_DATE` - Expected close date
+
+## Parameters
+
+- `top` - Number of records to return
+- `skip` - Offset for pagination
+- `$filter` - OData filter expression
+- `$orderby` - Sort field and direction
 
 ## When to Use
 
-- You use Insightly to manage both sales opportunities and post-sale project delivery
-- You want every website form submission to create a lead or contact automatically in Insightly
-- You need project records created automatically when clients submit onboarding forms
-- Your team needs a combined CRM and project management view starting from web lead capture
+- Tracking leads and opportunities from inbound inquiries
+- Managing post-sale project delivery alongside CRM data
+- Creating tasks and follow-ups automatically from web events
+- Running a combined sales + project management workflow
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- freshsales.md
-- copper-crm.md
-- flowlu.md
+- See Insightly pricing page for plan-specific limits
+- Typical: 10 requests/second, daily limit varies by plan
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- sales:pipeline-review

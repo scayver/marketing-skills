@@ -1,67 +1,93 @@
 # Hustle
 
-Hustle is a WordPress popup and opt-in plugin by WPMU DEV for creating email opt-ins, social sharing popups, and slide-ins with module-based management. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress popup, slide-in, and opt-in plugin for capturing email subscribers and displaying targeted offers.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Popups and Lead Capture
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Hustle.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add subscribers to Hustle modules |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to Hustle module subscriber fields |
-
-## Action Events
-
-- Add subscriber to module
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress plugin only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress hooks and filters only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Hustle must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress admin credentials
+- **Header**: `Authorization: Basic {base64(user:app_password)}` for WP REST API
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Hustle Email Module
-**Trigger:** WordPress form submission
-**Action:** Add the submitter to a Hustle email opt-in module subscriber list
-**Use case:** Build Hustle email opt-in lists from form submissions across the site
+### Hook into opt-in submission (PHP)
 
-### Recipe 2: WooCommerce Purchase to Hustle Campaign
-**Trigger:** WooCommerce order completed
-**Action:** Add the buyer to a Hustle post-purchase module
-**Use case:** Enroll WooCommerce buyers in a Hustle-managed email or re-engagement module
+```php
+add_action( 'hustle_form_submit_before_set_fields', function( $hustle_form, $data ) {
+    // $hustle_form — Hustle form/module object
+    // $data — submitted field data array
+}, 10, 2 );
+```
 
-### Recipe 3: User Registration to Hustle Onboarding Module
-**Trigger:** WordPress user registration
-**Action:** Add the new user to a Hustle onboarding or welcome module
-**Use case:** Automatically subscribe new registrations to a Hustle-powered welcome sequence
+### Hook into successful opt-in (PHP)
 
-## Setup Steps
+```php
+add_action( 'hustle_form_submit_success', function( $module_id, $fields, $hustle_form ) {
+    // $module_id — ID of the module that captured the opt-in
+    // $fields — submitted field values
+}, 10, 3 );
+```
 
-1. Install Bit Integrations Pro and Hustle on your WordPress site.
-2. Create the target Hustle module (email opt-in, slide-in, etc.).
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Hustle as the Action.
-6. Select the target Hustle module.
-7. Map form fields to subscriber fields (email, name).
-8. Save and test.
+### Get module list via WP REST API
+
+```bash
+GET https://yoursite.com/wp-json/wp/v2/hustle_module
+
+Authorization: Basic {base64(user:app_password)}
+```
+
+### Filter opt-in data before processing (PHP)
+
+```php
+add_filter( 'hustle_form_submit_data', function( $data, $module_id ) {
+    // Modify or validate $data before it is stored
+    return $data;
+}, 10, 2 );
+```
+
+## Key Fields
+
+### Opt-in Submission
+- `module_id` - ID of the Hustle module (popup, slide-in, or embed)
+- `email` - Subscriber email address
+- `name` - Subscriber name (if field is enabled)
+- `fields` - All submitted field key/value pairs
+- `hustle_privacy_consent` - GDPR consent checkbox value
+
+### Module Object
+- `id` - Unique module identifier
+- `module_name` - Human-readable name
+- `module_type` - popup | slidein | embedded | social_sharing
+- `active` - Whether the module is published
+
+## Parameters
+
+- `module_id` - Target a specific popup or opt-in module
+- `per_page` - Results per page for REST queries
+- `status` - Filter by module status (publish, draft)
 
 ## When to Use
 
-- When WordPress form submissions or purchases should add subscribers to Hustle modules
-- When managing email opt-in lists within Hustle populated automatically from WordPress events
-- When building a WPMU DEV-centered marketing workflow that uses Hustle for lead capture management
+- Growing an email list with timed or exit-intent popups
+- Displaying targeted offers to specific page visitors
+- Capturing leads with embedded opt-in forms in content
+- Running GDPR-compliant consent capture on WordPress sites
 
-## Related Integrations
+## Rate Limits
 
-- optinmonster.md
-- popup-maker.md
-- thrive-leads.md
-- convert-pro.md
+- No external rate limits; subject to WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- content-creation

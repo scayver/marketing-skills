@@ -1,86 +1,78 @@
 # Essential Blocks
 
-Essential Blocks is a Gutenberg block library for WordPress that includes a Form block, allowing users to build and embed forms directly within the WordPress block editor. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Gutenberg block library for WordPress adding 40+ blocks, including a Form block for building forms in the block editor.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Essential-Blocks.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress action hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress server-side hook access
+- **Header**: N/A — server-side PHP integration only
+- **Get token**: No API token required
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Capture form submission (PHP hook)
+```php
+add_action('eb_form_submit', function($form_data, $form_id) {
+    $email = $form_data['email'] ?? '';
+    $name  = $form_data['name'] ?? '';
+    // Forward to CRM or email platform via wp_remote_post()
+}, 10, 2);
+```
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Access form configuration
+```bash
+GET https://yoursite.com/wp-json/wp/v2/posts/{post_id}
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic {base64_credentials}
+# Parse block content for eb/form block attributes
+```
 
-## Connecting to Action Platforms
+### Send to webhook via built-in integration
+```
+Essential Blocks Form > Settings > Integrations:
+- Webhook URL field (POST JSON to external endpoint)
+- MailChimp list ID
+- ConvertKit form ID
+```
 
-After selecting Essential Blocks as the trigger in Bit Integrations, connect it to any of these action platforms:
+## Key Fields
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Form Submission
+- `form_id` - Block client ID or post ID
+- `fields` - Key-value map of field IDs to submitted values
+- `submitted_at` - Timestamp of submission
 
-## Setup Steps
+### Block Attributes (in page HTML/JSON)
+- `formLabel` - Form title
+- `inputFields` - Array of field configurations
+- `successMessage` - Confirmation text
 
-1. Install and activate Essential Blocks on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a page with the Essential Blocks Form block and publish it.
-4. Go to Bit Integrations > Create Integration.
-5. Select Essential Blocks as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+## Parameters
 
-## Field Mapping Tips
-
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- Field names are defined in the Gutenberg block editor
+- Hook fires once per valid submission
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capture contact or feedback form submissions
+- Route block editor form data to email marketing lists
+- Log submissions to a CRM or database
+- Trigger post-submission notifications
 
-## Related Integrations
+## Rate Limits
 
-- spectra.md
-- kadence-blocks-form.md
-- coblocks.md
-- gutena-forms.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; server-side PHP only
+
+## Relevant Skills
+
+- marketing:email-sequence
+- operations:process-doc

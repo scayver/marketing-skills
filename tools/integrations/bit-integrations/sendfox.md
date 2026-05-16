@@ -1,83 +1,107 @@
 # SendFox
 
-SendFox is an affordable email marketing tool created by AppSumo, designed for content creators and small businesses seeking simple list building and campaign automation. Available as an Action in the Bit Integrations WordPress plugin.
+Affordable email marketing tool by AppSumo for content creators and small businesses, featuring simple list building, campaign creation, and automation sequences.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/SendFox.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create contact, add to list |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Create contact
-- Add contact to list
-- Update contact fields
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.sendfox.com/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK; standard REST |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: SendFox account > Settings > Personal Access Token
-- **Required in Bit Integrations**: Personal Access Token
+- **Type**: Bearer Token (Personal Access Token)
+- **Header**: `Authorization: Bearer {personal_access_token}`
+- **Get token**: SendFox account > Settings > Personal Access Token
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| List ID | The SendFox list to add the contact to | Required |
+### List contacts
 
-## Common Workflow Recipes
+```bash
+GET https://api.sendfox.com/contacts
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Create contact in SendFox and add to list
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Bearer {token}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Create buyer contact in SendFox and add to customer list
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Create contact
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Create contact in SendFox and add to enrollment list
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+```bash
+POST https://api.sendfox.com/contacts
 
-## Setup Steps
+Authorization: Bearer {token}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select SendFox as the action.
-5. Connect your SendFox account using your Personal Access Token.
-6. Select the list to add contacts to.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+{"email": "jane@example.com", "first_name": "Jane", "last_name": "Doe", "lists": [12345]}
+```
+
+### List email lists
+
+```bash
+GET https://api.sendfox.com/lists
+
+Authorization: Bearer {token}
+```
+
+### Add contact to list
+
+```bash
+PATCH https://api.sendfox.com/contacts/{contact_id}
+
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{"lists": [12345, 67890]}
+```
+
+### Unsubscribe contact
+
+```bash
+PATCH https://api.sendfox.com/unsubscribe
+
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{"email": "jane@example.com"}
+```
+
+## Key Fields
+
+### Contact Object
+- `id` - Contact ID
+- `email` - Email address
+- `first_name` - First name
+- `last_name` - Last name
+- `unsubscribed` - Boolean unsubscribe status
+- `lists` - Array of list IDs
+
+### List Object
+- `id` - List ID
+- `name` - List name
+- `total_count` - Number of contacts
+
+## Parameters
+
+- `page` - Page number
+- `per_page` - Results per page
+- `email` - Filter by email
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions on a tight budget
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Building and managing email lists for content creators on a budget
+- Sending newsletters and drip campaigns to subscribers
+- Growing audiences through list segmentation
+- Automating subscriber onboarding with simple sequences
 
-## Related Integrations
+## Rate Limits
 
-- mailerlite.md
-- convertkit.md
-- mailchimp.md
+- See SendFox pricing page for plan-based limits
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:content-creation

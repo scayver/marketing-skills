@@ -1,86 +1,123 @@
 # SendGrid
 
-SendGrid (by Twilio) is a cloud-based email delivery and marketing platform trusted for high-volume transactional and marketing email sending. Available as an Action in the Bit Integrations WordPress plugin.
+Cloud-based email delivery and marketing platform by Twilio for high-volume transactional and marketing email sending with advanced analytics.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/SendGrid.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add contact to marketing list, send transactional email |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add contact to marketing list
-- Send transactional email
-- Update contact fields
-- Apply tags or segments
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.sendgrid.com/v3/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official SDKs for Python, Node.js, Ruby, PHP, Go, Java, C# |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: SendGrid account > Settings > API Keys > Create API Key (full access or restricted with Marketing Campaigns access)
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (Bearer)
+- **Header**: `Authorization: Bearer {api_key}`
+- **Get token**: SendGrid Settings > API Keys > Create API Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| List IDs | Marketing list IDs to add the contact to | Optional |
-| Custom Fields | Custom contact field key-value pairs | Optional |
+### Send email
 
-## Common Workflow Recipes
+```bash
+POST https://api.sendgrid.com/v3/mail/send
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to SendGrid marketing list with welcome tag
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Bearer {api_key}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to SendGrid customer list or segment
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{
+  "personalizations": [{"to": [{"email": "jane@example.com"}]}],
+  "from": {"email": "sender@yourdomain.com"},
+  "subject": "Hello, Jane!",
+  "content": [{"type": "text/plain", "value": "Your message here"}]
+}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to SendGrid marketing list and apply enrollment-related custom fields
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Add/update marketing contacts
 
-## Setup Steps
+```bash
+PUT https://api.sendgrid.com/v3/marketing/contacts
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select SendGrid as the action.
-5. Connect your SendGrid account using your API Key.
-6. Select the marketing list to add contacts to.
-7. Map the email field and any name or custom fields.
-8. Save and test with a real form submission.
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{"list_ids": ["abc123"], "contacts": [{"email": "jane@example.com", "first_name": "Jane", "last_name": "Doe"}]}
+```
+
+### List marketing lists
+
+```bash
+GET https://api.sendgrid.com/v3/marketing/lists
+
+Authorization: Bearer {api_key}
+```
+
+### Search contacts
+
+```bash
+POST https://api.sendgrid.com/v3/marketing/contacts/search
+
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{"query": "email LIKE 'jane%'"}
+```
+
+### Get email statistics
+
+```bash
+GET https://api.sendgrid.com/v3/stats?start_date=2026-05-01&end_date=2026-05-15
+
+Authorization: Bearer {api_key}
+```
+
+## Key Fields
+
+### Contact Object
+- `id` - Contact ID
+- `email` - Email address
+- `first_name` - First name
+- `last_name` - Last name
+- `list_ids` - Array of list IDs
+- `custom_fields` - Custom field values
+
+### Email Send Object
+- `personalizations` - Array of recipient objects
+- `from` - Sender email and name
+- `subject` - Email subject
+- `content` - Array of content objects (text/plain, text/html)
+- `template_id` - Dynamic template ID
+
+### Statistics Object
+- `date` - Date
+- `stats[].metrics.delivered` - Delivered count
+- `stats[].metrics.opens` - Opens count
+- `stats[].metrics.clicks` - Clicks count
+- `stats[].metrics.bounces` - Bounce count
+
+## Parameters
+
+- `start_date` - Stats start date (YYYY-MM-DD)
+- `end_date` - Stats end date
+- `page_size` - Results per page (max 1000)
+- `page_token` - Pagination token
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Sending transactional emails triggered by WordPress events
-- Replacing manual CSV imports from WordPress to your email platform
+- Sending high-volume transactional emails (receipts, notifications, password resets)
+- Managing marketing contact lists and segmentation
+- Running email campaigns with dynamic templates
+- Monitoring deliverability metrics and bounce rates
 
-## Related Integrations
+## Rate Limits
 
-- brevo.md
-- mailchimp.md
-- activecampaign.md
+- Free: 100 emails/day; Essentials: 40K/month; Pro/Premier: higher limits
+- API: 3,000 requests/second burst, sustained limits by plan
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report

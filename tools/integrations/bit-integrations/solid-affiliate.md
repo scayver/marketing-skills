@@ -1,66 +1,101 @@
 # Solid Affiliate
 
-Solid Affiliate is a modern WordPress affiliate management plugin built for WooCommerce stores with a focus on ease of use and clean reporting. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Solid Affiliate is a WordPress affiliate marketing plugin for managing affiliates, referrals, commissions, and payouts on WooCommerce stores.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Affiliate Management
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Solid-Affiliate.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create or update affiliates in Solid Affiliate |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to Solid Affiliate affiliate record fields |
-
-## Action Events
-
-- Create affiliate
-- Update affiliate
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/solid-affiliate/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI commands available |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Solid Affiliate must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Partner Application Form to Solid Affiliate
-**Trigger:** WordPress partner or affiliate application form submission
-**Action:** Create a new affiliate record in Solid Affiliate with the applicant's details
-**Use case:** Automate affiliate account creation from a custom application form built in any WordPress form plugin
+### List Affiliates
+```bash
+GET https://yoursite.com/wp-json/solid-affiliate/v1/affiliates
 
-### Recipe 2: WooCommerce Customer to Affiliate Conversion
-**Trigger:** WooCommerce order completed (repeat purchase or high-value customer)
-**Action:** Create a Solid Affiliate account for the customer
-**Use case:** Automatically invite high-value customers to join the affiliate program after purchase
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Referral Partner Update to Solid Affiliate
-**Trigger:** WordPress form or CRM event
-**Action:** Update an existing Solid Affiliate affiliate record with new details
-**Use case:** Sync affiliate profile updates from a partner portal form into Solid Affiliate
+### Get a Single Affiliate
+```bash
+GET https://yoursite.com/wp-json/solid-affiliate/v1/affiliates/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and Solid Affiliate on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Solid Affiliate as the Action.
-5. Select the action event (create affiliate or update affiliate).
-6. Map form fields to affiliate record fields.
-7. Save and test.
+### List Referrals
+```bash
+GET https://yoursite.com/wp-json/solid-affiliate/v1/referrals
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Payouts
+```bash
+GET https://yoursite.com/wp-json/solid-affiliate/v1/payouts
+
+Authorization: Basic {base64_credentials}
+```
+
+### Create a Payout
+```bash
+POST https://yoursite.com/wp-json/solid-affiliate/v1/payouts
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "affiliate_id": 42,
+  "amount": 50.00,
+  "status": "paid"
+}
+```
+
+## Key Fields
+
+### Affiliate
+- `id` - Unique affiliate ID
+- `user_id` - Associated WordPress user ID
+- `status` - active, inactive, pending
+- `affiliate_link` - Unique referral URL
+
+### Referral
+- `id` - Referral ID
+- `affiliate_id` - Owning affiliate
+- `order_id` - WooCommerce order ID
+- `commission_amount` - Calculated commission
+- `status` - unpaid, paid, rejected
+
+## Parameters
+
+- `status` - Filter affiliates or referrals by status
+- `per_page` / `page` - Pagination controls
+- `affiliate_id` - Filter referrals or payouts by affiliate
 
 ## When to Use
 
-- When using Solid Affiliate on WooCommerce and wanting automated affiliate onboarding from forms
-- When converting customers into affiliates based on purchase events
-- When managing affiliate data updates via WordPress forms instead of manual admin editing
+- Automating affiliate onboarding and approval notifications
+- Reporting on referral and commission data
+- Triggering payouts based on referral thresholds
+- Syncing affiliate performance data to a CRM or reporting tool
 
-## Related Integrations
+## Rate Limits
 
-- affiliatewp.md
-- slicewp.md
-- wc-affiliate.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- sales:pipeline-review
+- data:analyze
+- operations:process-doc

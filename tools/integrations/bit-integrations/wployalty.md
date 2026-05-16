@@ -1,74 +1,119 @@
 # WPLoyalty
 
-WPLoyalty is a WooCommerce loyalty and rewards plugin that lets store owners create points-based reward programs, referral incentives, and coupon rewards for customers. Available as Action in the Bit Integrations WordPress plugin.
+WooCommerce loyalty plugin for points, rewards, referrals, and customer retention.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-Loyalty-4.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add points to customer, add reward |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Add points to customer — award loyalty points to a WooCommerce customer in WPLoyalty
-- Add reward — grant a specific reward (coupon, product, etc.) to a customer
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WooCommerce and WPLoyalty must both be installed and active; Bit Integrations reads them directly via WordPress hooks
-- **Note**: No API keys required; all plugins must be on the same WordPress site
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Award points on course completion
-**Trigger:** LearnDash / TutorLMS — Course completed
-**Action:** WPLoyalty — Add points to customer
-**Key fields mapped:** User email, points to award (configured per course)
-**Use case:** Reward students with loyalty points when they complete a course, bridging your LMS and WooCommerce loyalty program
+### Check plugin status
 
-### Recipe 2: Award points on membership renewal
-**Trigger:** MemberPress — Membership renewed
-**Action:** WPLoyalty — Add points to customer
-**Key fields mapped:** User email, renewal bonus points
-**Use case:** Give bonus loyalty points to members who renew their subscription as a retention incentive
+```bash
+wp plugin status wployalty
+```
 
-### Recipe 3: Grant reward on milestone form submission
-**Trigger:** Bit Form / Gravity Forms — Form submitted (e.g., survey or referral form)
-**Action:** WPLoyalty — Add reward
-**Key fields mapped:** Customer email, reward type (coupon or product)
-**Use case:** Issue a loyalty reward to customers who complete a survey, referral, or engagement activity outside WooCommerce
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations on your WordPress site.
-2. Ensure WooCommerce and WPLoyalty are both installed and active.
-3. Go to Bit Integrations > Create Integration.
-4. Select WPLoyalty as the action.
-5. Choose Add Points to Customer or Add Reward.
-6. Configure the points amount or reward type.
-7. Map the customer email from your trigger source.
-8. Save and test with a real event (complete a test course or submit a test form).
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/wployalty/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='wployalty' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- You want to award loyalty points based on LMS course completions or membership renewals, not just WooCommerce purchases
-- You run engagement campaigns where completing forms or surveys earns rewards
-- You need to integrate your WooCommerce loyalty program with external event triggers
-- You want to gamify customer engagement across multiple touchpoints beyond the storefront
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- mycred.md
-- advanced-coupons.md
-- woocommerce.md
-- learndash.md
-- memberpress.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- referrals
+- churn-prevention
+- email-marketing

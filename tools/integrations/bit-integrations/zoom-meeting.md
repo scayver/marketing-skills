@@ -1,68 +1,125 @@
 # Zoom Meeting
 
-Zoom Meeting is a cloud-based video conferencing platform for virtual meetings, webinars, and collaboration. Available as an Action in the Bit Integrations WordPress plugin.
+Video meeting platform for meetings, registrants, participants, recordings, and scheduling.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ZoomMeeting.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add meeting registrants to a Zoom meeting |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Zoom meeting registrant fields |
-
-## Action Events
-
-- Add meeting registrant
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: OAuth 2.0 (Server-to-Server OAuth)
-- **Required**: Create a Server-to-Server OAuth app in the Zoom Marketplace (JWT is deprecated). Enter Client ID, Client Secret, and Account ID in Bit Integrations.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Bearer {api_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zoom Meeting dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Registration Form to Zoom Meeting
-**Trigger:** WordPress meeting registration form submission
-**Action:** Add the registrant to a Zoom meeting
-**Use case:** Automatically register form submitters for a Zoom meeting and send them Zoom's confirmation email with join link
+### List records
 
-### Recipe 2: WooCommerce Purchase to Zoom Meeting Access
-**Trigger:** WooCommerce order completed (meeting access product)
-**Action:** Register the customer as a Zoom meeting participant
-**Use case:** Grant purchased Zoom meeting access automatically upon payment without manual registration
+```bash
+GET https://api.zoom.us/v2/records?limit=50
 
-### Recipe 3: Membership Signup to Group Zoom Session
-**Trigger:** Membership plugin registration event
-**Action:** Register the new member for a recurring Zoom meeting
-**Use case:** Automatically enroll new members in scheduled group calls or coaching sessions
+Authorization: Bearer {api_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Zoom Meeting as the Action.
-5. In the Zoom Marketplace (marketplace.zoom.us), create a Server-to-Server OAuth app and get Client ID, Client Secret, and Account ID.
-6. Enter credentials in Bit Integrations.
-7. Select the target meeting.
-8. Map fields: first_name, last_name, email, meeting_id.
-9. Save and test.
+```bash
+GET https://api.zoom.us/v2/records/{record_id}
+
+Authorization: Bearer {api_token}
+```
+
+### Create record
+
+```bash
+POST https://api.zoom.us/v2/records
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://api.zoom.us/v2/records/{record_id}
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://api.zoom.us/v2/events
+
+Authorization: Bearer {api_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When WordPress forms should register attendees directly into a Zoom meeting
-- When WooCommerce purchases should grant access to a paid Zoom meeting
-- When automating Zoom meeting registration as part of a larger onboarding or event workflow
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- zoom-webinar.md
-- demio.md
-- livestorm.md
-- google-calendar.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- launch
+- email-marketing
+- content-repurposing

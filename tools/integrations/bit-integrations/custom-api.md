@@ -1,68 +1,98 @@
-# Custom API
+# Custom API (Generic REST Integration)
 
-Custom API is a flexible action that sends WordPress form or event data to any REST API endpoint with configurable HTTP method, headers, and body mapping. Available as an Action in the Bit Integrations WordPress plugin.
+A configurable generic HTTP client pattern for sending data to any REST API endpoint with custom methods, headers, and body structures — used when no dedicated connector exists for the target platform.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/CustomAPI.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to any REST API with custom method, headers, and body |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Fully configurable request body with field mapping |
-
-## Action Events
-
-- Send an HTTP GET, POST, or PUT request to any REST API endpoint with custom headers and a mapped request body
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Connects to any REST API endpoint |
+| MCP | - | Not applicable |
+| CLI | ✓ | curl or httpie for testing and scripting |
+| SDK | - | Use platform-specific SDKs for the target service |
 
 ## Authentication
 
-- **Type**: Configurable in Bit Integrations
-- **Required**: Configure target URL, HTTP method (GET/POST/PUT), request headers (e.g., Authorization, Content-Type), and body field mapping directly in Bit Integrations settings
+Configure authentication to match the target API's requirements:
 
-## Common Workflow Recipes
+- **API Key header**: `Authorization: Bearer {token}` or `X-API-Key: {key}`
+- **Basic auth**: `Authorization: Basic {base64(username:password)}`
+- **Custom header**: Any header name and value the target API requires
+- **Query parameter**: Append `?api_key={key}` to the URL
 
-### Recipe 1: Form Submission to Proprietary CRM API
-**Trigger:** WordPress form submission
-**Action:** POST form data to a proprietary CRM or internal API that has no standard connector
-**Use case:** Connect WordPress to any API-enabled internal system without needing a pre-built integration
+## Common Agent Operations
 
-### Recipe 2: WooCommerce Order to ERP System
-**Trigger:** WooCommerce order completed
-**Action:** POST order data to an ERP API endpoint for inventory or financial processing
-**Use case:** Trigger ERP workflows from WooCommerce purchases in real time
+### POST JSON data to an external API
+```bash
+curl -X POST https://api.example.com/v1/contacts \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "jane@example.com",
+    "name": "Jane Smith",
+    "source": "website"
+  }'
+```
 
-### Recipe 3: User Registration to External SSO or Directory
-**Trigger:** WordPress user registration
-**Action:** POST user data to an external identity provider or directory API
-**Use case:** Synchronize WordPress user creation with external access control or SSO systems
+### GET data from an external API
+```bash
+curl -X GET "https://api.example.com/v1/contacts?email=jane@example.com" \
+  -H "Authorization: Bearer {token}" \
+  -H "Accept: application/json"
+```
 
-## Setup Steps
+### PUT update to an external API
+```bash
+curl -X PUT https://api.example.com/v1/contacts/12345 \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "customer", "plan": "pro"}'
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Custom API as the Action.
-5. Enter the target API endpoint URL.
-6. Select the HTTP method (GET, POST, or PUT).
-7. Add any required headers (e.g., `Authorization: Bearer <token>`, `Content-Type: application/json`).
-8. Map form or event fields to the request body parameters.
-9. Save and test.
+### Send form-encoded data
+```bash
+curl -X POST https://api.example.com/v1/leads \
+  -H "Authorization: Bearer {token}" \
+  --data-urlencode "email=jane@example.com" \
+  --data-urlencode "name=Jane Smith"
+```
+
+## Key Fields
+
+### Request Configuration
+- `method` - HTTP verb: GET, POST, PUT, PATCH, DELETE
+- `url` - Full endpoint URL including any path parameters
+- `headers` - Object of header name/value pairs
+- `body` - JSON object, form-encoded string, or raw payload
+- `content_type` - application/json, application/x-www-form-urlencoded, multipart/form-data
+
+### Response Handling
+- `status_code` - HTTP response code (200, 201, 400, 401, 429, 500)
+- `response_body` - JSON or text returned by the target API
+- `headers` - Response headers (e.g., rate limit info, pagination tokens)
+
+## Parameters
+
+- `timeout` - Request timeout in seconds; set conservatively for reliability
+- `retry_on` - Status codes that should trigger a retry (e.g., 429, 503)
+- `pagination_token` - Cursor or page token from response headers or body for paginated APIs
+- `idempotency_key` - Unique key to prevent duplicate submissions on retry
 
 ## When to Use
 
-- When your destination has a REST API but no dedicated Bit Integrations connector
-- When integrating WordPress with proprietary, internal, or enterprise APIs
-- When you need full control over the HTTP method, headers, and body structure
+- The target platform has a REST API but no dedicated integration connector
+- Connecting to proprietary, internal, or enterprise APIs unique to your stack
+- Sending webhooks or event data to a custom-built backend service
+- Testing API endpoints before building a full integration
+- Building lightweight one-off integrations that don't justify a full connector
 
-## Related Integrations
+## Rate Limits
 
-- webhook-outgoing.md
-- webhook-incoming.md
-- n8n.md
-- zapier.md
+- Rate limits are determined entirely by the target API — check that platform's documentation
+- Common patterns: per-minute request caps, daily quotas, per-endpoint burst limits
+
+## Relevant Skills
+
+- lead-generation
+- crm-management
+- email-marketing

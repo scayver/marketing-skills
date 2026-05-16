@@ -1,69 +1,105 @@
 # Webhook (Incoming)
 
-Webhook (Incoming) is a trigger that receives a webhook POST from an external system and fires a Bit Integrations workflow in response. Available as a Trigger (Pro) in the Bit Integrations WordPress plugin.
+An incoming webhook is an HTTP POST endpoint that receives structured data from external systems and triggers downstream automation or processing.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Webhookincomming.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; receives incoming webhook POST to start a workflow |
-| As Action | — | — |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map incoming payload fields to action inputs |
-
-## Trigger Events
-
-- Receive an HTTP POST webhook from any external service or system
-- Parse the incoming payload and use its fields to drive Bit Integrations actions
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Any system that can send HTTP POST requests |
+| MCP | - | N/A — webhook is the receiver, not a calling client |
+| CLI | ✓ | Test with `curl` or httpie |
+| SDK | - | No SDK needed; standard HTTP |
 
 ## Authentication
 
-- **Type**: Unique incoming webhook URL
-- **Required**: Bit Integrations generates a unique incoming webhook URL. Share this URL with the external service that will send the POST request. No API key configuration needed on the WordPress side.
+- **Type**: Shared Secret / HMAC Signature (recommended) or API Key in header
+- **Header**: `X-Webhook-Secret: {secret}` or `Authorization: Bearer {token}`
+- **Security**: Always validate the sender's signature before processing payload
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Payment Gateway to WordPress User Creation
-**Trigger:** Payment platform (Stripe, PayPal, etc.) sends a webhook to the Bit Integrations URL on successful payment
-**Action:** Create a WordPress user or grant membership access
-**Use case:** Provision WordPress access automatically when a payment is confirmed outside of WooCommerce
+### Send a Test Webhook (curl)
+```bash
+POST https://yoursite.com/webhook-endpoint
 
-### Recipe 2: External CRM to Post Creation
-**Trigger:** CRM sends a webhook when a deal closes or contact is updated
-**Action:** Create a WordPress post or custom post type entry with the deal/contact data
-**Use case:** Publish content automatically based on CRM events without manual effort
+Content-Type: application/json
+X-Webhook-Secret: {shared_secret}
 
-### Recipe 3: Third-Party Form to WordPress Workflow
-**Trigger:** External form tool (Typeform, JotForm, etc.) sends a webhook on submission
-**Action:** Add subscriber to email list, create a user, or update a custom field in WordPress
-**Use case:** Process external form submissions through WordPress-based automation workflows
+{
+  "event": "order.completed",
+  "order_id": "ORD-12345",
+  "customer_email": "user@example.com",
+  "total": 99.00,
+  "timestamp": "2026-05-15T14:30:00Z"
+}
+```
 
-## Setup Steps
+### Validate HMAC Signature (Python)
+```python
+import hmac, hashlib
 
-1. Install Bit Integrations Pro on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Webhook (Incoming) as the Trigger.
-4. Bit Integrations generates a unique webhook URL — copy it.
-5. In the external service, configure it to POST to this URL on the desired event.
-6. Send a test payload to let Bit Integrations detect the field structure.
-7. Configure the desired Action (user creation, post creation, email, etc.).
-8. Map incoming payload fields to action inputs.
-9. Save and activate.
+def is_valid_signature(payload_bytes, secret, received_sig):
+    computed = hmac.new(secret.encode(), payload_bytes, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(computed, received_sig)
+```
+
+### Register a Webhook with a Source System
+```bash
+POST https://api.source-platform.com/v1/webhooks
+
+Authorization: Bearer {source_api_token}
+Content-Type: application/json
+
+{
+  "url": "https://yoursite.com/webhook-endpoint",
+  "events": ["order.completed", "subscription.cancelled"],
+  "secret": "{shared_secret}"
+}
+```
+
+### Acknowledge Receipt (HTTP 200 Response)
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"status": "received"}
+```
+
+## Key Fields
+
+### Typical Webhook Payload
+- `event` - Event type string (e.g., `order.completed`, `user.created`)
+- `id` - Unique event or record identifier
+- `timestamp` - ISO 8601 event timestamp
+- `data` - Nested object with event-specific fields
+
+### Security Headers
+- `X-Webhook-Signature` / `X-Hub-Signature-256` - HMAC-SHA256 of payload
+- `X-Webhook-Secret` - Pre-shared secret for simpler validation
+- `X-Request-Id` - Idempotency key for deduplication
+
+## Parameters
+
+- Return `HTTP 200` within 5 seconds to prevent retry loops from most senders
+- Return `HTTP 4xx` only for permanent errors (invalid payload); use `5xx` for transient failures
+- Store raw payload before processing to enable replay on failure
 
 ## When to Use
 
-- When an external service or payment gateway needs to trigger a WordPress workflow
-- When a third-party form tool or app sends webhooks that should drive WordPress actions
-- When you need WordPress to respond to events that originate outside of WordPress
+- Receiving real-time events from any external platform (payment processors, CRMs, eCommerce)
+- Triggering internal automation when a third-party event occurs
+- Ingesting data from platforms that push rather than pull
+- Building event-driven pipelines without polling
 
-## Related Integrations
+## Rate Limits
 
-- webhook-outgoing.md
-- custom-api.md
-- action-hook.md
-- zapier.md
+- No sending rate limit (you are the receiver); ensure your endpoint can handle burst traffic
+- Implement queuing (Redis, SQS, database queue) for high-volume sources
+
+## Relevant Skills
+
+- engineering:documentation
+- operations:runbook
+- data:explore-data
+- marketing:campaign-plan

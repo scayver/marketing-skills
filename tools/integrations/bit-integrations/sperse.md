@@ -1,67 +1,103 @@
-# Sperse.io
+# Sperse
 
-Sperse.io is a client portal and business management platform that combines invoicing, project management, and client communication. Available as an Action in the Bit Integrations WordPress plugin.
+Sperse is a business management platform offering client portals, invoicing, project management, and contact management for service businesses.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Sperse.io_.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data from WordPress to Sperse.io via API |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Sperse.io contact or record fields |
-
-## Action Events
-
-- Create or update records in Sperse.io from WordPress events
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API with API key authentication |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | - | No official SDK; use REST directly |
 
 ## Authentication
 
 - **Type**: API Key
-- **Required**: API key from your Sperse.io account settings
+- **Header**: `X-API-Key: {api_key}`
+- **Get token**: Sperse Dashboard > Settings > API Keys
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Contact Form to Sperse.io Client Record
-**Trigger:** WordPress contact form submission
-**Action:** Create a new client record in Sperse.io with the contact's details
-**Use case:** Automatically onboard new client inquiries into your Sperse.io client portal
+### List Contacts
+```bash
+GET https://api.sperse.com/v1/contacts
 
-### Recipe 2: Quote Request Form to Sperse.io Project
-**Trigger:** WordPress quote request form submission
-**Action:** Create a new project or opportunity in Sperse.io
-**Use case:** Convert web inquiries into tracked projects without manual data entry
+X-API-Key: {api_key}
+```
 
-### Recipe 3: Payment or Registration to Sperse.io Contact
-**Trigger:** WooCommerce order completed or user registration
-**Action:** Add buyer or registrant as a Sperse.io client
-**Use case:** Populate your client portal automatically when someone purchases or registers
+### Create a Contact
+```bash
+POST https://api.sperse.com/v1/contacts
 
-## Setup Steps
+X-API-Key: {api_key}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Sperse.io as the Action.
-5. Enter your Sperse.io API key in Bit Integrations.
-6. Configure target object type (contact, project, etc.).
-7. Map fields.
-8. Save and test.
+{
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "email": "jane@example.com",
+  "company": "Acme Corp"
+}
+```
+
+### List Projects
+```bash
+GET https://api.sperse.com/v1/projects
+
+X-API-Key: {api_key}
+```
+
+### Create an Invoice
+```bash
+POST https://api.sperse.com/v1/invoices
+
+X-API-Key: {api_key}
+Content-Type: application/json
+
+{
+  "contact_id": "cnt_123",
+  "line_items": [
+    {"description": "Consulting", "quantity": 5, "unit_price": 150}
+  ],
+  "due_date": "2026-06-01"
+}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Unique contact identifier
+- `email` - Primary email address
+- `company` - Organization name
+- `status` - active, inactive
+
+### Invoice
+- `id` - Invoice identifier
+- `contact_id` - Associated contact
+- `total` - Invoice total
+- `status` - draft, sent, paid, overdue
+
+## Parameters
+
+- `page` / `per_page` - Pagination controls
+- `status` - Filter contacts or invoices by status
+- `contact_id` - Scope projects or invoices to a contact
 
 ## When to Use
 
-- When managing client relationships in Sperse.io and wanting automatic intake from WordPress forms
-- When converting web leads or purchasers into Sperse.io client records without manual entry
-- When running a service business that uses Sperse.io as a client portal
+- Automating client onboarding by creating contacts from lead forms
+- Generating invoices from project completion events
+- Syncing project status to reporting dashboards
+- Sending invoice reminders via integrated email
 
-## Related Integrations
+## Rate Limits
 
-- custom-api.md
-- webhook-outgoing.md
-- zapier.md
-- notion.md
+- See Sperse pricing page for API limits
+
+## Relevant Skills
+
+- operations:process-doc
+- finance:financial-statements
+- sales:account-research
+- data:analyze

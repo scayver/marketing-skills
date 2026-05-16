@@ -1,66 +1,94 @@
 # SureFeedback
 
-SureFeedback is a WordPress client feedback and project collaboration plugin for collecting visual feedback on websites and digital projects. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+SureFeedback is a WordPress client feedback and project collaboration plugin for collecting visual feedback on websites and digital projects.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Support and Helpdesk
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Sure-Feedback.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create feedback projects in SureFeedback |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to SureFeedback project fields |
-
-## Action Events
-
-- Create feedback project
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/surefeedback/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and SureFeedback must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Client Onboarding Form to SureFeedback Project
-**Trigger:** WordPress client onboarding form submission
-**Action:** Create a new SureFeedback project for the client
-**Use case:** Automatically provision a SureFeedback feedback project when a new client completes their onboarding form
+### List Projects
+```bash
+GET https://yoursite.com/wp-json/surefeedback/v1/projects
 
-### Recipe 2: WooCommerce Service Purchase to Feedback Project
-**Trigger:** WooCommerce order completed (service product)
-**Action:** Create a SureFeedback project for the purchased service
-**Use case:** Start a client feedback project automatically when a web design or digital service is purchased
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Project Request Form to Feedback Environment
-**Trigger:** WordPress project request form submission
-**Action:** Create a SureFeedback project with the client's details and project name
-**Use case:** Set up the client feedback environment immediately when a project request comes in
+### Get a Single Project
+```bash
+GET https://yoursite.com/wp-json/surefeedback/v1/projects/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and SureFeedback on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select SureFeedback as the Action.
-5. Configure the project creation settings.
-6. Map form fields to project name and client details.
-7. Save and test.
+### List Feedback Items
+```bash
+GET https://yoursite.com/wp-json/surefeedback/v1/feedback?project_id={id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### Get a Single Feedback Item
+```bash
+GET https://yoursite.com/wp-json/surefeedback/v1/feedback/{id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Comments on Feedback
+```bash
+GET https://yoursite.com/wp-json/surefeedback/v1/feedback/{id}/comments
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Project
+- `id` - Project ID
+- `title` - Project name
+- `client_id` - Associated client user
+- `status` - active, completed, archived
+
+### Feedback
+- `id` - Feedback item ID
+- `project_id` - Parent project
+- `content` - Feedback text
+- `status` - open, resolved, in-progress
+- `created_at` - Submission timestamp
+
+## Parameters
+
+- `project_id` - Required to scope feedback to a project
+- `status` - Filter feedback by status
+- `per_page` / `page` - Pagination controls
 
 ## When to Use
 
-- When client onboarding or service purchase events should automatically create SureFeedback projects
-- When managing web design or digital projects and wanting automatic feedback environment setup
-- When building an automated client service delivery workflow with SureFeedback as the collaboration layer
+- Notifying team members when new client feedback is submitted
+- Syncing resolved feedback counts to project management tools
+- Generating weekly feedback summary reports
+- Escalating unresolved feedback items automatically
 
-## Related Integrations
+## Rate Limits
 
-- fluent-support.md
-- asana.md
-- clickup.md
-- fluentboards.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- product-management:synthesize-research
+- customer-support:ticket-triage
+- operations:process-doc
+- data:analyze

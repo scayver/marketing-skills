@@ -1,67 +1,85 @@
 # Thrive Leads
 
-Thrive Leads is an opt-in and lead generation plugin by Thrive Themes for building high-converting opt-in forms, popups, and asset delivery systems. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+Thrive Leads is a WordPress opt-in and lead generation plugin by Thrive Themes for building high-converting popups, sticky ribbons, in-content forms, and two-step opt-ins.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Popups and Lead Capture
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Thrive-Leads.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add subscribers to Thrive Leads asset delivery |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to Thrive Leads subscriber fields |
-
-## Action Events
-
-- Add subscriber to asset delivery
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; operates via WordPress hooks |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Thrive Leads must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password (for WP REST API access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: External Form to Thrive Leads Lead Magnet Delivery
-**Trigger:** WordPress form submission (from a non-Thrive form plugin)
-**Action:** Add the submitter to a Thrive Leads asset delivery to send a lead magnet
-**Use case:** Deliver lead magnets (eBooks, checklists) via Thrive Leads even when the opt-in form is built in another plugin
+Thrive Leads does not expose a public REST API. Data access is via WordPress hooks, native email service connections, or the Thrive Dashboard reporting UI.
 
-### Recipe 2: WooCommerce Purchase to Free Resource Delivery
-**Trigger:** WooCommerce order completed (free or low-cost product)
-**Action:** Add the buyer to Thrive Leads asset delivery to send a bonus resource
-**Use case:** Automatically deliver a bonus PDF or resource to buyers via Thrive Leads after purchase
+### Hook into Form Submission
+```php
+// Runs when a Thrive Leads form is submitted
+add_action( 'thrive_leads_form_submit', function( $data ) {
+  $email   = sanitize_email( $data['email'] );
+  $form_id = intval( $data['form_id'] );
+  // Route lead to CRM or trigger downstream logic
+}, 10, 1 );
+```
 
-### Recipe 3: Event Registration to Content Upgrade Delivery
-**Trigger:** Event registration form submission
-**Action:** Add the registrant to Thrive Leads asset delivery to send event materials
-**Use case:** Automatically deliver pre-event materials or confirmations via Thrive Leads asset delivery
+### Hook into Lead Group Opt-in
+```php
+add_action( 'thrive_leads_opt_in', function( $post_id, $form_type, $connection, $data ) {
+  // $data contains submitted field values
+  // $connection is the configured email service ID
+}, 10, 4 );
+```
 
-## Setup Steps
+### Read Lead Groups (WP Post Query)
+```php
+$lead_groups = get_posts([
+  'post_type'   => 'tl_lead_group',
+  'post_status' => 'publish',
+  'numberposts' => -1,
+]);
+```
 
-1. Install Bit Integrations Pro and Thrive Leads (Thrive Suite) on your WordPress site.
-2. Create the target asset delivery group in Thrive Leads.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Thrive Leads as the Action.
-6. Select the target asset delivery.
-7. Map form fields to subscriber fields.
-8. Save and test.
+## Key Fields
+
+### Lead Group (WordPress CPT `tl_lead_group`)
+- `ID` - WordPress post ID
+- `post_title` - Lead group name
+- `meta.tl_connection` - Connected email service configuration
+
+### Submitted Lead Data
+- `email` - Subscriber email
+- `name` - Subscriber name (if collected)
+- `form_id` - Originating form ID
+- `lead_group_id` - Parent lead group
+
+## Parameters
+
+- Form behavior (triggers, targeting, A/B test variants) configured in Thrive Leads admin UI
+- Programmatic access requires custom WordPress hooks
 
 ## When to Use
 
-- When forms built in other plugins should trigger Thrive Leads asset delivery or lead magnet distribution
-- When purchases or registrations should automatically deliver digital assets via Thrive Leads
-- When you use Thrive Suite but want Bit Integrations form triggers to feed Thrive Leads workflows
+- Routing Thrive Leads opt-ins to a CRM not natively supported
+- Triggering custom onboarding sequences on opt-in
+- Logging lead source and form ID to a reporting database
+- A/B testing opt-in copy and syncing winners to analytics
 
-## Related Integrations
+## Rate Limits
 
-- thrive-automator.md
-- optinmonster.md
-- convert-pro.md
-- hustle.md
+- No platform-level rate limits; constrained by WordPress server performance
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- data:analyze
+- operations:process-doc

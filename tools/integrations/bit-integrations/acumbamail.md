@@ -1,82 +1,113 @@
 # Acumbamail
 
-Acumbamail is a Spanish email and SMS marketing platform used by businesses in Spanish-speaking markets for list management, campaign automation, and subscriber analytics. Available as an Action in the Bit Integrations WordPress plugin.
+Spanish email and SMS marketing platform offering list management, campaign automation, transactional email, and subscriber analytics — popular in Spanish-speaking markets.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Acumbamail1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Subscribe to list |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Subscribe contact to list
-- Update subscriber merge fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://acumbamail.com/api/1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Acumbamail account > Settings > Auth Token
-- **Required in Bit Integrations**: Auth Token
+- **Type**: Auth Token
+- **Header**: N/A — token passed as query parameter or in request body
+- **Get token**: Acumbamail > Profile > Settings > Auth Token
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Merge Fields | Custom merge field key-value pairs | Optional |
-| List ID | The Acumbamail list to add the subscriber to | Required |
+### Subscribe a contact to a list
 
-## Common Workflow Recipes
+```bash
+POST https://acumbamail.com/api/1/addSubscriber/
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Subscribe contact to Acumbamail list with welcome merge fields
-**Key fields mapped:** Email, merge fields (name, etc.)
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Subscribe buyer to Acumbamail customer list
-**Key fields mapped:** Email, Order amount (as merge field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{
+  "auth_token": "{auth_token}",
+  "list_id": 42,
+  "email": "user@example.com",
+  "merge_fields": {"NOMBRE": "Jane", "APELLIDOS": "Doe"},
+  "double_optin": false
+}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Subscribe to Acumbamail list with enrollment merge fields
-**Key fields mapped:** Email, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Unsubscribe a contact
 
-## Setup Steps
+```bash
+POST https://acumbamail.com/api/1/unsubscribeSubscriber/
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Acumbamail as the action.
-5. Connect your Acumbamail account using your Auth Token.
-6. Select the list to add subscribers to.
-7. Map the email field and any merge fields.
-8. Save and test with a real form submission.
+Content-Type: application/json
+
+{"auth_token": "{auth_token}", "list_id": 42, "email": "user@example.com"}
+```
+
+### Get list of subscriber lists
+
+```bash
+GET https://acumbamail.com/api/1/getLists/?auth_token={auth_token}
+```
+
+### Get subscribers in a list
+
+```bash
+GET https://acumbamail.com/api/1/getSubscribers/?auth_token={auth_token}&list_id=42&limit=100&offset=0
+```
+
+### Send a transactional email
+
+```bash
+POST https://acumbamail.com/api/1/sendTransactionalEmail/
+
+Content-Type: application/json
+
+{
+  "auth_token": "{auth_token}",
+  "from_email": "hello@yourdomain.com",
+  "from_name": "Your Brand",
+  "to": [{"email": "user@example.com", "name": "Jane"}],
+  "subject": "Your order is confirmed",
+  "html": "<p>Thanks for your purchase!</p>"
+}
+```
+
+## Key Fields
+
+### Subscriber
+- `email` - Email address (required)
+- `merge_fields` - Key-value pairs for list merge fields (e.g., NOMBRE, APELLIDOS)
+- `list_id` - ID of the list to subscribe to
+- `double_optin` - Boolean; true sends a confirmation email
+
+### List
+- `id` - List ID
+- `name` - List name
+- `subscribers_count` - Total active subscribers
+
+## Parameters
+
+- `auth_token` - Required on all requests
+- `list_id` - Target subscriber list ID
+- `limit` - Results per page
+- `offset` - Pagination offset
+- `double_optin` - Enable double opt-in confirmation (true/false)
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions for Spanish-speaking audiences
-- Segmenting new subscribers by lead source using lists
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Growing email lists for Spanish-speaking audiences from web forms
+- Sending transactional emails (order confirmations, receipts) via API
+- Segmenting subscribers by source or campaign using multiple lists
+- Automating subscriber management without a manual CSV export
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- mailerlite.md
-- getresponse.md
+- See Acumbamail pricing page for API call limits by plan tier
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- ecommerce

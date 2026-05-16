@@ -1,78 +1,103 @@
 # Voxel
 
-Voxel is an advanced WordPress theme and directory/listing builder for creating custom post type directories, classifieds, booking sites, and community platforms. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+Voxel is a WordPress theme framework and directory/listing builder for creating custom post type directories, classifieds, booking sites, and community platforms with advanced field types and search.
 
-**Role:** Trigger/Action
-**Free Tier:** Action — Yes | Trigger — No (requires Pro)
-**Category:** WordPress Core and Utility
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/02/Voxel-1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/Voxel.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires when a post type is submitted or an order is placed (requires Pro) |
-| As Action | ✓ | Creates a Voxel post type entry (free tier) |
-| Free Tier | ✓ | Action is free; Trigger requires Bit Integrations Pro |
-| Field Mapping | ✓ | Map form or event fields to Voxel post type fields |
-
-## Trigger Events
-
-- Post type submitted (user submits a listing or custom post)
-- Order placed (Voxel's built-in order system)
-- Membership activated
-- Review submitted
-
-## Action Events
-
-- Create post type entry (listing, directory item, classified ad, booking)
-- Update post type entry
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API for Voxel custom post types via WP core endpoints |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; interact via WP REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Voxel theme must be installed and active on the same WordPress site as Bit Integrations
-- **Note**: No external API key required; Bit Integrations communicates directly with Voxel via WordPress hooks
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: New Listing Submission to CRM
-**Trigger:** Voxel post type submitted (new listing or directory entry)
-**Action:** Create contact in HubSpot, Pipedrive, or Zoho CRM
-**Use case:** Automatically capture listing owners as CRM contacts when they submit entries to your directory
+### List Posts of a Custom Post Type
+```bash
+GET https://yoursite.com/wp-json/wp/v2/{post_type}
 
-### Recipe 2: Voxel Order to Email Notification
-**Trigger:** Voxel order placed
-**Action:** Send notification via Slack or email
-**Use case:** Alert your team in real time when a paid listing or booking order comes in through Voxel
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Form Submission to Voxel Listing
-**Trigger:** WordPress form (WPForms, Gravity Forms, Bit Form)
-**Action:** Create Voxel post type entry
-**Use case:** Let users submit directory listings through a standard WordPress form and automatically create the Voxel listing on the backend
+### Get a Single Listing
+```bash
+GET https://yoursite.com/wp-json/wp/v2/{post_type}/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Voxel as the Trigger (for submission or order events) or as the Action (to create entries).
-4. If using as a Trigger, select the post type and the specific event (submitted, order placed, etc.).
-5. If using as an Action, select the post type you want to create entries in.
-6. Map the relevant fields between the trigger source and the Voxel post type fields.
-7. Save and test by submitting a real listing or placing a test order.
+### Create a Listing
+```bash
+POST https://yoursite.com/wp-json/wp/v2/{post_type}
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "title": "Joe's Coffee Shop",
+  "status": "publish",
+  "meta": {
+    "address": "123 Main St",
+    "phone": "+15551234567"
+  }
+}
+```
+
+### Update a Listing
+```bash
+POST https://yoursite.com/wp-json/wp/v2/{post_type}/{id}
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"meta": {"status": "verified"}}
+```
+
+### Query Listings with Search Parameters
+```bash
+GET https://yoursite.com/wp-json/wp/v2/{post_type}?search=coffee&meta_key=city&meta_value=Boston
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Listing (Custom Post Type)
+- `id` - WordPress post ID
+- `title` - Listing name
+- `status` - publish, draft, pending
+- `author` - WordPress user ID of listing owner
+- `meta` - Key-value map of Voxel custom fields (address, phone, hours, etc.)
+- `date` - ISO 8601 creation date
+
+## Parameters
+
+- `post_type` - The slug of the Voxel-registered custom post type (e.g., `places`, `listings`)
+- `per_page` / `page` - Pagination controls
+- `author` - Filter by listing owner user ID
+- `status` - Filter by post status
 
 ## When to Use
 
-- Building automated workflows around a Voxel-powered directory or marketplace
-- Syncing new listing submissions to a CRM or email marketing platform
-- Notifying a team channel when new paid listings or bookings come in
-- Creating Voxel listings programmatically from external form submissions
-- Connecting Voxel's order system to accounting or project management tools
+- Programmatically creating directory listings from external data sources
+- Syncing listing status changes to CRM or notification systems
+- Reporting on listing counts by category, location, or status
+- Building bulk import tools for directory entries
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- hubspot.md
-- google-sheets.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:content-creation
+- data:explore-data
+- operations:process-doc
+- product-management:write-spec

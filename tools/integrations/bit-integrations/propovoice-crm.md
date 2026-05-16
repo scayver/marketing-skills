@@ -1,86 +1,112 @@
 # Propovoice CRM
 
-Propovoice CRM is a WordPress-native CRM plugin built for agencies and freelancers, offering lead management, client portals, project tracking, and proposal generation directly inside WordPress. Available as an Action in the Bit Integrations WordPress plugin.
+WordPress-native CRM for agencies and freelancers offering lead management, client portals, project tracking, and proposal generation inside WordPress.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Propovoice-CRM.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Leads and Clients in Propovoice CRM |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to Propovoice fields |
-
-## Action Events
-
-- Create Lead
-- Create Client
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/propovoice/v1/` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress Plugin Native
-- **Where to get credentials**: No external API key required — Propovoice CRM connects via its WordPress plugin integration; both Bit Integrations and Propovoice CRM must be installed and active on the same WordPress site
-- **Required fields in Bit Integrations**: No credentials needed; plugin-to-plugin connection
+- **Type**: WordPress REST API (Application Password)
+- **Header**: `Authorization: Bearer {application_password}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### List leads
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| name | Full name of the lead or client | Required |
-| email | Email address | Required; used as unique identifier |
-| phone | Phone number | Optional |
-| company | Associated company name | Optional |
-| address | Physical address | Optional |
-| note | Additional notes about the lead or client | Optional |
+```bash
+GET https://yoursite.com/wp-json/propovoice/v1/leads
 
-## Common Workflow Recipes
+Authorization: Bearer {token}
+```
 
-### Recipe 1: Contact Form to Propovoice Lead
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Lead in Propovoice CRM
-**Key fields mapped:** Name, Email, Phone, Company, Note
-**Use case:** Automatically add website inquiries as Propovoice leads so agency owners can track prospects and send proposals without leaving WordPress.
+### Create lead
 
-### Recipe 2: Client Intake Form to Propovoice Client
-**Trigger:** Gravity Forms or Fluent Forms client intake submission
-**Action:** Create Client in Propovoice CRM
-**Key fields mapped:** Name, Email, Phone, Company, Address
-**Use case:** Add new client details from your onboarding form directly as a Propovoice client record, ready for project and invoice management.
+```bash
+POST https://yoursite.com/wp-json/propovoice/v1/leads
 
-### Recipe 3: Service Inquiry to Propovoice Lead with Note
-**Trigger:** Elementor service inquiry form
-**Action:** Create Lead in Propovoice CRM
-**Key fields mapped:** Name, Email, Phone, Company, Note = service type from form
-**Use case:** Capture service inquiries as Propovoice leads with the service type noted, so you can send targeted proposals quickly.
+Authorization: Bearer {token}
+Content-Type: application/json
 
-## Setup Steps
+{"name": "Jane Doe", "email": "jane@example.com", "phone": "+1-555-0100", "company": "Acme Corp"}
+```
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Install and activate Propovoice CRM on the same WordPress site.
-3. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-4. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-5. Select Propovoice CRM as the action — no external authentication required.
-6. Select the object type (Lead or Client) you want to create.
-7. Map the fields from your trigger to Propovoice CRM fields.
-8. Save and submit a test entry to verify data arrives correctly.
+### List clients
+
+```bash
+GET https://yoursite.com/wp-json/propovoice/v1/clients
+
+Authorization: Bearer {token}
+```
+
+### Create invoice
+
+```bash
+POST https://yoursite.com/wp-json/propovoice/v1/invoices
+
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{"client_id": "12", "title": "Design Project Invoice", "amount": 2500, "currency": "USD"}
+```
+
+### List projects
+
+```bash
+GET https://yoursite.com/wp-json/propovoice/v1/projects
+
+Authorization: Bearer {token}
+```
+
+## Key Fields
+
+### Lead Object
+- `id` - Lead ID
+- `name` - Full name
+- `email` - Email address
+- `phone` - Phone number
+- `company` - Company name
+- `status` - new / contacted / qualified / lost
+
+### Client Object
+- `id` - Client ID
+- `name` - Client name
+- `email` - Email address
+- `company` - Company name
+- `created_at` - Creation timestamp
+
+### Invoice Object
+- `id` - Invoice ID
+- `client_id` - Associated client ID
+- `amount` - Invoice amount
+- `status` - draft / sent / paid
+
+## Parameters
+
+- `status` - Filter by status
+- `per_page` - Results per page
+- `page` - Page number
 
 ## When to Use
 
-- You run an agency or freelance business and manage clients entirely within WordPress using Propovoice
-- You want contact forms on your site to automatically create leads in Propovoice without a third-party CRM
-- You need client onboarding forms to create Propovoice client records ready for proposals and invoicing
-- You prefer keeping all tools inside WordPress rather than connecting to external CRM services
+- Managing agency client relationships and proposals within WordPress
+- Automating lead creation from website inquiry forms
+- Tracking project milestones and invoices for freelance work
+- Generating and sending proposals from within the WordPress dashboard
 
-## Related Integrations
+## Rate Limits
 
-- jetpack-crm.md
-- agiled-crm.md
-- moxiecrm.md
-- fluentcrm.md
+- Self-hosted WordPress; limits depend on server configuration
+
+## Relevant Skills
+
+- sales:pipeline-review
+- finance:financial-statements
+- operations:process-doc

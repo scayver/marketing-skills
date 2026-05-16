@@ -1,86 +1,97 @@
-# OneHash CRM
+# OneHash
 
-OneHash CRM is an open-source, ERPNext-based CRM platform that combines lead management, sales pipeline, customer support, and ERP capabilities for startups and SMBs at low cost. Available as an Action in the Bit Integrations WordPress plugin.
+Open-source ERPNext-based business management platform combining CRM, HR, projects, accounting, and customer support for startups and SMBs.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/OneHash-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Leads, Contacts, and Opportunities in OneHash |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to OneHash fields |
-
-## Action Events
-
-- Create Lead
-- Create Contact
-- Create Opportunity
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://{your_instance}.onehash.ai/api/` |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | - | Uses standard ERPNext API conventions |
 
 ## Authentication
 
 - **Type**: API Key + API Secret
-- **Where to get credentials**: OneHash Settings > Integrations > API — generate an API key and API secret pair from your account
-- **Required fields in Bit Integrations**: API Key, API Secret, OneHash Instance URL
+- **Header**: `Authorization: token {api_key}:{api_secret}`
+- **Get token**: OneHash Settings > Integrations > API Access > Generate Keys
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Create a lead
+```bash
+POST https://your-instance.onehash.ai/api/resource/Lead
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| lead_name | Full name of the lead | Required |
-| email_id | Email address | Optional; used for deduplication |
-| mobile_no | Mobile phone number | Optional |
-| company_name | Associated company name | Optional |
-| source | Lead source | Optional; e.g., Website, Campaign |
+Authorization: token {api_key}:{api_secret}
+Content-Type: application/json
 
-## Common Workflow Recipes
+{"lead_name": "Jane Doe", "email_id": "jane@example.com", "mobile_no": "555-1234", "company_name": "Acme Co", "source": "Website"}
+```
 
-### Recipe 1: Contact Form to OneHash Lead
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Lead in OneHash
-**Key fields mapped:** Lead Name, Email, Mobile Number, Company Name, Source = Website
-**Use case:** Push every website inquiry directly into OneHash as a lead for your sales team to qualify and pursue.
+### List leads
+```bash
+GET https://your-instance.onehash.ai/api/resource/Lead?fields=["lead_name","email_id","status"]&limit=25
 
-### Recipe 2: Signup Form to OneHash Contact
-**Trigger:** Elementor or Fluent Forms sign-up form
-**Action:** Create Contact in OneHash
-**Key fields mapped:** Lead Name, Email, Mobile Number, Company Name
-**Use case:** Add new sign-ups from your website directly as OneHash contact records for pipeline and customer management.
+Authorization: token {api_key}:{api_secret}
+```
 
-### Recipe 3: Demo Request to OneHash Opportunity
-**Trigger:** Gravity Forms demo request form
-**Action:** Create Opportunity in OneHash
-**Key fields mapped:** Lead Name, Email, Company Name, Source = Demo Request
-**Use case:** Turn demo requests from your WordPress site into pipeline opportunities in OneHash for deal tracking and follow-up.
+### Create a contact
+```bash
+POST https://your-instance.onehash.ai/api/resource/Contact
 
-## Setup Steps
+Authorization: token {api_key}:{api_secret}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select OneHash as the action.
-5. Connect your OneHash account using your API key, API secret, and OneHash instance URL from Settings > Integrations > API.
-6. Select the object type (Lead, Contact, Opportunity) you want to create.
-7. Map the fields from your trigger to OneHash fields.
-8. Save and submit a test entry to verify data arrives correctly.
+{"first_name": "Jane", "last_name": "Doe", "email_ids": [{"email_id": "jane@example.com"}], "phone_nos": [{"phone": "555-1234"}]}
+```
+
+### Create an opportunity
+```bash
+POST https://your-instance.onehash.ai/api/resource/Opportunity
+
+Authorization: token {api_key}:{api_secret}
+Content-Type: application/json
+
+{"opportunity_from": "Lead", "party_name": "abc123", "opportunity_type": "Sales", "expected_closing": "2026-07-01"}
+```
+
+## Key Fields
+
+### Lead
+- `name` - Document name (auto-generated ID)
+- `lead_name` - Full name of the lead
+- `email_id` - Email address
+- `mobile_no` - Mobile phone
+- `company_name` - Company
+- `source` - Lead source (Website, Campaign, etc.)
+- `status` - Lead status (Open, Replied, Converted, etc.)
+
+### Contact
+- `first_name` / `last_name` - Name fields
+- `email_ids` - Array of email objects
+- `phone_nos` - Array of phone objects
+
+## Parameters
+
+- `fields` - JSON array of fields to return
+- `filters` - JSON array of filter conditions
+- `limit` - Results per page (default 20)
+- `order_by` - Sort field and direction
 
 ## When to Use
 
-- You use OneHash as a low-cost ERPNext CRM and want WordPress leads to flow in automatically
-- You need leads, contacts, and opportunities created from different form types across your WordPress site
-- You want an open-source CRM alternative connected to your WordPress marketing funnel
-- You use OneHash across sales, support, and operations and want web leads entering the system automatically
+- Managing leads, contacts, and opportunities in an open-source ERP environment
+- Automating CRM data entry from web forms, marketing, or external events
+- Connecting sales pipeline data with HR and accounting in a unified ERP system
+- Low-cost CRM alternative for startups needing sales and operations in one platform
 
-## Related Integrations
+## Rate Limits
 
-- perfex-crm.md
-- zoho-crm.md
-- insightly.md
-- flowlu.md
+- See OneHash/ERPNext documentation; limits vary by hosting plan
+
+## Relevant Skills
+
+- sales:account-research
+- sales:pipeline-review
+- operations:process-doc

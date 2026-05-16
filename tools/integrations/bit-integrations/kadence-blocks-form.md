@@ -1,85 +1,92 @@
 # Kadence Blocks Form
 
-Kadence Blocks is a popular Gutenberg block suite for WordPress, and its Form block allows building and embedding forms directly within the block editor — available in both the free and Pro versions of Kadence Blocks. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Gutenberg block suite for WordPress including a built-in Form block for creating contact and lead forms within the block editor.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Kadence-Blocks-Form.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API; WordPress plugin only |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress hooks and filters only |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress admin credentials
+- **Header**: `Authorization: Basic {base64(user:app_password)}` for WP REST API
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Hook into form submission (PHP)
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+```php
+add_action( 'kadence_blocks_form_submission', function( $form_data, $fields, $post_id ) {
+    // $form_data — all submitted field values as array
+    // $fields — field configuration from the block
+    // $post_id — WordPress post ID where the form lives
+}, 10, 3 );
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Hook into submission after email send (PHP)
 
-## Connecting to Action Platforms
+```php
+add_action( 'kadence_blocks_form_submission_actions', function( $fields, $post_id, $form_args ) {
+    // $fields — submitted data
+    // Runs after Kadence has processed its own notification emails
+}, 10, 3 );
+```
 
-After selecting Kadence Blocks Form as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Query form submissions via WP REST API
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+```bash
+GET https://yoursite.com/wp-json/kb-custom/v1/form-submissions?post_id={post_id}
 
-## Setup Steps
+Authorization: Basic {base64(user:app_password)}
+```
 
-1. Install and activate Kadence Blocks on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a page with a Kadence Form block and publish it.
-4. Go to Bit Integrations > Create Integration.
-5. Select Kadence Blocks Form as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+### Get all block-based forms on a post
 
-## Field Mapping Tips
+```bash
+GET https://yoursite.com/wp-json/wp/v2/posts/{post_id}?context=edit
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+Authorization: Basic {base64(user:app_password)}
+```
+
+## Key Fields
+
+### Submission Data
+- `_kb_form_id` - Unique Kadence form block ID on the page
+- `email` - Submitter email (if field is included)
+- `name` - Submitter name (if field is included)
+- `message` - Message body field value
+- `post_id` - WordPress post/page where the form is embedded
+
+### Block Configuration
+- `field_id` - Unique ID per field in the block settings
+- `label` - Visible field label
+- `type` - text | email | tel | textarea | select | checkbox | radio
+- `required` - Whether the field is required
+
+## Parameters
+
+- `post_id` - Filter submissions by the page containing the form
+- `per_page` - Number of results for REST queries
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Building contact and lead forms within the Gutenberg block editor
+- Integrating form submissions with email marketing or CRM tools via hooks
+- Collecting inquiries from sites built entirely with Kadence Blocks theme/blocks
+- Keeping form management inside WordPress without a separate form plugin license
 
-## Related Integrations
+## Rate Limits
 
-- gutena-forms.md
-- essential-blocks.md
-- spectra.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external rate limits; subject to WordPress server capacity
+
+## Relevant Skills
+
+- lead-generation
+- email-marketing
+- content-creation

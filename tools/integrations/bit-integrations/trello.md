@@ -1,69 +1,105 @@
 # Trello
 
-Trello is a visual project management tool that organizes work into boards, lists, and cards. Available as an Action in the Bit Integrations WordPress plugin.
+Trello is a visual project management tool that organizes work into boards, lists, and cards with drag-and-drop simplicity.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Trello-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create cards, add labels, move cards in Trello |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to Trello card fields |
-
-## Action Events
-
-- Create card
-- Add label to card
-- Move card to another list
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.trello.com/1/` |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | ✓ | Community SDKs in Python, Node.js, Ruby, and others |
 
 ## Authentication
 
-- **Type**: API Key + Token
-- **Required**: API key and token from https://trello.com/app-key. Enter both in Bit Integrations.
+- **Type**: API Key + Token (query parameters)
+- **Parameters**: `?key={api_key}&token={oauth_token}`
+- **Get token**: https://trello.com/app-key — generate API key, then authorize to get a token
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Contact Form to Trello Card
-**Trigger:** WordPress contact form submission
-**Action:** Create a Trello card in an inbox or leads list with contact details
-**Use case:** Convert form submissions into Trello cards for visual tracking and team assignment
+### List Boards
+```bash
+GET https://api.trello.com/1/members/me/boards?key={api_key}&token={token}
+```
 
-### Recipe 2: Bug Report Form to Bug Tracker Board
-**Trigger:** WordPress bug report form submission
-**Action:** Create a Trello card in the bug tracker board with description and priority label
-**Use case:** Route bug reports directly into a Trello development board for triage
+### Get Lists on a Board
+```bash
+GET https://api.trello.com/1/boards/{board_id}/lists?key={api_key}&token={token}
+```
 
-### Recipe 3: Order Completion to Fulfillment Board
-**Trigger:** WooCommerce order completed
-**Action:** Create a Trello card in the fulfillment board with order details
-**Use case:** Visually track orders through fulfillment stages using Trello's kanban layout
+### Create a Card
+```bash
+POST https://api.trello.com/1/cards?key={api_key}&token={token}
 
-## Setup Steps
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Trello as the Action.
-5. Go to https://trello.com/app-key to get your API key and generate a token.
-6. Enter both in Bit Integrations and select the target board and list.
-7. Map fields: name, desc, due, idList, idBoard, idLabels.
-8. Save and test.
+{
+  "name": "New Task",
+  "desc": "Task description here",
+  "idList": "{list_id}",
+  "due": "2026-06-01T09:00:00.000Z"
+}
+```
+
+### Update a Card
+```bash
+PUT https://api.trello.com/1/cards/{card_id}?key={api_key}&token={token}
+
+Content-Type: application/json
+
+{"idList": "{new_list_id}", "closed": false}
+```
+
+### Add a Comment to a Card
+```bash
+POST https://api.trello.com/1/cards/{card_id}/actions/comments?key={api_key}&token={token}
+
+Content-Type: application/json
+
+{"text": "This has been reviewed and approved."}
+```
+
+## Key Fields
+
+### Card
+- `id` - Card identifier
+- `name` - Card title
+- `desc` - Card description
+- `idList` - Parent list ID
+- `idBoard` - Parent board ID
+- `due` - Due date (ISO 8601)
+- `labels` - Array of label objects
+- `members` - Array of assigned member objects
+
+### List
+- `id` - List identifier
+- `name` - List name
+- `idBoard` - Parent board ID
+- `pos` - Position on board
+
+## Parameters
+
+- `fields` - Comma-separated list of fields to return (reduces payload)
+- `members` - `true` to include card member details
+- `attachments` - `true` to include attachment data
 
 ## When to Use
 
-- When your team uses Trello boards to manage incoming requests, leads, or orders
-- When a visual kanban-style task board is preferred for tracking WordPress-sourced data
-- When you want simple card creation from form submissions without complex configuration
+- Creating task cards from lead form submissions or support tickets
+- Moving cards between lists to reflect pipeline stage changes
+- Commenting on cards with external data or approvals
+- Reporting on card counts and due dates by list
 
-## Related Integrations
+## Rate Limits
 
-- asana.md
-- clickup.md
-- notion.md
-- google-sheets.md
+- 300 requests per 10 seconds per API key
+- See Trello developer docs for Power-Up limits
+
+## Relevant Skills
+
+- product-management:sprint-planning
+- operations:process-doc
+- marketing:campaign-plan
+- engineering:documentation

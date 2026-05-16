@@ -1,79 +1,99 @@
 # SureCart
 
-SureCart is a modern WordPress eCommerce plugin with a cloud-hosted checkout experience, subscriptions, one-click upsells, and digital product delivery. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+SureCart is a modern WordPress eCommerce platform with a cloud-hosted checkout, subscriptions, one-click upsells, and digital product delivery.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** eCommerce and Payments
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/SureCart-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/SureCart.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on purchase, subscription, and refund events |
-| As Action | ✓ | Create customer |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Purchase completed — fires when a SureCart purchase is successfully completed
-- Subscription activated — fires when a SureCart subscription becomes active
-- Subscription cancelled — fires when a SureCart subscription is cancelled
-- Refund issued — fires when a SureCart order is refunded
-
-## Action Events
-
-- Create customer — create a new customer record in SureCart
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/surecart/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI support via plugin |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: SureCart must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add buyer to CRM on purchase
-**Trigger:** SureCart — Purchase completed
-**Action:** HubSpot / ActiveCampaign — Create or update contact
-**Key fields mapped:** Customer email, first name, last name, product name, purchase amount
-**Use case:** Automatically push SureCart buyers into your CRM with full purchase details for follow-up
+### List Products
+```bash
+GET https://yoursite.com/wp-json/surecart/v1/products
 
-### Recipe 2: Enroll customer in LMS course on purchase
-**Trigger:** SureCart — Purchase completed
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** Customer email, product linked to course
-**Use case:** Grant LMS course access immediately when a SureCart purchase is confirmed
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Trigger win-back automation on subscription cancellation
-**Trigger:** SureCart — Subscription cancelled
-**Action:** Mailchimp / ConvertKit — Add to automation or add tag
-**Key fields mapped:** Customer email, subscription plan, cancellation date
-**Use case:** Start a re-engagement email flow as soon as a SureCart subscriber cancels
+### List Orders
+```bash
+GET https://yoursite.com/wp-json/surecart/v1/orders
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select SureCart as the trigger or action.
-4. For triggers, choose the event (e.g., Purchase Completed) and optionally filter by product.
-5. For actions, choose Create Customer and map the required fields.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (complete a test purchase or cancel a test subscription).
+### Get a Single Order
+```bash
+GET https://yoursite.com/wp-json/surecart/v1/orders/{id}
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Subscriptions
+```bash
+GET https://yoursite.com/wp-json/surecart/v1/subscriptions
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Customers
+```bash
+GET https://yoursite.com/wp-json/surecart/v1/customers
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Product
+- `id` - Product ID
+- `name` - Product name
+- `status` - publish, draft
+- `prices` - Array of pricing options
+
+### Order
+- `id` - Order ID
+- `customer_id` - Buyer's customer record
+- `total_amount` - Order total in cents
+- `status` - paid, pending, refunded
+
+### Subscription
+- `id` - Subscription ID
+- `customer_id` - Subscriber
+- `status` - active, cancelled, past_due
+- `current_period_end` - Next billing date
+
+## Parameters
+
+- `per_page` / `page` - Pagination controls
+- `status` - Filter by record status
+- `customer_id` - Scope orders or subscriptions to a customer
 
 ## When to Use
 
-- You use SureCart as your WordPress checkout solution and want buyer data in your CRM or email platform
-- You sell courses via SureCart and need automatic LMS enrollment on purchase
-- You want to trigger win-back flows when SureCart subscriptions lapse or are cancelled
-- You need to integrate SureCart into a broader post-purchase automation stack
+- Triggering onboarding sequences on first purchase
+- Syncing customer data to a CRM after checkout
+- Monitoring subscription churn via status changes
+- Building revenue dashboards from order data
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- easy-digital-downloads.md
-- learndash.md
-- lifterlms.md
-- memberpress.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:email-sequence
+- sales:pipeline-review
+- data:analyze
+- operations:process-doc

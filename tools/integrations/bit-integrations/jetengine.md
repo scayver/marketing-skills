@@ -1,75 +1,107 @@
 # JetEngine
 
-JetEngine by Crocoblock is a powerful WordPress plugin for creating custom post types, meta fields, taxonomies, relations, and dynamic content. Available as an Action (free) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WordPress plugin by Crocoblock for creating custom post types, meta fields, taxonomies, dynamic listings, and relations.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes (Action free; Trigger requires Pro)
-**Category:** Project Management and Productivity
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/02/Jet-Engine.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/JetEngine.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires on JetEngine form submission or post event |
-| As Action | ✓ | Free; create or update JetEngine posts and meta fields |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map fields to JetEngine custom post types and meta fields |
-
-## Trigger Events
-
-- JetEngine form submitted
-- Custom post type record created or updated
-- JetEngine listing filter applied (contextual)
-
-## Action Events
-
-- Create custom post type entry
-- Update meta field on a JetEngine post or user
-- Create or update a JetEngine relation record
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at /wp-json/jet-engine/v3/ |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress hooks and REST API only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and JetEngine (by Crocoblock) must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password (Basic Auth)
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: JetEngine Form to External CRM
-**Trigger:** JetEngine form submission
-**Action:** Send form data to a CRM (HubSpot, Zoho, Pipedrive) or email platform
-**Use case:** Use JetEngine forms as the intake point for CRM and marketing automation workflows
+### Get custom post type entries
 
-### Recipe 2: External Form to JetEngine Custom Post Type
-**Trigger:** Gravity Forms or WPForms submission
-**Action:** Create a new JetEngine custom post type entry with mapped field data
-**Use case:** Populate a JetEngine-powered directory, listing, or database from any WordPress form
+```bash
+GET https://yoursite.com/wp-json/wp/v2/{custom_post_type_slug}?per_page=100
 
-### Recipe 3: WooCommerce Order to JetEngine Booking Record
-**Trigger:** WooCommerce order completed
-**Action:** Create a JetEngine post type entry representing the booking or order record
-**Use case:** Build custom WooCommerce order tracking using JetEngine custom post types
+Authorization: Basic {base64(user:app_password)}
+```
 
-## Setup Steps
+### Create a custom post type entry
 
-1. Install Bit Integrations and JetEngine on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select JetEngine as the Trigger and choose the form or post event.
-4. For Action: Choose your trigger source, then select JetEngine as the Action.
-5. Select the target custom post type or meta field group.
-6. Map fields.
-7. Save and test.
+```bash
+POST https://yoursite.com/wp-json/wp/v2/{custom_post_type_slug}
+
+Authorization: Basic {base64(user:app_password)}
+Content-Type: application/json
+
+{"title": "New Entry", "status": "publish", "meta": {"custom_field_key": "value"}}
+```
+
+### Update meta fields on an entry
+
+```bash
+POST https://yoursite.com/wp-json/wp/v2/{custom_post_type_slug}/{post_id}
+
+Authorization: Basic {base64(user:app_password)}
+Content-Type: application/json
+
+{"meta": {"field_key": "updated_value"}}
+```
+
+### Query JetEngine listings
+
+```bash
+GET https://yoursite.com/wp-json/jet-engine/v3/listings
+
+Authorization: Basic {base64(user:app_password)}
+```
+
+### Hook into JetEngine form submission (PHP)
+
+```php
+add_action( 'jet-form-builder/form-handler/after-send', function( $handler ) {
+    $form_id = $handler->form_id;
+    $fields  = $handler->request_handler->get_fields();
+    // Process submitted fields
+} );
+```
+
+## Key Fields
+
+### Custom Post Type Entry
+- `id` - WordPress post ID
+- `title` - Entry title (rendered as `title.rendered`)
+- `status` - publish | draft | private
+- `meta` - Associative array of JetEngine custom meta field values
+- `date` - Creation timestamp (ISO 8601)
+
+### Relation Object
+- `parent_id` - ID of the parent post in the relation
+- `child_id` - ID of the child post in the relation
+- `rel_id` - Relation definition ID in JetEngine
+
+## Parameters
+
+- `per_page` - Number of results (default 10, max 100)
+- `page` - Pagination page
+- `meta_key` / `meta_value` - Filter by meta field
+- `orderby` - Sort field
+- `order` - ASC | DESC
 
 ## When to Use
 
-- When your site uses JetEngine for custom post types and you need forms to create or update records
-- When JetEngine forms should feed external CRMs, email lists, or notification services
-- When building custom database applications in WordPress using JetEngine as the data layer
+- Managing dynamic directory or listing data in WordPress
+- Creating and updating custom database records from external events
+- Building custom post type entries from form submissions or API calls
+- Syncing custom WordPress content with external platforms
 
-## Related Integrations
+## Rate Limits
 
-- advanced-custom-fields.md
-- pods.md
-- acpt.md
-- post-creation.md
+- No external rate limits; subject to WordPress server capacity
+
+## Relevant Skills
+
+- content-creation
+- lead-generation
+- ecommerce

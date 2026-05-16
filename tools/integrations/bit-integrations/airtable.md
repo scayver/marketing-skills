@@ -1,68 +1,114 @@
 # Airtable
 
-Airtable is a flexible database and spreadsheet hybrid for organizing, tracking, and collaborating on structured data. Available as an Action in the Bit Integrations WordPress plugin.
+Flexible cloud database combining the simplicity of a spreadsheet with the power of a relational database — used for CRM, project tracking, content calendars, and more.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Airtable1-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create or update records in Airtable |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to any Airtable field in the selected base and table |
-
-## Action Events
-
-- Create record
-- Update record
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.airtable.com/v0/{baseId}/{tableName}` |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | ✓ | Official JavaScript SDK (`airtable` npm package) |
 
 ## Authentication
 
-- **Type**: API Key (Personal Access Token)
-- **Required**: Personal Access Token from airtable.com/create/tokens with scopes for data.records:write and schema.bases:read. Enter token, base ID, and table name in Bit Integrations.
+- **Type**: Personal Access Token
+- **Header**: `Authorization: Bearer {token}`
+- **Get token**: airtable.com/create/tokens — create token with `data.records:read`, `data.records:write`, `schema.bases:read` scopes
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to Airtable CRM Base
-**Trigger:** WordPress lead form submission
-**Action:** Create a new Airtable record with lead name, email, phone, and source
-**Use case:** Build and populate an Airtable-based CRM automatically from WordPress form leads
+### List records in a table
 
-### Recipe 2: Event Registration to Attendee Table
-**Trigger:** Event registration form submission
-**Action:** Create an Airtable record in the attendee tracking table
-**Use case:** Maintain a live, filtered, and viewable event attendee database in Airtable
+```bash
+GET https://api.airtable.com/v0/{baseId}/{tableName}?maxRecords=100&view=Grid%20view
 
-### Recipe 3: WooCommerce Order to Order Log Table
-**Trigger:** WooCommerce order completed
-**Action:** Append order details as a new Airtable record in an orders table
-**Use case:** Keep an Airtable order log for reporting, filtering, and cross-team visibility
+Authorization: Bearer {token}
+```
 
-## Setup Steps
+### Create a record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Airtable as the Action.
-5. Go to airtable.com/create/tokens and create a Personal Access Token with appropriate scopes.
-6. Enter the token in Bit Integrations, then select the target base and table.
-7. Map form fields to Airtable field names.
-8. Save and test.
+```bash
+POST https://api.airtable.com/v0/{baseId}/{tableName}
+
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "fields": {
+    "Name": "Jane Doe",
+    "Email": "jane@example.com",
+    "Status": "Lead",
+    "Source": "Website"
+  }
+}
+```
+
+### Update a record
+
+```bash
+PATCH https://api.airtable.com/v0/{baseId}/{tableName}/{recordId}
+
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{"fields": {"Status": "Qualified", "Notes": "Followed up via email"}}
+```
+
+### Search records with a filter formula
+
+```bash
+GET https://api.airtable.com/v0/{baseId}/{tableName}?filterByFormula={Email}="jane@example.com"
+
+Authorization: Bearer {token}
+```
+
+### Delete a record
+
+```bash
+DELETE https://api.airtable.com/v0/{baseId}/{tableName}/{recordId}
+
+Authorization: Bearer {token}
+```
+
+## Key Fields
+
+### Record
+- `id` - Record ID (starts with `rec`)
+- `fields` - Object containing all field values
+- `createdTime` - ISO 8601 creation timestamp
+
+### Table Schema
+- `id` - Field ID
+- `name` - Field name (column header)
+- `type` - singleLineText, email, number, singleSelect, date, checkbox, linkedRecord, etc.
+- `options` - Field-specific config (e.g., choices for singleSelect)
+
+## Parameters
+
+- `maxRecords` - Max records to return per page (default 100, max 100)
+- `pageSize` - Records per page (max 100)
+- `offset` - Pagination cursor from previous response
+- `filterByFormula` - Airtable formula string for filtering
+- `sort` - Array of field/direction sort objects
+- `view` - Restrict results to a specific view's records and order
 
 ## When to Use
 
-- When using Airtable as a CRM, database, or tracker and wanting automatic data entry from WordPress
-- When teams need a structured, filterable view of form submissions or WooCommerce orders
-- When building internal dashboards or reports from WordPress data stored in Airtable
+- Logging leads, form submissions, or orders into a structured Airtable base
+- Building lightweight CRM or project trackers that non-technical teams can edit
+- Centralizing marketing campaign data across sources into a single Airtable base
+- Generating filtered views and reports from structured data via API
 
-## Related Integrations
+## Rate Limits
 
-- notion.md
-- google-sheets.md
-- clickup.md
-- zoho-sheet.md
+- 5 requests per second per base
+- Contact Airtable for higher limits via enterprise plan
+
+## Relevant Skills
+
+- crm-management
+- content-strategy
+- lead-generation
+- data:explore-data

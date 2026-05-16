@@ -1,67 +1,125 @@
 # Zapier
 
-Zapier is a no-code automation platform that connects 6,000+ apps via triggers and actions. Available as an Action in the Bit Integrations WordPress plugin.
+Workflow automation platform for connecting apps with triggers, actions, filters, and webhooks.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Zapier.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send WordPress data to a Zapier "Catch Hook" webhook |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map any form field to the outgoing webhook payload |
-
-## Action Events
-
-- Send data to Zapier Webhooks (Catch Hook) to route to 6,000+ apps
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: Webhook URL
-- **Required**: Paste the Zapier "Catch Hook" webhook URL into Bit Integrations. No API key needed.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Webhook URL token in request path`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zapier dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Form Submission to Any Zapier-Connected App
-**Trigger:** WordPress form submission (any form plugin)
-**Action:** Send payload to Zapier Catch Hook, then route to CRM, email tool, or spreadsheet
-**Use case:** Bridge WordPress with any app Zapier supports without needing a native Bit Integrations connector
+### List records
 
-### Recipe 2: WooCommerce Order to Accounting Software
-**Trigger:** WooCommerce order completed
-**Action:** Send order data to Zapier, which posts to QuickBooks or Xero
-**Use case:** Automate bookkeeping entries for every new sale
+```bash
+GET https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records?limit=50
 
-### Recipe 3: User Registration to Onboarding Sequence
-**Trigger:** WordPress user registration
-**Action:** Send user data to Zapier, which adds them to an onboarding email sequence in any ESP
-**Use case:** Start automated onboarding the moment someone creates a WordPress account
+Webhook URL token in request path
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger (form plugin, WooCommerce, user registration, etc.).
-4. Select Zapier as the Action.
-5. In Zapier, create a Zap with "Webhooks by Zapier > Catch Hook" as the trigger. Copy the webhook URL.
-6. Paste the webhook URL into Bit Integrations.
-7. Map fields.
-8. Save and test.
+```bash
+GET https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records/{record_id}
+
+Webhook URL token in request path
+```
+
+### Create record
+
+```bash
+POST https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records
+
+Webhook URL token in request path
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records/{record_id}
+
+Webhook URL token in request path
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/events
+
+Webhook URL token in request path
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When your destination app has a Zapier connector but no native Bit Integrations connector
-- When you need multi-step logic (filters, formatters, delays) between WordPress and a destination
-- When your team already manages automations in Zapier and you want to add WordPress as a source
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- make.md
-- pabbly.md
-- n8n.md
-- webhook-outgoing.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- revops
+- analytics
+- business-strategy

@@ -1,72 +1,99 @@
 # WooCommerce Bookings
 
-WooCommerce Bookings is the official WooCommerce extension for selling appointments, rentals, and time-based services with calendar-integrated booking management. Available as Action in the Bit Integrations WordPress plugin.
+WooCommerce Bookings is the official WooCommerce extension for selling appointments, rentals, and time-based services with calendar-integrated booking management.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WooCommerce-Booking.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create booking, confirm booking |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Create booking — create a new WooCommerce Bookings appointment or reservation
-- Confirm booking — change the status of a booking to Confirmed
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `/wp-json/wc-bookings/v1/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI with WooCommerce commands |
+| SDK | - | Not available |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WooCommerce and WooCommerce Bookings must both be installed and active; Bit Integrations reads them directly via WordPress hooks
-- **Note**: No API keys required; all plugins must be on the same WordPress site
+- **Type**: Consumer Key + Consumer Secret (same as WooCommerce REST API)
+- **Header**: `Authorization: Basic {base64(consumer_key:consumer_secret)}`
+- **Get token**: WooCommerce Admin > Settings > Advanced > REST API > Add Key
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Create booking from form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted (appointment request)
-**Action:** WooCommerce Bookings — Create booking
-**Key fields mapped:** Customer email, date, time, service type
-**Use case:** Create a WooCommerce Booking directly when a customer submits an appointment request form
+### List bookings
+```
+GET https://yoursite.com/wp-json/wc-bookings/v1/bookings?per_page=50
 
-### Recipe 2: Confirm booking after payment is received
-**Trigger:** WooCommerce — Order completed
-**Action:** WooCommerce Bookings — Confirm booking
-**Key fields mapped:** Order ID or customer email, booking linked to order
-**Use case:** Automatically confirm a pending booking as soon as the associated WooCommerce payment is completed
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Create booking from CRM deal
-**Trigger:** HubSpot / Zoho CRM — Deal moved to Scheduled stage
-**Action:** WooCommerce Bookings — Create booking
-**Key fields mapped:** Contact email, scheduled date and time, service
-**Use case:** Generate a WooCommerce Booking when a CRM deal reaches a scheduled or confirmed stage
+### Get a specific booking
+```
+GET https://yoursite.com/wp-json/wc-bookings/v1/bookings/{booking_id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Ensure WooCommerce and WooCommerce Bookings are both installed and active.
-3. Go to Bit Integrations > Create Integration.
-4. Select WooCommerce Bookings as the action.
-5. Choose Create Booking or Confirm Booking.
-6. Map the customer email, date, time, and service fields from your trigger source.
-7. Save and test with a real event (submit a test form or trigger a test payment).
+### Create a booking
+```
+POST https://yoursite.com/wp-json/wc-bookings/v1/bookings
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "product_id": 42,
+  "customer_id": 15,
+  "start_date": "2024-03-15",
+  "end_date": "2024-03-15",
+  "status": "confirmed"
+}
+```
+
+### Get available slots for a bookable product
+```
+GET https://yoursite.com/wp-json/wc-bookings/v1/products/{product_id}/slots?start=2024-03-01&end=2024-03-31
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Booking Object
+- `id` - Booking ID
+- `status` - `unpaid`, `pending`, `confirmed`, `cancelled`, `complete`
+- `product_id` - ID of the bookable product
+- `customer_id` - WordPress user ID of the customer
+- `start_date` - Booking start date (YYYY-MM-DD or Unix timestamp)
+- `end_date` - Booking end date
+- `order_id` - Associated WooCommerce order ID
+- `resource_id` - Assigned resource (room, staff, equipment)
+
+### Resource Object
+- `id` - Resource ID
+- `title` - Resource name (e.g., "Room A", "Staff Member")
+- `availability` - Availability rules array
+
+## Parameters
+
+- `status` - Filter bookings by status
+- `product_id` - Filter by bookable product
+- `customer_id` - Filter by customer
+- `after` / `before` - ISO 8601 date range for booking dates
 
 ## When to Use
 
-- You accept appointment requests via forms and want to create WooCommerce Bookings automatically
-- You want to confirm bookings programmatically as soon as payment is received
-- You manage appointments through a CRM and need bookings created from CRM stage changes
-- You want to integrate WooCommerce Bookings into a broader client intake or scheduling automation
+- Creating bookings programmatically from external scheduling forms or CRM events
+- Querying upcoming appointments for reminder or notification workflows
+- Syncing booking status with external calendar systems (Google Calendar, Outlook)
+- Building availability checkers for service-based businesses
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- woocommerce-subscriptions.md
-- surecart.md
-- wp-simple-pay.md
+- No built-in rate limits; subject to WordPress server capacity
+- Recommend paginated requests with `per_page=100` for bulk exports
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- operations:capacity-plan
+- customer-support:customer-research

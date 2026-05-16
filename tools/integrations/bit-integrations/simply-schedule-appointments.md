@@ -1,67 +1,119 @@
 # Simply Schedule Appointments
 
-Simply Schedule Appointments is a user-friendly WordPress appointment booking plugin with Google Calendar sync and flexible scheduling rules. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress appointment scheduling plugin for booking calendars, availability, and appointment management.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Webinars and Events
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Simply-Schedule-Appointments.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create appointments in Simply Schedule Appointments |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to appointment booking fields |
-
-## Action Events
-
-- Create appointment
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Simply Schedule Appointments must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Intake Form to SSA Appointment
-**Trigger:** WordPress client intake form submission
-**Action:** Create a Simply Schedule Appointments booking with the client's details
-**Use case:** Convert intake form submissions into scheduled appointments in SSA without manual booking
+### Check plugin status
 
-### Recipe 2: WooCommerce Service Purchase to Appointment
-**Trigger:** WooCommerce order completed (service product)
-**Action:** Create a Simply Schedule Appointments booking for the purchased service
-**Use case:** Automatically schedule a session in SSA when a client pays for a service through WooCommerce
+```bash
+wp plugin status simply-schedule-appointments
+```
 
-### Recipe 3: Contact Form Consultation to Appointment
-**Trigger:** WordPress consultation request form submission
-**Action:** Book a consultation slot in Simply Schedule Appointments for the requester
-**Use case:** Turn website consultation requests into scheduled SSA appointments automatically
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations Pro and Simply Schedule Appointments on your WordPress site.
-2. Create the target appointment type in SSA.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Simply Schedule Appointments as the Action.
-6. Select the appointment type.
-7. Map form fields to appointment fields.
-8. Save and test.
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/simply-schedule-appointments/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='simply-schedule-appointments' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- When form submissions or purchases should create SSA appointments automatically
-- When running a service business that uses Simply Schedule Appointments for client scheduling
-- When WooCommerce service sales should trigger automatic appointment scheduling in SSA
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- amelia.md
-- fluentbooking.md
-- appointment-hour-booking.md
-- google-calendar.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- local-seo
+- customer-service
+- email-marketing

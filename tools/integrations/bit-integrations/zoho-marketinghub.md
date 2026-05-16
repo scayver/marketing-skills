@@ -1,84 +1,125 @@
 # Zoho Marketing Automation
 
-Zoho Marketing Automation (MarketingHub) is a multi-channel marketing automation platform within the Zoho ecosystem offering lead management, behavioral tracking, and email campaign automation. Available as an Action in the Bit Integrations WordPress plugin.
+Marketing automation platform for leads, journeys, campaigns, web behavior, and scoring.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ZohoMarketingHub.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add lead, add to list, update contact |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add lead
-- Add contact to list
-- Update contact information
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: OAuth 2.0
-- **Where to get credentials**: Zoho developer console (api-console.zoho.com) — create a server-based application to obtain OAuth credentials
-- **Required in Bit Integrations**: OAuth 2.0 authorization flow (authorize via Bit Integrations UI)
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Zoho-oauthtoken {access_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zoho Marketing Automation dashboard
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Lead or contact email address | Required |
-| First Name | Lead or contact first name | Optional |
-| Last Name | Lead or contact last name | Optional |
-| Phone | Lead or contact phone number | Optional |
-| List ID | The Zoho Marketing Automation list to add to | Optional |
+### List records
 
-## Common Workflow Recipes
+```bash
+GET https://www.zohoapis.com/records?limit=50
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add lead to Zoho Marketing Automation and add to nurture list
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your lead database when visitors fill out any lead capture form
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer as lead to Zoho Marketing Automation customer list
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+### Get one record
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add lead to Zoho Marketing Automation and enroll in onboarding list
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+```bash
+GET https://www.zohoapis.com/records/{record_id}
 
-## Setup Steps
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Zoho Marketing Automation as the action.
-5. Connect your Zoho account using OAuth 2.0 authorization.
-6. Configure the lead or contact action and select the list.
-7. Map the email field and any name or phone fields.
-8. Save and test with a real form submission.
+### Create record
+
+```bash
+POST https://www.zohoapis.com/records
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://www.zohoapis.com/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://www.zohoapis.com/events
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- Growing a lead database from WordPress form submissions within the Zoho ecosystem
-- Segmenting new leads by source using Zoho Marketing Automation lists
-- Syncing WooCommerce buyers to a customer list in Zoho
-- Adding new members or course students to automated onboarding sequences
-- Replacing manual CSV imports from WordPress to your marketing automation platform
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- zoho-campaigns.md
-- activecampaign.md
-- hubspot.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- email-marketing
+- emails
+- analytics

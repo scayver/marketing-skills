@@ -1,71 +1,119 @@
 # Sensei LMS
 
-Sensei LMS is a WordPress LMS plugin by Automattic, the makers of WordPress.com and WooCommerce, designed for course creation with deep WooCommerce integration. Available as Action in the Bit Integrations WordPress plugin.
+WordPress learning management system for courses, lessons, quizzes, and student progress.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** LMS and Course Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Sensei-LMS.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Enroll student in course |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Enroll student in course — add a WordPress user to a Sensei LMS course
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Sensei LMS must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Enroll student after WooCommerce purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** Sensei LMS — Enroll student in course
-**Key fields mapped:** Customer email, product linked to course
-**Use case:** Automatically grant Sensei LMS course access when a WooCommerce order is completed
+### Check plugin status
 
-### Recipe 2: Enroll student from lead magnet form
-**Trigger:** Gravity Forms / WPForms — Form submitted
-**Action:** Sensei LMS — Enroll student in course
-**Key fields mapped:** Email field, free course selection
-**Use case:** Use a lead capture form to automatically enroll subscribers in a free Sensei course
+```bash
+wp plugin status sensei-lms
+```
 
-### Recipe 3: Enroll student on membership activation
-**Trigger:** MemberPress — Membership purchased
-**Action:** Sensei LMS — Enroll student in course
-**Key fields mapped:** User email, course tied to membership level
-**Use case:** Bundle Sensei LMS courses with MemberPress membership tiers
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Sensei LMS as the action.
-4. Choose Enroll Student in Course and select the target course.
-5. Map the user email from your trigger source to Sensei LMS's student field.
-6. Save and test with a real event (complete a test WooCommerce purchase or form submission).
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/sensei-lms/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='sensei-lms' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- You sell Sensei LMS courses via WooCommerce and want enrollment fully automated
-- You use Sensei for free courses and want to enroll students via form submissions
-- You bundle Sensei courses with membership plans managed elsewhere
-- You want to integrate Sensei LMS into a multi-step onboarding automation
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- learndash.md
-- lifterlms.md
-- woocommerce.md
-- memberpress.md
-- learnpress.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- education-content
+- email-marketing
+- business-strategy

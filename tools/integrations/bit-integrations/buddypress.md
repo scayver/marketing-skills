@@ -1,67 +1,119 @@
 # BuddyPress
 
-BuddyPress is an open-source WordPress plugin for building social networks and community sites with profiles, groups, and activity streams. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress community plugin for member profiles, groups, activity streams, and private messaging.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Community and Forum
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Buddy-Press.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; add users to BuddyPress groups |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user data to BuddyPress group membership |
-
-## Action Events
-
-- Add user to group
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and BuddyPress must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Membership Purchase to BuddyPress Group
-**Trigger:** WooCommerce or membership plugin purchase
-**Action:** Add the purchasing user to a BuddyPress group corresponding to their membership level
-**Use case:** Automatically grant BuddyPress community group access after a membership purchase
+### Check plugin status
 
-### Recipe 2: Course Enrollment to Student Group
-**Trigger:** LMS course enrollment
-**Action:** Add the enrolled student to a BuddyPress course group
-**Use case:** Create student cohort groups in BuddyPress automatically as learners enroll
+```bash
+wp plugin status buddypress
+```
 
-### Recipe 3: Registration to Community Group
-**Trigger:** WordPress user registration
-**Action:** Add the new user to a default BuddyPress welcome group
-**Use case:** Automatically onboard all new registrations into a community-wide BuddyPress group
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations Pro and BuddyPress on your WordPress site.
-2. Create the target BuddyPress group(s).
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select BuddyPress as the Action.
-6. Select the target group.
-7. Map the user identifier field.
-8. Save and test.
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/buddypress/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='buddypress' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- When membership, course, or registration events should grant BuddyPress group membership
-- When automating community access management based on purchase or enrollment events
-- When building a BuddyPress-powered community with automated group assignment
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- buddyboss.md
-- wpforo.md
-- fluent-community.md
-- learndash.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- community-marketing
+- customer-service
+- social-content-planner

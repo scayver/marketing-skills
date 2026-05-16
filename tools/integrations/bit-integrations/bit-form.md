@@ -1,93 +1,119 @@
 # Bit Form
 
-Bit Form is a drag-and-drop WordPress form builder made by the same team as Bit Integrations. Available as both a Trigger and an Action in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted, or creates/updates form entries as an action in a workflow.
+WordPress form builder for lead capture, contact forms, surveys, and payment forms.
 
-**Role:** Trigger and Action
-**Free Tier:** Yes
-**Category:** Form Builders
-**Trigger Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Bit-Form-1.svg`
-**Action Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Bit_Form1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | ✓ | Can create or update Bit Form entries |
-| Free Tier | ✓ | Free |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## Action Capabilities
+### Check plugin status
 
-When used as an Action, Bit Form can:
+```bash
+wp plugin status bit-form
+```
 
-- Create a new form entry in a selected Bit Form form
-- Update an existing form entry based on a matched field value
+### List REST routes
 
-This allows other triggers (e.g., a CRM update, a payment, or a webhook) to write data back into a Bit Form entry.
+```bash
+GET https://example.com/wp-json/
 
-## What Data Gets Passed
+Authorization: Basic base64(username:application_password)
+```
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Search posts or records
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
 
-## Connecting to Action Platforms
+Authorization: Basic base64(username:application_password)
+```
 
-After selecting Bit Form as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Create a WordPress post or content record
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+```bash
+POST https://example.com/wp-json/wp/v2/posts
 
-## Setup Steps
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
 
-1. Install and activate Bit Form on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Bit Form and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Bit Form as the trigger (or as the action if writing entries).
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
 
-## Field Mapping Tips
+### Update metadata through a plugin endpoint
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+```bash
+POST https://example.com/wp-json/bit-form/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='bit-form' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Writing data from external systems back into Bit Form entries
-- Passing UTM data from forms into CRM contact records for attribution
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- landing-page-cro
+- customer-service
+- analytics

@@ -1,67 +1,87 @@
 # SyncSpider
 
-SyncSpider is an e-commerce-focused integration platform designed to sync product, order, and customer data across online stores and marketplaces. Available as an Action in the Bit Integrations WordPress plugin.
+SyncSpider is an eCommerce-focused integration platform for syncing product, order, and customer data across online stores, marketplaces, and marketing tools.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Automation and Integration Platforms
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/SyncSpider.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to SyncSpider via API |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form or WooCommerce fields to SyncSpider fields |
-
-## Action Events
-
-- Send WordPress or WooCommerce data to SyncSpider for cross-platform syncing
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API with API key authentication |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | - | No official SDK; use REST directly |
 
 ## Authentication
 
 - **Type**: API Key
-- **Required**: API key from your SyncSpider account settings
+- **Header**: `X-Api-Key: {api_key}`
+- **Get token**: SyncSpider Dashboard > Settings > API Keys
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: WooCommerce Order to Marketplace Sync
-**Trigger:** WooCommerce order placed
-**Action:** SyncSpider syncs order data to an external marketplace or fulfillment platform
-**Use case:** Keep sales channels synchronized when orders come in through WordPress/WooCommerce
+### List Tasks (Sync Jobs)
+```bash
+GET https://app.syncspider.com/api/v1/tasks
 
-### Recipe 2: Product Form Submission to Catalog
-**Trigger:** WordPress form submission with product details
-**Action:** SyncSpider pushes product data to connected sales channels
-**Use case:** Distribute new product listings across multiple platforms from a single WordPress form
+X-Api-Key: {api_key}
+```
 
-### Recipe 3: Customer Registration to Cross-Platform CRM
-**Trigger:** WooCommerce customer registration
-**Action:** SyncSpider syncs customer profile to connected CRM or ERP
-**Use case:** Maintain a unified customer database across all sales and service platforms
+### Get a Single Task
+```bash
+GET https://app.syncspider.com/api/v1/tasks/{id}
 
-## Setup Steps
+X-Api-Key: {api_key}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select SyncSpider as the Action.
-5. Enter your SyncSpider API key in Bit Integrations.
-6. Configure the target SyncSpider task or task group.
-7. Map fields.
-8. Save and test.
+### Trigger a Task Run
+```bash
+POST https://app.syncspider.com/api/v1/tasks/{id}/run
+
+X-Api-Key: {api_key}
+```
+
+### Register a Webhook
+```bash
+POST https://app.syncspider.com/api/v1/webhooks
+
+X-Api-Key: {api_key}
+Content-Type: application/json
+
+{
+  "url": "https://yoursite.com/webhook-receiver",
+  "event": "task.completed"
+}
+```
+
+## Key Fields
+
+### Task
+- `id` - Task ID
+- `name` - Task name
+- `source` - Source connector name
+- `destination` - Destination connector name
+- `status` - active, inactive, running
+- `last_run` - ISO 8601 timestamp of last execution
+
+## Parameters
+
+- `status` - Filter tasks by status
+- `page` / `per_page` - Pagination controls
 
 ## When to Use
 
-- When running a multi-channel e-commerce operation that needs data synced across platforms
-- When WooCommerce orders or products need to flow into marketplaces or ERPs automatically
-- When you need e-commerce-specific integration logic beyond generic webhook tools
+- Keeping product catalogs in sync across multiple stores
+- Automating order data flow between platforms
+- Triggering downstream workflows when a sync task completes
+- Monitoring sync job health via status polling or webhooks
 
-## Related Integrations
+## Rate Limits
 
-- zapier.md
-- make.md
-- webhook-outgoing.md
-- custom-api.md
+- See SyncSpider pricing page for API call limits
+
+## Relevant Skills
+
+- operations:process-doc
+- data:explore-data
+- marketing:campaign-plan
+- engineering:documentation

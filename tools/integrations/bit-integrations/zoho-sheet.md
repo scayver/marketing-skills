@@ -1,67 +1,125 @@
 # Zoho Sheet
 
-Zoho Sheet is Zoho's cloud-based spreadsheet application for creating, editing, and sharing structured data online. Available as an Action in the Bit Integrations WordPress plugin.
+Online spreadsheet platform for workbooks, worksheets, cells, collaboration, and data automation.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Zoho-Sheet-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Append rows to a Zoho Sheet spreadsheet |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to spreadsheet column headers |
-
-## Action Events
-
-- Append row to spreadsheet
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: OAuth 2.0
-- **Required**: Authorize Bit Integrations via Zoho OAuth. Select the target Zoho Sheet workbook and worksheet.
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Zoho-oauthtoken {access_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zoho Sheet dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to Zoho Sheet Lead Log
-**Trigger:** WordPress form submission
-**Action:** Append a new row with lead details to a Zoho Sheet spreadsheet
-**Use case:** Maintain a shared Zoho Sheet lead log populated automatically from WordPress form submissions
+### List records
 
-### Recipe 2: WooCommerce Order to Sales Sheet
-**Trigger:** WooCommerce order completed
-**Action:** Append order data to a Zoho Sheet for tracking and reporting
-**Use case:** Build a running WooCommerce sales log in Zoho Sheet for teams using Zoho tools
+```bash
+GET https://www.zohoapis.com/records?limit=50
 
-### Recipe 3: Event Registration to Attendee Sheet
-**Trigger:** Event registration form submission
-**Action:** Append registrant details to a Zoho Sheet attendee list
-**Use case:** Track event sign-ups in a Zoho Sheet shared with coordinators
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Zoho Sheet as the Action.
-5. Authorize Bit Integrations with your Zoho account.
-6. Select the target workbook and worksheet.
-7. Map form fields to the spreadsheet column headers.
-8. Save and test.
+```bash
+GET https://www.zohoapis.com/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+```
+
+### Create record
+
+```bash
+POST https://www.zohoapis.com/records
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://www.zohoapis.com/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://www.zohoapis.com/events
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When your organization uses Zoho Suite and prefers Zoho Sheet over Google Sheets for data logging
-- When form submissions or WooCommerce orders should populate a Zoho Sheet automatically
-- When maintaining a shared Zoho Sheet database for team reporting or tracking
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- google-sheets.md
-- airtable.md
-- zoho-flow.md
-- zoho-crm.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- analytics
+- revops
+- business-strategy

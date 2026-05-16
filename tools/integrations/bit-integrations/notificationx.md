@@ -1,71 +1,72 @@
 # NotificationX
 
-NotificationX is a WordPress social proof and FOMO notification plugin for displaying live sales notifications, review alerts, and engagement stats. Available as an Action (Pro) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WordPress social proof and FOMO notification plugin for displaying live sales alerts, review notifications, and engagement stats to boost conversions.
 
-**Role:** Trigger/Action
-**Free Tier:** No
-**Category:** SEO and Analytics
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/04/NotificationX-1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/04/NotificationX.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires when a notification is clicked |
-| As Action | ✓ | Requires Pro plan; display notification via NotificationX |
-| Free Tier | — | Both roles require Pro |
-| Field Mapping | ✓ | Map event data to notification display fields |
-
-## Trigger Events
-
-- Notification clicked
-
-## Action Events
-
-- Display notification
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API; WordPress hook-based only |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and NotificationX must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress plugin-native (hook-based)
+- **Access**: Notification display is controlled via WordPress action hooks on the same WordPress installation; no external credentials required
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: WooCommerce Sale to Social Proof Notification
-**Trigger:** WooCommerce order completed
-**Action:** Display a NotificationX sales notification showing the recent purchase
-**Use case:** Automatically show live "someone just bought this" social proof notifications driven by actual WooCommerce orders
+NotificationX has no external REST API. Notifications are managed through the WordPress admin and PHP hooks.
 
-### Recipe 2: Form Sign-Up to Subscriber Notification
-**Trigger:** WordPress form submission (email opt-in)
-**Action:** Display a NotificationX notification showing a recent sign-up
-**Use case:** Show real-time social proof of new subscriber activity driven by actual form opt-ins
+### Trigger a custom notification (PHP — server-side)
+```php
+do_action('nx_notification', [
+    'title'   => 'Jane from Austin',
+    'content' => 'Just purchased Product X',
+    'link'    => 'https://yoursite.com/product-x',
+    'image'   => 'https://yoursite.com/avatar.jpg',
+    'time'    => current_time('timestamp'),
+]);
+```
 
-### Recipe 3: Notification Clicked to CRM or Analytics Event
-**Trigger:** NotificationX notification clicked
-**Action:** Log the click as a conversion event in Google Sheets or a CRM
-**Use case:** Track notification engagement by capturing click events and logging them in reporting tools
+### Hook into notification click event (PHP — server-side)
+```php
+add_action('nx_notification_clicked', function($notification_id, $user_data) {
+    // Log the click or trigger a downstream action
+}, 10, 2);
+```
 
-## Setup Steps
+### Get notification stats (via WP REST API for stored CPT data)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/nx_notification?status=publish
 
-1. Install Bit Integrations Pro and NotificationX on your WordPress site.
-2. Create the notification campaign in NotificationX.
-3. Go to Bit Integrations > Create Integration.
-4. For Trigger: Select NotificationX as the Trigger (notification clicked).
-5. For Action: Choose your trigger source, then select NotificationX as the Action (display notification).
-6. Map fields.
-7. Save and test.
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Notification
+- `title` - Notification headline (e.g., buyer name + location)
+- `content` - Notification body text (e.g., "purchased Product X")
+- `link` - URL the notification links to
+- `image` - Avatar or product image URL
+- `time` - Timestamp for "X minutes ago" display
 
 ## When to Use
 
-- When WooCommerce purchases or form sign-ups should drive real social proof notifications in NotificationX
-- When notification click events should be tracked in external analytics or CRM tools
-- When building a conversion-focused site where real-time FOMO notifications are driven by actual WordPress events
+- Displaying real-time social proof notifications driven by actual WooCommerce purchases
+- Showing opt-in or review notifications to reduce bounce rates and improve conversions
+- Tracking notification click events for conversion attribution
+- Running FOMO campaigns that display recent activity to new site visitors
 
-## Related Integrations
+## Rate Limits
 
-- advanced-ads.md
-- seopress.md
-- post-creation.md
-- google-sheets.md
+- No external API; display frequency is configured in the NotificationX admin settings
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- marketing:content-creation
+- marketing:performance-report

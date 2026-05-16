@@ -1,71 +1,98 @@
 # GiveWP
 
-GiveWP is the leading WordPress donation plugin for nonprofits and fundraising campaigns with payment gateway integration and donor management. Available as an Action (free) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+Leading WordPress donation plugin for nonprofits and fundraising campaigns with payment gateway integration and donor management.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes (Action free; Trigger requires Pro)
-**Category:** Gamification and Loyalty
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/02/GiveWp1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/GiveWp1-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires on donation events |
-| As Action | ✓ | Free; create donors |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map donor and donation data fields |
-
-## Trigger Events
-
-- Donation completed
-- Recurring donation created
-
-## Action Events
-
-- Create donor
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via GiveWP endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and GiveWP must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: API Key + Token (query parameters) or Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)` or query params
+- **Get token**: GiveWP Settings > API > Generate API Key
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Donation Completed to Email Marketing List
-**Trigger:** GiveWP donation completed
-**Action:** Add the donor to an email marketing list with a donor tag
-**Use case:** Automatically grow a donor email list and segment donors for targeted follow-up communications
+### List donors
+```bash
+GET https://yoursite.com/wp-json/give-api/v2/donors?key={api_key}&token={token}
+```
 
-### Recipe 2: Donation to CRM Contact
-**Trigger:** GiveWP donation completed
-**Action:** Create or update a CRM contact with donor name, email, and donation amount
-**Use case:** Keep CRM donor records synchronized with GiveWP donation activity automatically
+### Get single donor
+```bash
+GET https://yoursite.com/wp-json/give-api/v2/donors/{id}?key={api_key}&token={token}
+```
 
-### Recipe 3: Recurring Donation to Thank-You Campaign
-**Trigger:** GiveWP recurring donation created
-**Action:** Add the recurring donor to a special thank-you email sequence
-**Use case:** Recognize and nurture recurring donors with automated thank-you and stewardship campaigns
+### List donations
+```bash
+GET https://yoursite.com/wp-json/give-api/v2/donations?key={api_key}&token={token}&number=50
+```
 
-## Setup Steps
+### List donation forms
+```bash
+GET https://yoursite.com/wp-json/give-api/v2/forms?key={api_key}&token={token}
+```
 
-1. Install Bit Integrations and GiveWP on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select GiveWP as the Trigger and choose the event (donation completed, recurring created).
-4. For Action: Choose your trigger source, then select GiveWP as the Action (create donor).
-5. Map fields.
-6. Save and test.
+### Hook on donation completion (PHP)
+```php
+add_action('give_complete_purchase', function($payment_id, $payment_data) {
+    $donor_email = $payment_data['user_email'];
+    $amount      = $payment_data['price'];
+    // Sync to CRM or email platform
+}, 10, 2);
+```
+
+## Key Fields
+
+### Donor
+- `id` - Donor ID
+- `name` - Full name
+- `email` - Email address
+- `total_donations` - Lifetime donation count
+- `total_donated` - Total amount donated
+- `user_id` - WordPress user ID (if registered)
+
+### Donation
+- `id` - Donation/payment ID
+- `form_id` - Source donation form
+- `donor_id` - Linked donor
+- `amount` - Donation amount
+- `currency` - Currency code
+- `status` - publish (complete), pending, refunded
+- `date` - Donation date
+
+### Donation Form
+- `id` - Form post ID
+- `title` - Form name
+- `goal` - Fundraising goal amount
+- `total_income` - Amount raised
+
+## Parameters
+
+- `key` / `token` - API authentication params
+- `number` - Results per request (default 10)
+- `page` - Pagination
+- `form` - Filter donations by form ID
 
 ## When to Use
 
-- When GiveWP donations should trigger email marketing, CRM, or notification workflows
-- When new donors should be added to email lists or CRM records automatically
-- When recurring donors need to be recognized with special automated sequences
+- Add donors to email marketing lists after donating
+- Send automated thank-you sequences post-donation
+- Pull donation data for grant reporting
+- Segment donors by giving level for targeted campaigns
 
-## Related Integrations
+## Rate Limits
 
-- mailchimp.md
-- activecampaign.md
-- gamipress.md
-- google-sheets.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- marketing:email-sequence
+- finance:financial-statements
+- operations:status-report

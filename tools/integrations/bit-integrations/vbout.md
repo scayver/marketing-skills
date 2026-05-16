@@ -1,84 +1,90 @@
 # Vbout
 
-Vbout is a marketing automation and email platform offering multi-channel campaign management, lead scoring, and subscriber list tools for growing businesses. Available as an Action in the Bit Integrations WordPress plugin.
+Vbout is a multi-channel marketing automation platform offering email campaigns, social media management, lead tracking, and contact list tools.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Vbout.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Add subscriber to email list, apply label |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to email list
-- Apply label to subscriber
-- Update subscriber fields
-- Unsubscribe contact
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.vbout.com/1/` |
+| MCP | - | No official MCP server |
+| CLI | - | No official CLI |
+| SDK | - | No official SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: Vbout account settings > API section
-- **Required in Bit Integrations**: API Key
+- **Type**: API Key (query parameter)
+- **Parameter**: `?key={api_key}`
+- **Get token**: Vbout Dashboard > Account Settings > API Keys
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| List ID | The Vbout email list to add the subscriber to | Required |
+### List Email Lists
+```bash
+GET https://api.vbout.com/1/emailmarketing/lists.json?key={api_key}
+```
 
-## Common Workflow Recipes
+### Add a Contact to a List
+```bash
+POST https://api.vbout.com/1/emailmarketing/addcontact.json
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to Vbout email list with label
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Content-Type: application/x-www-form-urlencoded
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to Vbout customer email list
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+key={api_key}&listid={list_id}&email=user@example.com&firstname=Jane&lastname=Doe&status=active
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to Vbout email list with enrollment label
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Get Contact Details
+```bash
+GET https://api.vbout.com/1/emailmarketing/getcontact.json?key={api_key}&email=user@example.com
+```
 
-## Setup Steps
+### List Email Campaigns
+```bash
+GET https://api.vbout.com/1/emailmarketing/campaigns.json?key={api_key}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-4. Select Vbout as the action.
-5. Connect your Vbout account using your API Key.
-6. Select the email list to add subscribers to.
-7. Map the email field and any name fields.
-8. Save and test with a real form submission.
+### Get Campaign Stats
+```bash
+GET https://api.vbout.com/1/emailmarketing/campaignstats.json?key={api_key}&id={campaign_id}
+```
+
+## Key Fields
+
+### Contact
+- `id` - Contact ID
+- `email` - Contact email address
+- `firstname` / `lastname` - Name fields
+- `status` - active, unsubscribed, bounced
+- `listid` - List membership
+
+### Campaign
+- `id` - Campaign ID
+- `name` - Campaign name
+- `status` - draft, scheduled, sent
+- `sent` - Number of sends
+- `opens` / `clicks` - Engagement counts
+
+## Parameters
+
+- `key` - Required API key on all requests
+- `listid` - Target email list ID
+- `email` - Contact email address (for lookup or update)
+- `status` - Filter contacts by active/unsubscribed
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions automatically
-- Segmenting new subscribers by lead source using labels
-- Syncing WooCommerce buyers to a customer email list
-- Adding new members or course students to onboarding sequences
-- Replacing manual CSV imports from WordPress to your email platform
+- Adding new leads to Vbout email lists from form submissions
+- Triggering automation workflows based on contact activity
+- Pulling campaign performance data for marketing reports
+- Syncing CRM contact status changes to Vbout list membership
 
-## Related Integrations
+## Rate Limits
 
-- activecampaign.md
-- getresponse.md
-- mailchimp.md
+- See Vbout pricing page for API call limits per plan
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report
+- data:analyze

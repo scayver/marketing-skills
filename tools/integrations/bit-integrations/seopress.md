@@ -1,71 +1,119 @@
 # SEOPress
 
-SEOPress is a comprehensive WordPress SEO plugin for managing meta titles, descriptions, sitemaps, and social tags. Available as an Action (Pro) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WordPress SEO plugin for titles, meta descriptions, XML sitemaps, schema, and redirects.
 
-**Role:** Trigger/Action
-**Free Tier:** No
-**Category:** SEO and Analytics
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/02/SEOPress.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/SEOPress-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires when posts are published or updated |
-| As Action | ✓ | Requires Pro plan; update SEO metadata on posts |
-| Free Tier | — | Both roles require Pro |
-| Field Mapping | ✓ | Map fields to SEO title, description, and other metadata |
-
-## Trigger Events
-
-- Post published
-- Post updated
-
-## Action Events
-
-- Update SEO metadata (title, meta description) on a post
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and SEOPress must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Content Submission Form to SEO Meta Update
-**Trigger:** WordPress content submission form
-**Action:** Update the SEOPress meta title and description on the created post
-**Use case:** Allow content contributors to set SEO metadata via a form that automatically writes to SEOPress fields
+### Check plugin status
 
-### Recipe 2: Post Published to External SEO Notification
-**Trigger:** SEOPress post published
-**Action:** Send a notification to an SEO team Slack channel or create an Asana task for SEO review
-**Use case:** Alert the SEO team automatically whenever new content is published for review and optimization
+```bash
+wp plugin status seopress
+```
 
-### Recipe 3: Bulk SEO Meta Update from Spreadsheet Form
-**Trigger:** WordPress form submission with SEO fields
-**Action:** Update SEOPress metadata on a target post
-**Use case:** Enable admins to update post SEO metadata via a form without accessing the post editor
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations Pro and SEOPress on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select SEOPress as the Trigger and choose the event (post published, post updated).
-4. For Action: Choose your trigger source, then select SEOPress as the Action.
-5. Map fields to SEO title and description.
-6. Save and test.
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/seopress/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='seopress' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- When form-based content workflows should automatically set or update SEOPress metadata
-- When post publishing events should trigger SEO team notifications or review tasks
-- When managing SEO metadata updates through Bit Integrations workflows rather than manual post editing
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- advanced-custom-fields.md
-- asana.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- seo-audit
+- seo-content-strategy
+- schema

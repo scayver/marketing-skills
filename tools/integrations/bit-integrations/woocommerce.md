@@ -1,87 +1,119 @@
 # WooCommerce
 
-WooCommerce is the most widely used WordPress eCommerce plugin, powering product stores, subscriptions, digital downloads, and online marketplaces. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WooCommerce is the most widely used WordPress eCommerce platform, powering product stores, digital downloads, subscriptions, and online marketplaces.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes — both Trigger and Action are free
-**Category:** eCommerce and Payments
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/WooCommerce-1.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/WooCommerce.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on order status changes, subscription events, and new customer registration |
-| As Action | ✓ | Create orders, update order status, create and update products, create coupons |
-| Free Tier | ✓ | Free for both Trigger and Action |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Order completed — fires when a WooCommerce order reaches "Completed" status
-- Order pending — fires when an order is placed but payment is pending
-- Order failed — fires when an order payment fails
-- Order refunded — fires when an order is refunded
-- Order cancelled — fires when an order is cancelled
-- Subscription activated — fires when a WooCommerce Subscription is activated
-- New customer registered — fires when a new customer account is created
-
-## Action Events
-
-- Create order — programmatically create a WooCommerce order
-- Update order status — change the status of an existing order
-- Create product — add a new product to the WooCommerce store
-- Update product — modify an existing product's details
-- Create coupon — generate a new WooCommerce coupon code
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `/wp-json/wc/v3/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI with WooCommerce commands |
+| SDK | ✓ | Official PHP, Python, Node.js, Ruby SDKs |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WooCommerce must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: Consumer Key + Consumer Secret (HTTP Basic Auth)
+- **Header**: `Authorization: Basic {base64(consumer_key:consumer_secret)}`
+- **Get token**: WooCommerce Admin > Settings > Advanced > REST API > Add Key
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add customer to CRM on order completed
-**Trigger:** WooCommerce — Order completed
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** Customer email, first name, last name, order total, product name
-**Use case:** Automatically create or update CRM contacts with purchase data every time a sale is completed
+### List recent orders
+```
+GET https://yoursite.com/wp-json/wc/v3/orders?status=completed&per_page=50
 
-### Recipe 2: Enroll customer in LMS course on purchase
-**Trigger:** WooCommerce — Order completed
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** Customer email, product linked to course
-**Use case:** Automatically grant course access when a customer purchases the associated product
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Send order data to email platform and generate coupon
-**Trigger:** WooCommerce — Order completed
-**Action:** Mailchimp — Add to list AND WooCommerce — Create coupon
-**Key fields mapped:** Customer email, order total, discount percentage
-**Use case:** Add buyers to your email list and generate a personal follow-up coupon to encourage repeat purchases
+### Get a specific order
+```
+GET https://yoursite.com/wp-json/wc/v3/orders/{order_id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select WooCommerce as the trigger or action.
-4. For triggers, choose the event (e.g., Order Completed) and optionally filter by product or category.
-5. For actions, choose the action type (e.g., Create Order or Create Coupon) and configure the fields.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (place a test order or register a test customer).
+### Create a coupon
+```
+POST https://yoursite.com/wp-json/wc/v3/coupons
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "code": "WELCOME20",
+  "discount_type": "percent",
+  "amount": "20",
+  "individual_use": true,
+  "usage_limit": 1
+}
+```
+
+### List products by category
+```
+GET https://yoursite.com/wp-json/wc/v3/products?category=12&per_page=100
+
+Authorization: Basic {base64_credentials}
+```
+
+### Update order status
+```
+PUT https://yoursite.com/wp-json/wc/v3/orders/{order_id}
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"status": "completed"}
+```
+
+## Key Fields
+
+### Order Object
+- `id` - Order ID
+- `status` - `pending`, `processing`, `on-hold`, `completed`, `cancelled`, `refunded`, `failed`
+- `total` - Order total as string
+- `billing` - Customer billing address object
+- `line_items` - Array of purchased products
+- `customer_id` - WordPress user ID (0 for guest)
+
+### Product Object
+- `id` - Product ID
+- `name` - Product name
+- `sku` - Stock keeping unit
+- `price` - Current price
+- `stock_status` - `instock`, `outofstock`, `onbackorder`
+- `categories` - Array of category objects
+
+### Customer Object
+- `id` - Customer ID
+- `email` - Customer email
+- `first_name` / `last_name` - Name fields
+- `orders_count` - Total number of orders
+- `total_spent` - Lifetime spend as string
+
+## Parameters
+
+- `status` - Filter orders by status
+- `per_page` - Results per page (max 100)
+- `after` / `before` - ISO 8601 date range filters
+- `customer` - Filter orders by customer ID
+- `category` - Filter products by category ID
 
 ## When to Use
 
-- You want to push WooCommerce order or customer data into your CRM or email platform automatically
-- You need to enroll buyers in LMS courses after purchase without a separate enrollment plugin
-- You want to generate personalized coupons or update order statuses from external triggers
-- You need WooCommerce to serve as the central trigger hub for a multi-tool automation stack
+- Querying purchase data for CRM sync or analytics
+- Creating coupons programmatically for marketing campaigns
+- Building order fulfillment integrations with 3PL providers
+- Syncing product catalog with external inventory systems
+- Generating customer LTV and purchase frequency reports
 
-## Related Integrations
+## Rate Limits
 
-- surecart.md
-- easy-digital-downloads.md
-- woocommerce-subscriptions.md
-- woocommerce-memberships.md
-- memberpress.md
-- learndash.md
+- No built-in WooCommerce rate limits; subject to server capacity
+- Recommended: max 25 concurrent requests; use `per_page=100` with pagination
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- data:analyze
+- sales:pipeline-review

@@ -1,68 +1,102 @@
 # Notion
 
-Notion is an all-in-one workspace for notes, databases, wikis, and project management. Available as an Action in the Bit Integrations WordPress plugin.
+All-in-one workspace for notes, wikis, databases, and project management with a flexible block-based editor and relational database capabilities.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Notion.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create database pages in Notion |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map form fields to any Notion database property |
-
-## Action Events
-
-- Create database page (add a new row/entry to a Notion database)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `https://api.notion.com/v1/` |
+| MCP | ✓ | Official Notion MCP server available |
+| CLI | - | No official CLI |
+| SDK | ✓ | Official JavaScript SDK (`@notionhq/client`) |
 
 ## Authentication
 
-- **Type**: Internal Integration Token
-- **Required**: Create an internal integration at notion.so/my-integrations and copy the token. Share the target Notion database with the integration. Enter the token in Bit Integrations and select the target database.
+- **Type**: Bearer Token (Internal Integration)
+- **Header**: `Authorization: Bearer {integration_token}` + `Notion-Version: 2022-06-28`
+- **Get token**: notion.so/my-integrations > New Integration > copy Internal Integration Token, then share target database with the integration
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Lead Form to Notion CRM Database
-**Trigger:** WordPress lead form submission
-**Action:** Create a new page in a Notion CRM database with contact details
-**Use case:** Use a Notion database as a lightweight CRM, populated automatically from WordPress forms
+### Query a database
+```bash
+POST https://api.notion.com/v1/databases/{database_id}/query
 
-### Recipe 2: Job Application to Notion Applicant Tracker
-**Trigger:** Job application form submission
-**Action:** Create a Notion database entry with applicant name, email, and application details
-**Use case:** Manage hiring pipelines in Notion with automatic population from application forms
+Authorization: Bearer {integration_token}
+Notion-Version: 2022-06-28
+Content-Type: application/json
 
-### Recipe 3: Event Registration to Notion Attendee List
-**Trigger:** Event registration form submission
-**Action:** Add a new row to a Notion attendee tracking database
-**Use case:** Maintain a live attendee list in Notion updated automatically as registrations come in
+{"filter": {"property": "Status", "select": {"equals": "In Progress"}}}
+```
 
-## Setup Steps
+### Create a page (add row to database)
+```bash
+POST https://api.notion.com/v1/pages
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Notion as the Action.
-5. At notion.so/my-integrations, create an internal integration and copy the token.
-6. Share your target Notion database with the integration (Share > Invite > select integration).
-7. Enter the token in Bit Integrations and select the target database.
-8. Map fields to database properties: Title, Email, Phone, Date, Status, Number, Select, etc.
-9. Save and test.
+Authorization: Bearer {integration_token}
+Notion-Version: 2022-06-28
+Content-Type: application/json
+
+{"parent": {"database_id": "{database_id}"}, "properties": {"Name": {"title": [{"text": {"content": "New Entry"}}]}, "Email": {"email": "user@example.com"}, "Status": {"select": {"name": "New"}}}}
+```
+
+### Update a page
+```bash
+PATCH https://api.notion.com/v1/pages/{page_id}
+
+Authorization: Bearer {integration_token}
+Notion-Version: 2022-06-28
+Content-Type: application/json
+
+{"properties": {"Status": {"select": {"name": "Completed"}}}}
+```
+
+### Search pages and databases
+```bash
+POST https://api.notion.com/v1/search
+
+Authorization: Bearer {integration_token}
+Notion-Version: 2022-06-28
+Content-Type: application/json
+
+{"query": "project name", "filter": {"value": "database", "property": "object"}}
+```
+
+## Key Fields
+
+### Page / Database Row
+- `id` - Page UUID
+- `properties` - Object of property type objects (title, rich_text, select, date, email, number, etc.)
+- `parent` - Parent object (database_id or page_id)
+- `created_time` - ISO 8601 creation timestamp
+- `last_edited_time` - Last edit timestamp
+
+### Database
+- `id` - Database UUID
+- `title` - Database title (array of rich text objects)
+- `properties` - Schema of property definitions
+
+## Parameters
+
+- `filter` - Filter object for database queries
+- `sorts` - Array of sort definitions
+- `page_size` - Results per page (max 100)
+- `start_cursor` - Pagination cursor
 
 ## When to Use
 
-- When your team uses Notion databases as a CRM, tracker, or data repository
-- When you want form submissions or WordPress events to automatically populate a Notion database
-- When building lightweight project or applicant tracking in Notion from WordPress data sources
+- Using Notion databases as a lightweight CRM, project tracker, or content calendar
+- Automatically adding rows to Notion databases from form submissions or API events
+- Querying Notion databases to pull structured data into reports or dashboards
+- Building wiki-style knowledge bases with programmatically updated content
 
-## Related Integrations
+## Rate Limits
 
-- airtable.md
-- google-sheets.md
-- clickup.md
-- asana.md
+- 3 requests per second per integration; see Notion API documentation
+
+## Relevant Skills
+
+- product-management:write-spec
+- marketing:content-creation
+- operations:process-doc

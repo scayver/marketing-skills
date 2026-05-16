@@ -1,73 +1,101 @@
 # Ultimate Member
 
-Ultimate Member is a WordPress plugin for building user profiles, member directories, and community features with role-based access control and custom profile fields. Available as Action in the Bit Integrations WordPress plugin.
+Ultimate Member is a WordPress plugin for building user profiles, member directories, and community features with role-based access control and custom profile fields.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** Membership and Access Control
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Ultimate-Member.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Assign role to user, update user meta |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Action Events
-
-- Assign role to user — set or change a WordPress user's role via Ultimate Member
-- Update user meta — update custom profile fields stored in Ultimate Member for a user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/wp/v2/users/` and `/wp-json/um-api/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI with WP user commands |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Ultimate Member must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Assign role on membership purchase
-**Trigger:** MemberPress / WooCommerce — Membership purchased or order completed
-**Action:** Ultimate Member — Assign role to user
-**Key fields mapped:** User email, role tied to membership or product
-**Use case:** Automatically promote a user to a higher-access role when they purchase a membership or product
+### List Members (WordPress Users)
+```bash
+GET https://yoursite.com/wp-json/wp/v2/users?roles=subscriber
 
-### Recipe 2: Update profile field from form submission
-**Trigger:** Gravity Forms / Bit Form — Form submitted
-**Action:** Ultimate Member — Update user meta
-**Key fields mapped:** Email, custom profile fields (company, phone, bio, etc.)
-**Use case:** Keep Ultimate Member profile data up to date when users submit forms
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Assign role from LMS course completion
-**Trigger:** LearnDash / TutorLMS — Course completed
-**Action:** Ultimate Member — Assign role to user
-**Key fields mapped:** User email, role to assign on completion
-**Use case:** Promote users to a "Graduate" or "Certified" role in Ultimate Member after completing a course
+### Get a Single User's Profile
+```bash
+GET https://yoursite.com/wp-json/wp/v2/users/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Ultimate Member as the action.
-4. Choose Assign Role to User or Update User Meta.
-5. Select the target role or the user meta key to update.
-6. Map the user email from your trigger source to Ultimate Member's user field.
-7. Save and test with a real event (complete a test purchase, form submission, or course).
+### Create a User
+```bash
+POST https://yoursite.com/wp-json/wp/v2/users
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "username": "jdoe",
+  "email": "jane@example.com",
+  "password": "SecurePass1!",
+  "roles": ["subscriber"]
+}
+```
+
+### Update User Meta (Custom Profile Fields)
+```bash
+POST https://yoursite.com/wp-json/wp/v2/users/{id}
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"meta": {"company": "Acme Corp", "phone": "+15551234567"}}
+```
+
+### Get User Role via UM API
+```bash
+GET https://yoursite.com/wp-json/um-api/v1/user/{id}
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### User
+- `id` - WordPress user ID
+- `username` - Login name
+- `email` - Email address
+- `roles` - Array of WordPress role slugs
+- `meta.account_status` - Ultimate Member account status (approved, pending, inactive)
+- `meta.um_role` - Ultimate Member role assigned to user
+
+## Parameters
+
+- `roles` - Filter users by WordPress role
+- `per_page` / `page` - Pagination controls
+- `search` - Text search across username and email
+- `meta_key` / `meta_value` - Filter by custom user meta
 
 ## When to Use
 
-- You use Ultimate Member for community profiles and need to assign roles based on purchases or course completions
-- You want to keep Ultimate Member profile fields synced with form submission data
-- You need to promote or demote users programmatically based on external events
-- You integrate Ultimate Member into a broader onboarding or community access workflow
+- Automating user account approval based on form submissions
+- Syncing member profile data to a CRM
+- Granting or revoking UM roles based on purchase events
+- Reporting on member registration counts and account statuses
 
-## Related Integrations
+## Rate Limits
 
-- memberpress.md
-- profilegrid.md
-- peepso.md
-- learndash.md
-- user-registration.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- operations:process-doc
+- data:analyze
+- customer-support:customer-research

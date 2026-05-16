@@ -1,78 +1,100 @@
 # WP Courseware
 
-WP Courseware is a drag-and-drop WordPress course builder plugin with drip content, quizzes, and gradebooks. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WP Courseware is a drag-and-drop WordPress LMS plugin with drip content scheduling, quizzes, gradebooks, and certificate generation for online course creators.
 
-**Role:** Trigger/Action
-**Free Tier:** Action: Yes — Trigger: No
-**Category:** LMS and Course Platforms
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/02/WpCourseware.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/02/WpCourseware-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on enrollment, unit completion, and course completion events |
-| As Action | ✓ | Enroll or unenroll students |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Course enrollment — fires when a student enrolls in a course
-- Unit completion — fires when a student completes a unit (module)
-- Course completion — fires when a student completes the full course
-
-## Action Events
-
-- Enroll student — add a WordPress user to a WP Courseware course
-- Unenroll student — remove a student from a WP Courseware course
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at `/wp-json/wp-courseware/v1/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI |
+| SDK | - | Not available |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: WP Courseware must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress Application Password or API Key
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Tag student in email platform on enrollment
-**Trigger:** WP Courseware — Course enrollment
-**Action:** ConvertKit / Mailchimp — Add tag or add to list
-**Key fields mapped:** Student email, course name, enrollment date
-**Use case:** Automatically start a welcome or orientation email sequence for new enrollees
+### List all courses
+```
+GET https://yoursite.com/wp-json/wp-courseware/v1/courses
 
-### Recipe 2: Notify team on course completion
-**Trigger:** WP Courseware — Course completion
-**Action:** Slack or email notification
-**Key fields mapped:** Student name, course name, completion date
-**Use case:** Alert your team or customer success department when students finish a course
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Enroll student after membership purchase
-**Trigger:** MemberPress / WooCommerce — Membership purchased or order completed
-**Action:** WP Courseware — Enroll student
-**Key fields mapped:** Customer email, course linked to product or membership
-**Use case:** Automate course access grants from external purchase systems
+### Get enrolled students for a course
+```
+GET https://yoursite.com/wp-json/wp-courseware/v1/courses/{course_id}/students
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select WP Courseware as the trigger or action.
-4. For triggers, choose the event (e.g., Course Completion) and select the course.
-5. For actions, choose Enroll Student or Unenroll Student and select the course.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (enroll a test student or complete a test unit).
+### Enroll a student in a course
+```
+POST https://yoursite.com/wp-json/wp-courseware/v1/courses/{course_id}/students
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "user_id": 42
+}
+```
+
+### Get student progress for a course
+```
+GET https://yoursite.com/wp-json/wp-courseware/v1/students/{user_id}/progress?course_id={course_id}
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Course Object
+- `id` - Course ID
+- `title` - Course title
+- `status` - `publish`, `draft`
+- `modules` - Array of module IDs
+- `enrollment_count` - Number of enrolled students
+
+### Student Progress Object
+- `user_id` - WordPress user ID
+- `course_id` - Course ID
+- `progress` - Percentage complete (0-100)
+- `status` - `not_started`, `in_progress`, `completed`
+- `completed_units` - Array of completed unit IDs
+- `completion_date` - Date completed (if applicable)
+
+### Module/Unit Object
+- `id` - Unit ID
+- `title` - Unit title
+- `module_id` - Parent module ID
+- `type` - `unit`, `quiz`
+
+## Parameters
+
+- `course_id` - Filter by specific course
+- `user_id` - Filter by student
+- `status` - Filter by enrollment or progress status
 
 ## When to Use
 
-- You want to automatically add WP Courseware students to your email platform
-- You need to enroll students from WooCommerce purchases or membership activations
-- You want to send notifications when students hit completion milestones
-- You need to remove access for students who cancel or churn
+- Enrolling students programmatically after external purchases or registrations
+- Querying completion data to trigger certificates or next-step communications
+- Building course progress reports for instructors or administrators
+- Syncing enrollment status with CRM or email platforms for targeted follow-up
 
-## Related Integrations
+## Rate Limits
 
-- learndash.md
-- tutorlms.md
-- memberpress.md
-- woocommerce.md
+- Subject to WordPress server limits; no hard API rate limit
+- Batch enrollment operations should include delays to avoid server overload
+
+## Relevant Skills
+
+- marketing:email-sequence
+- data:analyze
+- customer-support:customer-research

@@ -1,86 +1,111 @@
 # CompanyHub CRM
 
-CompanyHub is a customizable CRM platform that lets businesses model their sales process with custom objects, fields, and automated follow-ups without coding. Available as an Action in the Bit Integrations WordPress plugin.
+Customizable CRM platform that lets businesses model their own sales process with custom objects, fields, and automated follow-up sequences without writing code.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** CRM
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/CompanyHub1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Create Leads, Companies, and Deals in CompanyHub |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map WordPress data fields to CompanyHub fields |
-
-## Action Events
-
-- Create Lead
-- Create Company
-- Create Deal
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API with JSON; API key authentication |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key
-- **Where to get credentials**: CompanyHub account settings > API — generate and copy the API key
-- **Required fields in Bit Integrations**: API Key
+- **Type**: API Key (request header)
+- **Header**: `X-API-KEY: {api_key}`
+- **Get token**: CompanyHub > Settings > API Keys > Generate Key
 
-## Field Mapping Reference
+## Common Agent Operations
 
-Common fields available for mapping when this integration is used as an Action:
+### Get all contacts (leads)
+```
+GET https://api.companyhub.com/v1/contacts
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| name | Full name of the lead or contact | Required |
-| email | Email address | Optional; used for deduplication |
-| phone | Phone number | Optional |
-| company | Associated company name | Optional |
-| lead_source | Origin of the lead | Optional; e.g., Web, Referral |
+X-API-KEY: {api_key}
+Content-Type: application/json
+```
 
-## Common Workflow Recipes
+### Create a contact
+```
+POST https://api.companyhub.com/v1/contacts
 
-### Recipe 1: Contact Form to CompanyHub Lead
-**Trigger:** WPForms or Gravity Forms submission
-**Action:** Create Lead in CompanyHub
-**Key fields mapped:** Name, Email, Phone, Company, Lead Source = Web
-**Use case:** Automatically add website inquiries as CompanyHub leads so your sales team can track and follow up without manual entry.
+X-API-KEY: {api_key}
+Content-Type: application/json
 
-### Recipe 2: Partner Inquiry to CompanyHub Company
-**Trigger:** Elementor partner inquiry form
-**Action:** Create Company in CompanyHub
-**Key fields mapped:** Company Name, Email, Phone, Lead Source
-**Use case:** Add partner or B2B inquiry submissions directly as Company records in CompanyHub for account-level tracking.
+{
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "phone": "+1 555 000 0000",
+  "company": "Acme Corp",
+  "lead_source": "Website"
+}
+```
 
-### Recipe 3: Quote Request to CompanyHub Deal
-**Trigger:** Gravity Forms quote request submission
-**Action:** Create Deal in CompanyHub
-**Key fields mapped:** Name, Email, Company, Deal Name, Value
-**Use case:** Push pricing and quote requests into CompanyHub as deals so your team can track them through the sales process.
+### Create a deal
+```
+POST https://api.companyhub.com/v1/deals
 
-## Setup Steps
+X-API-KEY: {api_key}
+Content-Type: application/json
 
-1. Install Bit Integrations on your WordPress site (free version from wordpress.org/plugins/bit-integrations/).
-2. Go to Bit Integrations > Create Integration in your WordPress dashboard.
-3. Select your trigger source (the form plugin or WordPress event that starts the workflow).
-4. Select CompanyHub CRM as the action.
-5. Connect your CompanyHub account using your API key from CompanyHub account settings.
-6. Select the object type (Lead, Company, Deal) you want to create.
-7. Map the fields from your trigger to CompanyHub fields.
-8. Save and submit a test entry to verify data arrives correctly.
+{
+  "name": "Website Redesign Project",
+  "contact_id": "abc123",
+  "amount": 8000,
+  "stage": "Proposal",
+  "expected_close_date": "2026-07-01"
+}
+```
+
+### Update a contact
+```
+PUT https://api.companyhub.com/v1/contacts/{contact_id}
+
+X-API-KEY: {api_key}
+Content-Type: application/json
+
+{"company": "New Corp", "lead_source": "Referral"}
+```
+
+## Key Fields
+
+### Contact
+- `name` - Full name (required)
+- `email` - Email address; used for deduplication
+- `phone` - Phone number
+- `company` - Associated company name
+- `lead_source` - Origin of the lead (e.g., Website, Referral, Ad)
+- Custom fields defined in your CompanyHub schema are also available
+
+### Deal
+- `name` - Deal title
+- `contact_id` - Associated contact record ID
+- `amount` - Deal value
+- `stage` - Pipeline stage name
+- `expected_close_date` - ISO 8601 date
+
+## Parameters
+
+- `contact_id` - Required for update and deal association
+- `deal_id` - Required for deal updates and retrieval
+- `page` - Pagination page number
+- `per_page` - Results per page
 
 ## When to Use
 
-- You use CompanyHub as your CRM and need website leads to enter it automatically
-- You want to map custom form fields to custom CompanyHub objects or fields
-- You need company-level records created from B2B inquiry forms on your website
-- You track deals in CompanyHub and want pricing requests to feed the pipeline directly
+- Automatically creating CRM contacts from web form submissions
+- Pushing quote or proposal requests into a customized deal pipeline
+- Syncing B2B inquiry data (company, role) into company-level records
+- Building a lead intake workflow where each form maps to custom CRM fields
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- salesmate.md
-- nutshell-crm.md
-- freshsales.md
+- See [companyhub.com](https://companyhub.com) or contact support for current limits
+
+## Relevant Skills
+
+- crm-management
+- lead-generation
+- sales-brief

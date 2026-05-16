@@ -1,73 +1,98 @@
 # Fluent Support
 
-Fluent Support is a WordPress-native customer support and helpdesk plugin for managing tickets and customer conversations without leaving WordPress. Available as an Action (free) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WordPress-native customer support and helpdesk plugin for managing tickets and conversations without leaving WordPress.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes (Action free; Trigger requires Pro)
-**Category:** Support and Helpdesk
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent_Support1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent_Support1-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires on ticket lifecycle events |
-| As Action | ✓ | Free; create support tickets |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map form fields to Fluent Support ticket fields |
-
-## Trigger Events
-
-- Ticket created
-- Ticket resolved
-- Reply added to ticket
-
-## Action Events
-
-- Create ticket
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via Fluent Support endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and Fluent Support must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Contact Form to Fluent Support Ticket
-**Trigger:** WordPress contact or support form submission
-**Action:** Create a Fluent Support ticket with the submitter's message and contact details
-**Use case:** Route website inquiries directly into Fluent Support for agent handling without leaving WordPress
+### List tickets
+```bash
+GET https://yoursite.com/wp-json/fluent-support/v2/tickets
 
-### Recipe 2: Ticket Resolved to CRM Update
-**Trigger:** Fluent Support ticket resolved
-**Action:** Update the customer's CRM record with a resolved ticket note or tag
-**Use case:** Keep CRM contact history in sync with support resolution events automatically
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: WooCommerce Order to Auto-Support Ticket
-**Trigger:** WooCommerce order event (refund requested, order on hold, etc.)
-**Action:** Create a Fluent Support ticket for the customer
-**Use case:** Automatically open a support ticket for order issues that require agent review
+### Get single ticket
+```bash
+GET https://yoursite.com/wp-json/fluent-support/v2/tickets/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations and Fluent Support on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select Fluent Support as the Trigger and choose the event.
-4. For Action: Choose your trigger source, then select Fluent Support as the Action.
-5. Select the action event (create ticket).
-6. Map fields to ticket fields.
-7. Save and test.
+### Create ticket
+```bash
+POST https://yoursite.com/wp-json/fluent-support/v2/tickets
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "title": "Cannot access my account",
+  "content": "I keep getting a 403 error.",
+  "customer_id": 12,
+  "mailbox_id": 1
+}
+```
+
+### List agents
+```bash
+GET https://yoursite.com/wp-json/fluent-support/v2/agents
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Ticket
+- `id` - Ticket ID
+- `title` - Ticket subject
+- `content` - First message body
+- `status` - open, closed, pending, resolved
+- `priority` - low, medium, high
+- `customer_id` - Linked customer
+- `agent_id` - Assigned agent
+- `mailbox_id` - Support inbox
+- `created_at` - ISO 8601 timestamp
+
+### Customer
+- `id` - Customer ID
+- `first_name` / `last_name` - Name
+- `email` - Email address
+
+## Parameters
+
+- `status` - Filter tickets by status
+- `priority` - Filter by priority
+- `agent_id` - Filter by assigned agent
+- `per_page` / `page` - Pagination
 
 ## When to Use
 
-- When WordPress forms should create Fluent Support tickets for team handling
-- When support ticket lifecycle events should update CRM records or send notifications
-- When building a fully WordPress-native support workflow without external helpdesk tools
+- Escalate tickets to external tools based on priority
+- Sync customer data with a CRM
+- Generate support KPI reports
+- Alert team channels on new high-priority tickets
 
-## Related Integrations
+## Rate Limits
 
-- freshdesk.md
-- zoho-desk.md
-- slack.md
-- fluentboards.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- customer-support:ticket-triage
+- customer-support:draft-response
+- operations:status-report

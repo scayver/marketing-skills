@@ -1,76 +1,104 @@
 # Creator LMS
 
-Creator LMS is a WordPress LMS plugin built for content creators and course sellers who need a streamlined course delivery experience. Available as both Trigger and Action in the Bit Integrations WordPress plugin.
+WordPress LMS plugin built for content creators and course sellers that provides streamlined course creation, student management, and progress tracking.
 
-**Role:** Trigger/Action
-**Free Tier:** No — both Trigger and Action require Pro
-**Category:** LMS and Course Platforms
-**Icon:** Action: `https://bit-integrations.com/wp-content/uploads/2026/04/CreatorLMS.svg` — Trigger: `https://bit-integrations.com/wp-content/uploads/2026/04/CreatorLMS-1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on course and student activity events |
-| As Action | ✓ | Manage course enrollment and student data |
-| Free Tier | — | Requires Pro for both Trigger and Action |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Student course activity events (refer to Bit Integrations documentation for the current full list of supported trigger events)
-
-## Action Events
-
-- Course enrollment and student management actions (refer to Bit Integrations documentation for the current full list of supported action events)
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API |
+| MCP | - | Not available |
+| CLI | - | WP-CLI available for WordPress-level operations |
+| SDK | - | Not available |
+| WordPress REST | ✓ | REST endpoints at /wp-json/creator-lms/v1/ |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Creator LMS must be installed and active; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No API keys required; both plugins must be on the same WordPress site
+- **Type**: WordPress application password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Sync new enrollments to email platform
-**Trigger:** Creator LMS — Student enrolled
-**Action:** ConvertKit / ActiveCampaign — Add subscriber or tag
-**Key fields mapped:** Student email, course name, enrollment date
-**Use case:** Automatically add new Creator LMS students to your email platform for course-specific sequences
+### List all courses
+```
+GET /wp-json/creator-lms/v1/courses
 
-### Recipe 2: Enroll student after external purchase
-**Trigger:** WooCommerce / SureCart — Order or purchase completed
-**Action:** Creator LMS — Enroll student in course
-**Key fields mapped:** Customer email, product linked to course
-**Use case:** Grant Creator LMS access when students purchase through an external checkout
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Notify on course completion
-**Trigger:** Creator LMS — Course completed
-**Action:** HubSpot — Update contact or add note
-**Key fields mapped:** Student email, course name, completion date
-**Use case:** Trigger CRM updates or success team notifications when students complete training
+### Get course details
+```
+GET /wp-json/creator-lms/v1/courses/{course_id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Select Creator LMS as the trigger or action.
-4. For triggers, choose the relevant student or course event.
-5. For actions, choose the enrollment or student management action and select the target course.
-6. Map the relevant fields to the connected platform.
-7. Save and test with a real event (enroll a test student or complete a test lesson).
+### Enroll a student in a course
+```
+POST /wp-json/creator-lms/v1/enrollments
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{"user_id": 42, "course_id": 17}
+```
+
+### Get enrollments for a course
+```
+GET /wp-json/creator-lms/v1/courses/{course_id}/students
+
+Authorization: Basic {base64_credentials}
+```
+
+### Hook into enrollment event (PHP)
+```php
+add_action('creator_lms_student_enrolled', function($user_id, $course_id) {
+    // Trigger downstream action on enrollment
+}, 10, 2);
+```
+
+## Key Fields
+
+### Course
+- `id` - Course post ID
+- `title` - Course name
+- `status` - publish / draft
+- `price` - Course price
+- `instructor_id` - WordPress user ID of the instructor
+
+### Enrollment
+- `user_id` - WordPress user ID of the student
+- `course_id` - Creator LMS course ID
+- `enrolled_at` - Enrollment timestamp
+- `status` - active / completed / cancelled
+
+### Student Progress
+- `user_id` - Student identifier
+- `course_id` - Course identifier
+- `completed_lessons` - Count or array of completed lesson IDs
+- `completion_percentage` - Progress as a percentage
+
+## Parameters
+
+- `course_id` - Targets a specific course for enrollment or progress queries
+- `user_id` - Targets a specific student
+- `per_page` - Results per page for list endpoints
+- `page` - Pagination page number
 
 ## When to Use
 
-- You sell courses via Creator LMS and want to sync student data with your email or CRM platform
-- You need to enroll students from external checkout flows
-- You want to trigger automations based on student progress milestones
-- You need to integrate Creator LMS into a multi-step onboarding sequence
+- Enrolling students programmatically after purchase or registration
+- Syncing new enrollment data to email marketing or CRM platforms
+- Triggering automations (certificate delivery, Slack notification) on course completion
+- Pulling student progress data for reporting or success team workflows
 
-## Related Integrations
+## Rate Limits
 
-- learndash.md
-- tutorlms.md
-- masterstudy-lms.md
-- woocommerce.md
-- surecart.md
+- No external API; limits governed by WordPress server capacity
+
+## Relevant Skills
+
+- course-creation
+- email-marketing
+- lead-generation

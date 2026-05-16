@@ -1,66 +1,102 @@
 # Advanced Ads
 
-Advanced Ads is a WordPress ad management plugin for creating, scheduling, and rotating ads from any ad network or custom HTML. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WordPress ad management plugin for creating, scheduling, targeting, and rotating advertisements from any ad network or custom HTML/JavaScript.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** SEO and Analytics
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Advanced-Ads.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; rotate or update ad groups in Advanced Ads |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map event data to ad group configuration |
-
-## Action Events
-
-- Rotate or update ad groups
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No public external REST API |
+| MCP | - | Not available |
+| CLI | - | No WP-CLI support |
+| SDK | - | WordPress PHP hooks only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Advanced Ads must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress admin access
+- **Header**: N/A — plugin managed entirely within WordPress admin
+- **Get token**: N/A — configure via WordPress Admin > Advanced Ads
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: User Role Change to Ad Group Rotation
-**Trigger:** WordPress user role update (from subscriber to member)
-**Action:** Rotate or switch the ad group shown to the user in Advanced Ads
-**Use case:** Show different ad sets or remove ads for paid members after they upgrade their account
+Advanced Ads has no external REST API. Management is done through WordPress admin or PHP hooks.
 
-### Recipe 2: Purchase to Ad-Free Experience
-**Trigger:** WooCommerce order completed (ad-removal product)
-**Action:** Update Advanced Ads settings to suppress ads for the purchasing user
-**Use case:** Automatically enable an ad-free experience for users who purchase an ad-removal subscription
+### Register an ad group via PHP filter
 
-### Recipe 3: Scheduled Campaign Launch to Ad Group Activation
-**Trigger:** Date-based or form-triggered campaign start
-**Action:** Activate a specific ad group in Advanced Ads for the campaign period
-**Use case:** Launch ad campaigns in Advanced Ads triggered by a WordPress form or scheduling event
+```php
+add_filter( 'advanced-ads-ad-select-args', function( $args ) {
+    $args['user_role'] = 'subscriber';
+    return $args;
+});
+```
 
-## Setup Steps
+### Display an ad in a template
 
-1. Install Bit Integrations Pro and Advanced Ads on your WordPress site.
-2. Set up ad groups and rotation rules in Advanced Ads.
-3. Go to Bit Integrations > Create Integration.
-4. Choose your trigger.
-5. Select Advanced Ads as the Action.
-6. Configure the ad group rotation or update settings.
-7. Save and test.
+```php
+// Display ad by ID
+the_ad( 42 );
+
+// Display an ad group
+the_ad_group( 5 );
+
+// Display an ad placement
+the_ad_placement( 'header-placement' );
+```
+
+### Hide ads for specific user roles via PHP
+
+```php
+add_filter( 'advanced-ads-can-display-ad', function( $can_display, $ad ) {
+    if ( is_user_logged_in() && current_user_can( 'premium_member' ) ) {
+        return false;
+    }
+    return $can_display;
+}, 10, 2 );
+```
+
+### Query ads via WordPress REST API (standard WP posts)
+
+```bash
+GET https://yoursite.com/wp-json/wp/v2/advanced_ads
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Ad
+- `id` - Ad post ID
+- `title` - Ad name in admin
+- `type` - Ad type: plain, image, rich-content, AdSense, etc.
+- `status` - publish, draft
+- `conditions` - Targeting conditions array (user role, page, device)
+- `expiry_date` - Optional ad expiration date
+
+### Ad Group
+- `id` - Group ID
+- `name` - Group name
+- `type` - default, ordered, or shuffle
+- `ads` - Array of ad IDs in the group
+
+## Parameters
+
+- `user_role` - Target ads to specific WordPress roles
+- `page_type` - Restrict ad to post, page, archive, etc.
+- `device` - Target mobile, desktop, or tablet users
+- `expiry_date` - Date string when ad expires
 
 ## When to Use
 
-- When user role changes or purchases should alter which ads are displayed to users
-- When WooCommerce purchases of ad-free memberships should suppress ads automatically
-- When campaign launches or time-based events should activate specific Advanced Ads groups
+- Displaying and rotating ads on WordPress sites with role-based targeting
+- Suppressing ads for premium or logged-in members programmatically
+- Scheduling ad campaigns with start and expiry dates
+- Managing Google AdSense or custom HTML ad placements in WordPress
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- seopress.md
-- notificationx.md
+- No rate limits; governed by WordPress server performance
+
+## Relevant Skills
+
+- content-strategy
+- ecommerce

@@ -1,67 +1,125 @@
 # Zoho Flow
 
-Zoho Flow is Zoho's no-code automation platform for connecting apps and building multi-step workflows with logic and conditions. Available as an Action in the Bit Integrations WordPress plugin.
+Workflow automation platform for app integrations, webhooks, logic, and data routing.
 
-**Role:** Action
-**Free Tier:** Yes
-**Category:** Project Management and Productivity
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/ZohoFlow.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Send data to a Zoho Flow webhook trigger |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map any form field to the outgoing webhook payload |
-
-## Action Events
-
-- Send data to a Zoho Flow workflow via webhook trigger
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: Webhook URL
-- **Required**: Webhook URL from a Zoho Flow workflow's webhook trigger step
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Authorization: Zoho-oauthtoken {access_token}`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zoho Flow dashboard
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: WordPress Form to Zoho Suite Workflow
-**Trigger:** WordPress form submission
-**Action:** Zoho Flow workflow creates records in Zoho CRM, Desk, and Campaigns simultaneously
-**Use case:** Use a single WordPress form submission to drive actions across the entire Zoho ecosystem
+### List records
 
-### Recipe 2: WooCommerce Order to Zoho Books Invoice
-**Trigger:** WooCommerce order completed
-**Action:** Zoho Flow creates an invoice in Zoho Books and updates the Zoho CRM deal
-**Use case:** Automate accounting and CRM updates for every WooCommerce sale via Zoho's native tools
+```bash
+GET https://www.zohoapis.com/records?limit=50
 
-### Recipe 3: Registration to Zoho Campaigns List
-**Trigger:** WordPress user registration or form submission
-**Action:** Zoho Flow adds the contact to a Zoho Campaigns mailing list
-**Use case:** Grow Zoho Campaigns lists automatically from WordPress form and registration events
+Authorization: Zoho-oauthtoken {access_token}
+```
 
-## Setup Steps
+### Get one record
 
-1. Install Bit Integrations on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select Zoho Flow as the Action.
-5. In Zoho Flow, create a flow with "Webhook" as the trigger. Copy the webhook URL.
-6. Paste the webhook URL into Bit Integrations.
-7. Map fields.
-8. Save and test.
+```bash
+GET https://www.zohoapis.com/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+```
+
+### Create record
+
+```bash
+POST https://www.zohoapis.com/records
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
+}
+```
+
+### Update record
+
+```bash
+PATCH https://www.zohoapis.com/records/{record_id}
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "tags": ["lead", "website"]
+}
+```
+
+### Send event or webhook payload
+
+```bash
+POST https://www.zohoapis.com/events
+
+Authorization: Zoho-oauthtoken {access_token}
+Content-Type: application/json
+
+{
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
+}
+```
+
+## Key Fields
+
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- When your business runs on the Zoho ecosystem and needs WordPress to drive cross-app Zoho workflows
-- When you need multi-step Zoho automation triggered by WordPress form or WooCommerce events
-- When logic, conditions, or data transformations are needed between WordPress and Zoho apps
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
-## Related Integrations
+## Rate Limits
 
-- zoho-crm.md
-- zoho-desk.md
-- zoho-sheet.md
-- zapier.md
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
+
+## Relevant Skills
+
+- revops
+- analytics
+- business-strategy

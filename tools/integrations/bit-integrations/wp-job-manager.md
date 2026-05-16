@@ -1,66 +1,104 @@
 # WP Job Manager
 
-WP Job Manager is a lightweight WordPress plugin for creating and managing job listing boards with front-end submission and filtering. Available as an Action (Pro) in the Bit Integrations WordPress plugin.
+WP Job Manager is a lightweight WordPress plugin for creating and managing job listing boards with front-end job submission, filtering, and application management.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** WordPress Core and Utility
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/WP-Job-Manager.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | — | — |
-| As Action | ✓ | Requires Pro plan; create job listings in WP Job Manager |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map form fields to WP Job Manager listing fields |
-
-## Action Events
-
-- Create job listing
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/wp/v2/job_listing/` |
+| MCP | - | Not available |
+| CLI | ✓ | Via WP-CLI |
+| SDK | - | Not available |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and WP Job Manager must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Job Submission Form to WP Job Manager Listing
-**Trigger:** WordPress job submission form
-**Action:** Create a new job listing in WP Job Manager with the submitted details
-**Use case:** Accept job listings via a custom form and automatically publish them to the WP Job Manager board
+### List all job listings
+```
+GET https://yoursite.com/wp-json/wp/v2/job_listing?per_page=50
 
-### Recipe 2: WooCommerce Job Posting Purchase to Listing
-**Trigger:** WooCommerce order completed (job posting product)
-**Action:** Create a WP Job Manager listing for the purchased job post
-**Use case:** Allow employers to purchase and publish job listings through WooCommerce with automatic creation in WP Job Manager
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: HR System Webhook to Job Listing
-**Trigger:** Incoming webhook from an external HR or ATS system
-**Action:** Create a WP Job Manager listing from the received job data
-**Use case:** Automatically publish job openings from an HR system to a WordPress job board via webhook
+### Get a specific job listing
+```
+GET https://yoursite.com/wp-json/wp/v2/job_listing/{listing_id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and WP Job Manager on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. Choose your trigger.
-4. Select WP Job Manager as the Action.
-5. Configure job listing status (published, pending, etc.).
-6. Map form fields to listing fields (job title, location, company, type, description, expiry date).
-7. Save and test.
+### Create a new job listing
+```
+POST https://yoursite.com/wp-json/wp/v2/job_listing
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "title": "Senior Developer",
+  "content": "We are looking for a senior developer...",
+  "status": "publish",
+  "meta": {
+    "_job_location": "Remote",
+    "_company_name": "Acme Corp",
+    "_job_type": "full-time",
+    "_application": "jobs@acme.com"
+  }
+}
+```
+
+### Filter listings by job type
+```
+GET https://yoursite.com/wp-json/wp/v2/job_listing?job_listing_type=full-time
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Job Listing Post Object
+- `id` - Post ID
+- `title` - Job title
+- `content` - Job description
+- `status` - `publish`, `pending`, `expired`, `preview`
+- `meta._job_location` - Job location
+- `meta._company_name` - Hiring company name
+- `meta._company_website` - Company website URL
+- `meta._job_type` - Job type slug (e.g., `full-time`, `part-time`, `remote`)
+- `meta._application` - Application email or URL
+- `meta._job_expiry_date` - Expiration date (YYYY-MM-DD)
+
+### Job Type Taxonomy
+- `slug` - Type identifier (e.g., `full-time`, `freelance`)
+- `name` - Display name
+
+## Parameters
+
+- `per_page` - Results per page (max 100)
+- `status` - Filter by post status
+- `job_listing_type` - Filter by job type taxonomy slug
+- `search` - Keyword search on title and content
 
 ## When to Use
 
-- When employers should be able to submit job listings via a custom form that auto-creates WP Job Manager entries
-- When WooCommerce job posting purchases should automatically publish listings in WP Job Manager
-- When external HR systems should sync open positions to a WordPress job board automatically
+- Programmatically publishing job openings from an ATS or HR system via API
+- Querying active job listings to display or sync to external job aggregators
+- Expiring or updating listings in bulk based on HR system state changes
+- Building recruitment dashboards on top of WordPress job board data
 
-## Related Integrations
+## Rate Limits
 
-- post-creation.md
-- wp-post.md
-- zoho-recruit.md
-- webhook-incoming.md
+- Subject to WordPress server limits; no hard API rate limit
+- Recommended: paginate requests with `per_page=100`
+
+## Relevant Skills
+
+- human-resources:recruiting-pipeline
+- human-resources:job-post-builder
+- operations:process-doc

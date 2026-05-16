@@ -1,85 +1,81 @@
 # Essential Addons for Elementor
 
-Essential Addons for Elementor is a popular Elementor extension that adds dozens of additional widgets, including a Form widget for building and embedding forms within Elementor page layouts. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Popular Elementor extension adding 80+ widgets, including a form widget for building forms within Elementor page layouts.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Essential-Addons.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external REST API |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress action hooks |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress server-side hook access
+- **Header**: N/A — server-side PHP integration only
+- **Get token**: No API token; Elementor Pro + Essential Addons required
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### Capture form submission (PHP hook)
+```php
+add_action('eael/contact-form/after_send_email', function($record, $fields) {
+    $email = $fields['email'] ?? '';
+    $name  = $fields['name'] ?? '';
+    // Forward to external API via wp_remote_post()
+}, 10, 2);
+```
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+### Use Elementor Pro form hook (also fires for EAEL forms)
+```php
+add_action('elementor_pro/forms/new_record', function($record, $handler) {
+    $fields = $record->get('fields');
+    // Same hook as Elementor Pro form widget
+}, 10, 2);
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Built-in integrations in widget settings
+```
+Essential Addons Form widget > Form Actions:
+- Email notification
+- Redirect URL
+- Webhook (POST to external URL)
+- MailChimp, ActiveCampaign (via widget settings)
+```
 
-## Connecting to Action Platforms
+## Key Fields
 
-After selecting Essential Addons for Elementor as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Form Record
+- `form_name` - Name from Elementor editor
+- `fields` - Array of field objects with `id`, `value`, `label`
+- `id` - Widget element ID
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Field Object
+- `id` - Field key/slug
+- `value` - Submitted value
+- `label` - Display label
+- `type` - text, email, tel, select, textarea
 
-## Setup Steps
+## Parameters
 
-1. Install and activate Elementor and Essential Addons for Elementor on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form using the Essential Addons Form widget in Elementor and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Essential Addons for Elementor as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
-
-## Field Mapping Tips
-
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+- Field IDs are defined per-form in the Elementor/EAEL editor
+- Hook priority can be adjusted (default 10)
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capture leads from Elementor landing pages
+- Trigger CRM contact creation on form submit
+- Send confirmation emails with custom data
+- Route form data to different destinations by form name
 
-## Related Integrations
+## Rate Limits
 
-- elementor-form.md
-- metform.md
-- piotnet-addons-elementor.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; server-side PHP only
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:campaign-plan
+- operations:process-doc

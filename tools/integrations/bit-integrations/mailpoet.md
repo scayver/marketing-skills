@@ -1,90 +1,119 @@
 # MailPoet
 
-MailPoet is a WordPress-native email marketing plugin that lets you create, send, and manage newsletters directly from your WordPress dashboard. Available as both an Action and Trigger in the Bit Integrations WordPress plugin.
+WordPress newsletter and email marketing plugin for subscribers, lists, and campaigns.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/MailPoet.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Bit Integrations Pro |
-| As Action | ✓ | Free with Bit Integrations free plan |
-| Free Tier | ✓ | Free with Bit Integrations free plan |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Subscribe user to list
-- Add subscriber to newsletter list
-- Update subscriber fields
-- Unsubscribe contact
-
-## Trigger Events
-
-- Subscriber confirmed (double opt-in confirmed)
-- Subscriber unsubscribed
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Where to get credentials**: No external API key needed — MailPoet must be installed and active on the same WordPress site
-- **Required in Bit Integrations**: No credentials required; MailPoet is detected automatically
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| First Name | Subscriber first name | Optional |
-| Last Name | Subscriber last name | Optional |
-| List ID | The MailPoet list to add the subscriber to | Required |
+### Check plugin status
 
-## Common Workflow Recipes
+```bash
+wp plugin status mailpoet
+```
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Subscribe user to MailPoet newsletter list
-**Key fields mapped:** Email, First Name, Last Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+### List REST routes
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to MailPoet customer list or segment
-**Key fields mapped:** Email, First Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+```bash
+GET https://example.com/wp-json/
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to MailPoet list with enrollment tag
-**Key fields mapped:** Email, First Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+Authorization: Basic base64(username:application_password)
+```
 
-## Setup Steps
+### Search posts or records
 
-1. Install Bit Integrations on your WordPress site.
-2. Install and activate the MailPoet plugin on the same site.
-3. Go to Bit Integrations > Create Integration.
-4. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-5. Select MailPoet as the action.
-6. MailPoet is detected automatically — no API key needed.
-7. Select the list to add subscribers to.
-8. Map the email field and any name fields.
-9. Save and test with a real form submission.
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/mailpoet/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='mailpoet' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- Growing an email list from WordPress form submissions without leaving WordPress
-- Managing newsletters entirely within the WordPress dashboard
-- Syncing WooCommerce buyers to a MailPoet subscriber list
-- Adding new members or course students to onboarding email sequences
-- Replacing manual CSV imports from WordPress forms to MailPoet
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- newsletter.md
-- mailster.md
-- mail-mint.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- email-marketing
+- emails
+- analytics

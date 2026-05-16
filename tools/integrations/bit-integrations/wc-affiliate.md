@@ -1,72 +1,102 @@
 # WC Affiliate
 
-WC Affiliate is a WooCommerce-specific affiliate management plugin for tracking referrals, commissions, and payouts within a WooCommerce store. Available as an Action (Pro) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WC Affiliate is a WooCommerce affiliate management plugin for tracking referrals, commissions, and payouts directly within a WooCommerce store.
 
-**Role:** Trigger/Action
-**Free Tier:** No
-**Category:** Affiliate Management
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/04/WC-Affiliate-1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/04/WC-Affiliate.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan |
-| As Action | ✓ | Requires Pro plan |
-| Free Tier | — | Both roles require Pro |
-| Field Mapping | ✓ | Map fields to WC Affiliate affiliate and commission data |
-
-## Trigger Events
-
-- Affiliate registered
-- Commission created or approved
-
-## Action Events
-
-- Register affiliate
-- Update affiliate status
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | Extends WooCommerce REST API at `/wp-json/wc/v3/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI with WooCommerce CLI support |
+| SDK | - | No external SDK; use WC REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and WC Affiliate must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WooCommerce API Keys (Consumer Key + Consumer Secret)
+- **Header**: `Authorization: Basic {base64(ck:cs)}`
+- **Get token**: WooCommerce > Settings > Advanced > REST API
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Affiliate Application to WC Affiliate Registration
-**Trigger:** WordPress affiliate application form
-**Action:** Register the applicant in WC Affiliate
-**Use case:** Create a front-end affiliate sign-up experience that auto-registers in WC Affiliate
+### List Affiliates
+```bash
+GET https://yoursite.com/wp-json/wc/v3/wc-affiliate/affiliates
 
-### Recipe 2: WC Affiliate Commission to Email Notification
-**Trigger:** WC Affiliate commission created
-**Action:** Send email notification to the affiliate with commission details
-**Use case:** Automatically notify affiliates when they earn a commission
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: WC Affiliate Registration to CRM Contact
-**Trigger:** WC Affiliate affiliate registered
-**Action:** Create a CRM contact for the new affiliate
-**Use case:** Add new WC Affiliate affiliates to your CRM for relationship management
+### Get a Single Affiliate
+```bash
+GET https://yoursite.com/wp-json/wc/v3/wc-affiliate/affiliates/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and WC Affiliate on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select WC Affiliate as the Trigger and choose the event.
-4. For Action: Choose your trigger source, then select WC Affiliate as the Action.
-5. Map fields.
-6. Save and test.
+### List Referrals
+```bash
+GET https://yoursite.com/wp-json/wc/v3/wc-affiliate/referrals
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Commissions
+```bash
+GET https://yoursite.com/wp-json/wc/v3/wc-affiliate/commissions
+
+Authorization: Basic {base64_credentials}
+```
+
+### Create a Payout
+```bash
+POST https://yoursite.com/wp-json/wc/v3/wc-affiliate/payouts
+
+Authorization: Basic {base64_credentials}
+Content-Type: application/json
+
+{
+  "affiliate_id": 12,
+  "amount": 75.00,
+  "payment_method": "paypal"
+}
+```
+
+## Key Fields
+
+### Affiliate
+- `id` - Affiliate record ID
+- `user_id` - WordPress user ID
+- `status` - active, inactive, pending
+- `affiliate_url` - Unique referral link
+- `balance` - Unpaid commission balance
+
+### Referral
+- `id` - Referral ID
+- `affiliate_id` - Owning affiliate
+- `order_id` - WooCommerce order ID
+- `commission` - Earned commission amount
+- `status` - pending, approved, rejected, paid
+
+## Parameters
+
+- `status` - Filter affiliates, referrals, or commissions by status
+- `affiliate_id` - Scope referrals or commissions to an affiliate
+- `per_page` / `page` - Pagination controls
 
 ## When to Use
 
-- When running a WooCommerce-based affiliate program with WC Affiliate and needing automated workflows
-- When affiliate events in WC Affiliate should trigger email notifications or CRM updates
-- When building a complete affiliate automation pipeline within the WooCommerce ecosystem
+- Automating payout processing when affiliate balances reach a threshold
+- Reporting on affiliate revenue attribution per order
+- Syncing commission data to accounting tools
+- Notifying affiliates of new referral activity
 
-## Related Integrations
+## Rate Limits
 
-- affiliatewp.md
-- slicewp.md
-- solid-affiliate.md
-- ultimate-affiliate-pro.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- sales:pipeline-review
+- data:analyze
+- finance:financial-statements

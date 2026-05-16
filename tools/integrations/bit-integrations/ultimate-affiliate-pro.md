@@ -1,72 +1,96 @@
 # Ultimate Affiliate Pro
 
-Ultimate Affiliate Pro is a feature-rich WordPress affiliate plugin with multi-tier commissions, bonuses, and social sharing capabilities. Available as an Action (Pro) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+Ultimate Affiliate Pro is a WordPress affiliate plugin with multi-tier commissions, bonuses, social sharing rewards, and referral tracking.
 
-**Role:** Trigger/Action
-**Free Tier:** No
-**Category:** Affiliate Management
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/04/Ultimate-Affiliate-Pro-1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/04/Ultimate-Affiliate-Pro.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan |
-| As Action | ✓ | Requires Pro plan |
-| Free Tier | — | Both roles require Pro |
-| Field Mapping | ✓ | Map fields to Ultimate Affiliate Pro affiliate data |
-
-## Trigger Events
-
-- Affiliate registered
-- Commission earned or approved
-
-## Action Events
-
-- Register affiliate
-- Update affiliate rank or commission rate
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API at `/wp-json/uap/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | WP-CLI for plugin management |
+| SDK | - | No external SDK; use REST directly |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations Pro and Ultimate Affiliate Pro must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Dashboard > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Affiliate Sign-Up Form to Ultimate Affiliate Pro
-**Trigger:** WordPress affiliate sign-up form submission
-**Action:** Register the applicant as an affiliate in Ultimate Affiliate Pro
-**Use case:** Build a custom affiliate recruitment workflow with automated registration
+### List Affiliates
+```bash
+GET https://yoursite.com/wp-json/uap/v1/affiliates
 
-### Recipe 2: Commission Earned to Slack or Email Alert
-**Trigger:** Ultimate Affiliate Pro commission earned
-**Action:** Send a Slack message or email with commission details
-**Use case:** Keep affiliates or the internal team informed of commissions in real time
+Authorization: Basic {base64_credentials}
+```
 
-### Recipe 3: Affiliate Milestone to Rank Upgrade
-**Trigger:** Affiliate referral count or commission threshold reached
-**Action:** Update affiliate rank in Ultimate Affiliate Pro
-**Use case:** Automate multi-tier affiliate rank promotions based on performance milestones
+### Get a Single Affiliate
+```bash
+GET https://yoursite.com/wp-json/uap/v1/affiliates/{id}
 
-## Setup Steps
+Authorization: Basic {base64_credentials}
+```
 
-1. Install Bit Integrations Pro and Ultimate Affiliate Pro on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select Ultimate Affiliate Pro as the Trigger and choose the event.
-4. For Action: Choose your trigger source, then select Ultimate Affiliate Pro as the Action.
-5. Map fields.
-6. Save and test.
+### List Referrals
+```bash
+GET https://yoursite.com/wp-json/uap/v1/referrals
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Commissions
+```bash
+GET https://yoursite.com/wp-json/uap/v1/commissions
+
+Authorization: Basic {base64_credentials}
+```
+
+### List Payouts
+```bash
+GET https://yoursite.com/wp-json/uap/v1/payouts
+
+Authorization: Basic {base64_credentials}
+```
+
+## Key Fields
+
+### Affiliate
+- `id` - Affiliate record ID
+- `user_id` - WordPress user ID
+- `status` - active, inactive, pending
+- `affiliate_link` - Unique referral URL
+- `balance` - Unpaid commission balance
+
+### Referral
+- `id` - Referral ID
+- `affiliate_id` - Owning affiliate
+- `order_id` - Associated order
+- `commission` - Earned commission amount
+- `status` - pending, approved, rejected, paid
+
+## Parameters
+
+- `status` - Filter affiliates, referrals, or payouts by status
+- `affiliate_id` - Scope referrals or commissions to an affiliate
+- `per_page` / `page` - Pagination controls
+- `date_from` / `date_to` - Filter by date range
 
 ## When to Use
 
-- When using Ultimate Affiliate Pro's multi-tier commission features and needing automated workflows
-- When affiliate events should trigger notifications, CRM updates, or rank changes automatically
-- When building a sophisticated affiliate program with automated lifecycle management
+- Automating affiliate approval notifications
+- Triggering payout workflows when balance exceeds a threshold
+- Reporting on multi-tier commission structures
+- Syncing affiliate performance data to a CRM or spreadsheet
 
-## Related Integrations
+## Rate Limits
 
-- affiliatewp.md
-- slicewp.md
-- wc-affiliate.md
-- fluentaffiliate.md
+- Subject to WordPress server limits; no platform-level rate cap
+
+## Relevant Skills
+
+- marketing:campaign-plan
+- sales:pipeline-review
+- data:analyze
+- operations:process-doc

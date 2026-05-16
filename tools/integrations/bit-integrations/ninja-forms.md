@@ -1,82 +1,90 @@
 # Ninja Forms
 
-Ninja Forms is a flexible WordPress form builder with a free core plugin and a suite of paid add-ons for payments, conditional logic, and CRM integrations. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Flexible WordPress form builder with a free core plugin and paid add-ons for payments, conditional logic, multi-part forms, and CRM integrations.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Ninja-Forms.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via `/wp-json/ninja-forms-submissions/v1/` |
+| MCP | - | No official MCP server |
+| CLI | - | No CLI |
+| SDK | - | No official SDK |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### List all forms
+```bash
+GET https://yoursite.com/wp-json/ninja-forms-submissions/v1/forms
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+Authorization: Basic {base64_credentials}
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Get submissions for a form
+```bash
+GET https://yoursite.com/wp-json/ninja-forms-submissions/v1/subs?form_id={form_id}
 
-## Connecting to Action Platforms
+Authorization: Basic {base64_credentials}
+```
 
-After selecting Ninja Forms as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Get a specific submission
+```bash
+GET https://yoursite.com/wp-json/ninja-forms-submissions/v1/subs/{submission_id}
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Get form fields
+```bash
+GET https://yoursite.com/wp-json/ninja-forms-submissions/v1/fields?form_id={form_id}
 
-1. Install and activate Ninja Forms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Ninja Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Ninja Forms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+Authorization: Basic {base64_credentials}
+```
 
-## Field Mapping Tips
+## Key Fields
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Form
+- `id` - Form ID
+- `settings.title` - Form display title
+- `fields` - Array of field definition objects
+
+### Submission
+- `id` - Submission ID
+- `form_id` - Parent form ID
+- `date_updated` - Submission timestamp
+- `fields` - Array of submitted field objects with `key` and `value`
+
+### Field
+- `id` - Field ID
+- `key` - Field machine name
+- `type` - Field type (textbox, email, phone, etc.)
+- `label` - Field display label
+
+## Parameters
+
+- `form_id` - Filter by form ID
+- `per_page` - Results per page
+- `page` - Page number
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Capturing leads from contact, inquiry, and registration forms on WordPress
+- Querying form submission history for reporting or CRM sync
+- Building payment-enabled forms with the Stripe or PayPal add-on
+- Creating multi-part or conditional-logic forms for complex data collection
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- Limited by WordPress server capacity; no built-in rate limiting
+
+## Relevant Skills
+
+- marketing:email-sequence
+- marketing:draft-content
+- data:validate-data

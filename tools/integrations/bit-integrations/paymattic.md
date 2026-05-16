@@ -1,76 +1,119 @@
 # Paymattic
 
-Paymattic is a WordPress payment and donation plugin with support for Stripe, PayPal, and other gateways, built for simple payment forms, subscriptions, and donation campaigns. Available as Action in the Bit Integrations WordPress plugin, with a payment trigger.
+WordPress payment and donation plugin for Stripe, PayPal, forms, and checkout workflows.
 
-**Role:** Action
-**Free Tier:** No
-**Category:** eCommerce and Payments
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Paymattic.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Payment completed |
-| As Action | ✓ | Process payment |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map user and event data to connected platforms |
-
-## Trigger Events
-
-- Payment completed — fires when a Paymattic payment form is successfully paid
-
-## Action Events
-
-- Process payment — initiate a payment process via Paymattic
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Paymattic must be installed and active, with your payment gateway connected; Bit Integrations reads it directly via WordPress hooks
-- **Note**: No additional API keys required in Bit Integrations; Paymattic manages its own payment gateway connections
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Add payer to CRM on payment completion
-**Trigger:** Paymattic — Payment completed
-**Action:** HubSpot / Zoho CRM — Create or update contact
-**Key fields mapped:** Payer email, first name, last name, payment amount, campaign or form name
-**Use case:** Automatically create or update CRM contacts when a Paymattic payment or donation is submitted
+### Check plugin status
 
-### Recipe 2: Add donor to email list on donation
-**Trigger:** Paymattic — Payment completed (donation form)
-**Action:** Mailchimp / ConvertKit — Add subscriber or tag
-**Key fields mapped:** Donor email, donation amount, campaign name
-**Use case:** Subscribe donors to a thank-you or engagement email list immediately after they give
+```bash
+wp plugin status paymattic
+```
 
-### Recipe 3: Enroll payer in course after payment
-**Trigger:** Paymattic — Payment completed
-**Action:** LearnDash / TutorLMS — Enroll in course
-**Key fields mapped:** Payer email, course linked to the payment form
-**Use case:** Grant course access automatically when a student pays via a Paymattic form
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations on your WordPress site.
-2. Ensure Paymattic is installed, active, and connected to your payment gateway.
-3. Go to Bit Integrations > Create Integration.
-4. Select Paymattic as the trigger.
-5. Choose Payment Completed and select the specific payment form if needed.
-6. Configure your action (CRM, email platform, LMS) and map the payment fields.
-7. Save and test with a real or sandbox payment to verify the integration fires.
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/paymattic/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='paymattic' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- You use Paymattic for payments or donations and want payer data pushed to your CRM or email platform
-- You sell course access via Paymattic and need enrollment automated on payment
-- You run donation campaigns and want donors added to email sequences automatically
-- You need a Paymattic payment event to trigger broader automation workflows
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- woocommerce.md
-- wp-simple-pay.md
-- surecart.md
-- learndash.md
-- memberpress.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- ecommerce-content
+- business-strategy
+- analytics

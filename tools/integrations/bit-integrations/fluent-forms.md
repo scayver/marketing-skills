@@ -1,82 +1,89 @@
 # Fluent Forms
 
-Fluent Forms is a fast, lightweight WordPress form builder with a free core and a Pro version offering advanced fields, payment integrations, and conditional logic. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+Fast, lightweight WordPress form builder with drag-and-drop editor, conditional logic, and payment integrations.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Fluent_Forms1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API via Fluent Forms endpoints |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | PHP hooks and filters |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password or API Key (Pro)
+- **Header**: `Authorization: Basic base64(username:app_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## What Data Gets Passed
+### List forms
+```bash
+GET https://yoursite.com/wp-json/fluentform/v1/forms
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+Authorization: Basic {base64_credentials}
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Get form entries
+```bash
+GET https://yoursite.com/wp-json/fluentform/v1/entries?form_id={id}
 
-## Connecting to Action Platforms
+Authorization: Basic {base64_credentials}
+```
 
-After selecting Fluent Forms as the trigger in Bit Integrations, connect it to any of these action platforms:
+### Get single entry
+```bash
+GET https://yoursite.com/wp-json/fluentform/v1/entries/{entry_id}
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic {base64_credentials}
+```
 
-## Setup Steps
+### Hook on submission (PHP)
+```php
+add_action('fluentform/submission_inserted', function($entry_id, $form_data, $form) {
+    $email = $form_data['email'] ?? '';
+    // Forward via wp_remote_post()
+}, 10, 3);
+```
 
-1. Install and activate Fluent Forms on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Fluent Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Fluent Forms as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+## Key Fields
 
-## Field Mapping Tips
+### Form
+- `id` - Form ID
+- `title` - Form title
+- `status` - active, inactive
+- `created_at` - Creation timestamp
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Entry
+- `id` - Entry ID
+- `form_id` - Parent form
+- `response` - JSON of submitted field values
+- `status` - unread, read, spam, trashed
+- `ip` - Submitter IP
+- `created_at` - Submission timestamp
+
+## Parameters
+
+- `form_id` - Filter entries by form
+- `status` - Filter by entry status
+- `per_page` / `page` - Pagination
+- `date_range` - Start and end dates
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Sync form leads to a CRM or email platform
+- Pull submission data for reporting
+- Trigger automations on specific form completions
+- Analyze form conversion rates
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- Subject to WordPress server limits; no hard API rate limit
+
+## Relevant Skills
+
+- marketing:email-sequence
+- data:analyze
+- operations:process-doc

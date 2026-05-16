@@ -1,86 +1,94 @@
 # Contact Form 7
 
-Contact Form 7 (CF7) is the most widely installed WordPress form plugin, with over 5 million active installations. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when a form is submitted.
+The most widely installed WordPress form plugin (5+ million active installations) for building and embedding contact forms using simple shortcodes and tag syntax.
 
-**Role:** Trigger
-**Free Tier:** Yes
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Contact_Form_71.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | - | No external API |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for managing forms and settings |
+| SDK | - | Not available |
+| WordPress REST | ✓ | REST API at /wp-json/contact-form-7/v1/ |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission |
-| As Action | — | Not available as action |
-| Free Tier | ✓ | Free |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress application password (for REST access)
+- **Header**: `Authorization: Basic {base64(username:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (all forms or specific form selection)
+## Common Agent Operations
 
-## Important Note: Entry Storage
+### List all forms
+```
+GET /wp-json/contact-form-7/v1/contact-forms
 
-Contact Form 7 does not store form entries natively — by default, submissions are only sent by email. If you want to save entries to the WordPress database, install the free Flamingo plugin (also by the CF7 author). This does not affect Bit Integrations trigger functionality — Bit Integrations will still fire correctly on submission regardless of whether Flamingo is installed.
+Authorization: Basic {base64_credentials}
+```
 
-## What Data Gets Passed
+### Get a specific form
+```
+GET /wp-json/contact-form-7/v1/contact-forms/{form_id}
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+Authorization: Basic {base64_credentials}
+```
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+### Submit a form programmatically
+```
+POST /wp-json/contact-form-7/v1/contact-forms/{form_id}/feedback
 
-## Connecting to Action Platforms
+Content-Type: multipart/form-data
 
-After selecting Contact Form 7 as the trigger in Bit Integrations, connect it to any of these action platforms:
+your-name=Jane Smith&your-email=jane@example.com&your-message=Hello
+```
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+### Hook into form submission (PHP)
+```php
+add_action('wpcf7_mail_sent', function($contact_form) {
+    $submission = WPCF7_Submission::get_instance();
+    $data = $submission->get_posted_data();
+    // $data contains all submitted field values
+});
+```
 
-## Setup Steps
+### List forms via WP-CLI
+```bash
+wp post list --post_type=wpcf7_contact_form --fields=ID,post_title
+```
 
-1. Install and activate Contact Form 7 on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Contact Form 7 and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select Contact Form 7 as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+## Key Fields
 
-## Field Mapping Tips
+### Form Configuration
+- `id` - Unique form ID
+- `title` - Form name as set in admin
+- `form` - Form tag template markup
+- `mail` - Mail template configuration object
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+### Submission Data (via PHP hook)
+- `your-name` - Default name field (field names are customizable)
+- `your-email` - Default email field
+- `your-message` - Default message field
+- `_wpcf7_unit_tag` - Unique submission identifier
+
+## Parameters
+
+- `form_id` - Targets a specific form for REST operations
+- `per_page` - Number of forms to return (REST listing)
+- `offset` - Pagination offset (REST listing)
 
 ## When to Use
 
-- Capturing leads from contact forms and sending them directly to a CRM
-- Growing an email list by connecting opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Sending real-time lead notifications to Slack or WhatsApp
-- Triggering a welcome email automation when someone fills out a form
-- Passing UTM data from forms into CRM contact records for attribution
+- Triggering CRM or email list automations when a contact form is submitted
+- Capturing lead data from the most common WordPress form plugin
+- Logging form submissions to external systems via the REST API or PHP hooks
+- Building simple contact, inquiry, or quote request forms with minimal setup
 
-## Related Integrations
+## Rate Limits
 
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- No external API; REST API rate limited by WordPress server and hosting configuration
+
+## Relevant Skills
+
+- lead-generation
+- content-strategy

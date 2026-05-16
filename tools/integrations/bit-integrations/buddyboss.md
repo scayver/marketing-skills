@@ -1,74 +1,119 @@
 # BuddyBoss
 
-BuddyBoss is a WordPress platform for building social networks, online communities, and membership sites with groups, messaging, and activity feeds. Available as an Action (free) and Trigger (Pro) in the Bit Integrations WordPress plugin.
+WordPress community and membership platform for courses, groups, activity feeds, and member profiles.
 
-**Role:** Trigger/Action
-**Free Tier:** Yes (Action free; Trigger requires Pro)
-**Category:** Community and Forum
-**Icon (Action):** `https://bit-integrations.com/wp-content/uploads/2026/02/BuddyBoss1-1.svg`
-**Icon (Trigger):** `https://bit-integrations.com/wp-content/uploads/2026/02/BuddyBoss1.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Pro plan; fires on community activity events |
-| As Action | ✓ | Free; add users to groups and send notifications |
-| Free Tier | ✓ | Action is free; Trigger requires Pro |
-| Field Mapping | ✓ | Map user and activity data to action inputs |
-
-## Trigger Events
-
-- Member joined group
-- Profile field updated
-- Activity posted
-
-## Action Events
-
-- Add user to group
-- Send notification to user
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Required**: Both Bit Integrations and BuddyBoss Platform must be installed and active on the same WordPress site. No external credentials needed.
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Common Workflow Recipes
+## Common Agent Operations
 
-### Recipe 1: Membership Purchase to BuddyBoss Group
-**Trigger:** WooCommerce or membership purchase
-**Action:** Add the buyer to a BuddyBoss group matching their membership level
-**Use case:** Automatically grant community group access when a membership is purchased
+### Check plugin status
 
-### Recipe 2: Course Enrollment to Community Group
-**Trigger:** LMS course enrollment (LearnDash, LifterLMS, etc.)
-**Action:** Add the student to a BuddyBoss cohort group for peer interaction
-**Use case:** Build learning cohorts in BuddyBoss automatically as students enroll in courses
+```bash
+wp plugin status buddyboss
+```
 
-### Recipe 3: New Member Activity to External Notification
-**Trigger:** BuddyBoss member joined group
-**Action:** Send a Slack notification or email alert to the community manager
-**Use case:** Monitor community growth by getting notified when members join specific groups
+### List REST routes
 
-## Setup Steps
+```bash
+GET https://example.com/wp-json/
 
-1. Install Bit Integrations and BuddyBoss Platform on your WordPress site.
-2. Go to Bit Integrations > Create Integration.
-3. For Trigger: Select BuddyBoss as the Trigger and choose the event.
-4. For Action: Choose your trigger source, then select BuddyBoss as the Action.
-5. Select the action event and target group.
-6. Map fields.
-7. Save and test.
+Authorization: Basic base64(username:application_password)
+```
+
+### Search posts or records
+
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
+
+Authorization: Basic base64(username:application_password)
+```
+
+### Create a WordPress post or content record
+
+```bash
+POST https://example.com/wp-json/wp/v2/posts
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/buddyboss/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='buddyboss' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- When membership purchases or course enrollments should grant BuddyBoss group access
-- When BuddyBoss community events should trigger external notifications or CRM updates
-- When building a social learning or membership community with automated group management
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- buddypress.md
-- wpforo.md
-- learndash.md
-- fluent-community.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- community-marketing
+- customer-service
+- social-content-planner

@@ -1,87 +1,111 @@
 # MailerPress
 
-MailerPress is a WordPress-native email marketing plugin offering subscriber management, campaign creation, and automation workflows directly within WordPress. Available as both an Action and Trigger in the Bit Integrations WordPress plugin.
+WordPress-native email marketing plugin for subscriber management, newsletter campaigns, and automation workflows within WordPress.
 
-**Role:** Trigger/Action
-**Free Tier:** No
-**Category:** Email Marketing
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/Mailer-Press.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
-
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Requires Bit Integrations Pro |
-| As Action | ✓ | Requires Bit Integrations Pro |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | Map subscriber fields and apply tags or lists |
-
-## Action Events
-
-- Add subscriber to list
-- Update subscriber fields
-- Unsubscribe contact
-
-## Trigger Events
-
-- Subscriber added
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | REST API at /wp-json/mailerpress/v1/ |
+| MCP | - | Not available |
+| CLI | - | Not available |
+| SDK | - | WordPress hooks and REST API only |
 
 ## Authentication
 
-- **Type**: WordPress plugin-native
-- **Where to get credentials**: No external API key needed — MailerPress must be installed and active on the same WordPress site
-- **Required in Bit Integrations**: No credentials required; MailerPress is detected automatically
+- **Type**: WordPress Application Password (Basic Auth)
+- **Header**: `Authorization: Basic {base64(user:app_password)}`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-## Field Mapping Reference
+## Common Agent Operations
 
-| Field | Description | Notes |
-|-------|-------------|-------|
-| Email | Subscriber email address | Required |
-| Name | Subscriber full name | Optional |
-| List ID | The MailerPress list to add the subscriber to | Required |
+### Add a subscriber to a list
 
-## Common Workflow Recipes
+```bash
+POST https://yoursite.com/wp-json/mailerpress/v1/subscribers
 
-### Recipe 1: Lead Capture Form to Email List
-**Trigger:** WordPress form submission (WPForms, Gravity Forms, Bit Form, CF7, Elementor Forms)
-**Action:** Add subscriber to MailerPress list
-**Key fields mapped:** Email, Name
-**Use case:** Automatically grow your email list when visitors fill out any lead capture form
+Authorization: Basic {base64(user:app_password)}
+Content-Type: application/json
 
-### Recipe 2: WooCommerce Purchase to Customer Segment
-**Trigger:** WooCommerce order completed
-**Action:** Add buyer to MailerPress customer list
-**Key fields mapped:** Email, Name, Order amount (as custom field if available)
-**Use case:** Segment buyers separately from leads for targeted post-purchase sequences
+{"email": "jane@example.com", "name": "Jane Doe", "list_id": 5}
+```
 
-### Recipe 3: Membership or Course Enrollment to Nurture Sequence
-**Trigger:** MemberPress or LearnDash enrollment
-**Action:** Add to MailerPress list for enrollment-based nurture
-**Key fields mapped:** Email, Name, membership level or course name
-**Use case:** Trigger onboarding and course-related emails automatically on enrollment
+### Get all lists
 
-## Setup Steps
+```bash
+GET https://yoursite.com/wp-json/mailerpress/v1/lists
 
-1. Install Bit Integrations Pro on your WordPress site.
-2. Install and activate the MailerPress plugin on the same site.
-3. Go to Bit Integrations > Create Integration.
-4. Select your trigger (form plugin, WooCommerce, membership plugin, etc.).
-5. Select MailerPress as the action.
-6. MailerPress is detected automatically — no API key needed.
-7. Select the list to add subscribers to.
-8. Map the email field and the name field.
-9. Save and test with a real form submission.
+Authorization: Basic {base64(user:app_password)}
+```
+
+### Get subscribers in a list
+
+```bash
+GET https://yoursite.com/wp-json/mailerpress/v1/subscribers?list_id=5&per_page=100
+
+Authorization: Basic {base64(user:app_password)}
+```
+
+### Unsubscribe a contact
+
+```bash
+POST https://yoursite.com/wp-json/mailerpress/v1/subscribers/unsubscribe
+
+Authorization: Basic {base64(user:app_password)}
+Content-Type: application/json
+
+{"email": "jane@example.com"}
+```
+
+### Hook into subscriber added event (PHP)
+
+```php
+add_action( 'mailerpress_subscriber_added', function( $subscriber_id, $list_id, $email ) {
+    // Trigger downstream actions when a subscriber is added
+}, 10, 3 );
+```
+
+## Key Fields
+
+### Subscriber Object
+- `id` - Unique subscriber ID
+- `email` - Primary email address
+- `name` - Full name
+- `list_id` - Associated list ID
+- `status` - subscribed | unsubscribed
+- `created_at` - Subscription timestamp
+
+### List Object
+- `id` - Unique list ID
+- `name` - List name
+- `subscriber_count` - Number of active subscribers
+
+### Campaign Object
+- `id` - Campaign ID
+- `subject` - Email subject line
+- `status` - Draft | Scheduled | Sent
+- `list_id` - Target list
+
+## Parameters
+
+- `list_id` - Filter subscribers or campaigns by list
+- `per_page` - Results per page
+- `page` - Pagination offset
+- `status` - Filter by subscriber status
 
 ## When to Use
 
-- Growing a subscriber base from WordPress form submissions without leaving WordPress
-- Managing newsletters and automation entirely within the WordPress dashboard
-- Syncing WooCommerce buyers to a MailerPress subscriber list
-- Adding new members or course students to onboarding email sequences
-- Replacing manual CSV imports from WordPress forms to MailerPress
+- Managing email subscribers entirely within WordPress
+- Sending newsletters and broadcast emails without a third-party service
+- Building subscriber lists from WordPress form submissions or purchases
+- Running on-site email marketing without external dependencies
 
-## Related Integrations
+## Rate Limits
 
-- mailpoet.md
-- newsletter.md
-- mailster.md
+- No external rate limits; subject to WordPress server and SMTP provider capacity
+
+## Relevant Skills
+
+- email-marketing
+- lead-generation
+- content-creation

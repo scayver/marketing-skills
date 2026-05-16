@@ -1,88 +1,119 @@
 # GravityKit
 
-GravityKit (formerly GravityView) is a suite of add-ons for Gravity Forms that extends it with Views (publicly displaying form entries), advanced reporting, and workflow tools. Available as a Trigger in the Bit Integrations WordPress plugin — fires a workflow when triggered through the GravityKit ecosystem.
+WordPress toolkit for displaying, editing, importing, and managing Gravity Forms entries.
 
-**Role:** Trigger
-**Free Tier:** No
-**Category:** Form Builders
-**Icon:** `https://bit-integrations.com/wp-content/uploads/2026/02/GravityKIT.svg`
+## Capabilities
 
-## Capabilities in Bit Integrations
+| Integration | Available | Notes |
+|-------------|-----------|-------|
+| API | ✓ | WordPress REST API, admin AJAX, plugin hooks, or plugin-specific endpoints when available |
+| MCP | - | Not available |
+| CLI | ✓ | WP-CLI for WordPress-level inspection and plugin management |
+| SDK | - | WordPress PHP hooks and REST endpoints are the primary interface |
 
-| Feature | Available | Notes |
-|---------|-----------|-------|
-| As Trigger | ✓ | Fires on form submission or entry events |
-| As Action | — | Not available as action |
-| Free Tier | — | Requires Pro |
-| Field Mapping | ✓ | All form fields available for mapping to action platforms |
+## Authentication
 
-## Trigger Events
+- **Type**: WordPress Application Password, cookie nonce, or administrator session
+- **Header**: `Authorization: Basic base64(username:application_password)`
+- **Get token**: WordPress Admin > Users > Profile > Application Passwords
 
-- Form submitted (via Gravity Forms, extended by GravityKit)
-- Entry updated or approved (via GravityKit workflow actions)
+## Common Agent Operations
 
-## Important Note
+### Check plugin status
 
-GravityKit requires Gravity Forms as its base — you must have both Gravity Forms and GravityKit installed. The Bit Integrations trigger works within the GravityKit/Gravity Forms ecosystem, passing entry data and any additional GravityKit-specific fields.
+```bash
+wp plugin status gravitykit
+```
 
-## What Data Gets Passed
+### List REST routes
 
-When a form is submitted, Bit Integrations passes the following data to any connected action:
+```bash
+GET https://example.com/wp-json/
 
-- All form field values (text, email, phone, textarea, dropdowns, checkboxes, file URLs)
-- Form ID and form name
-- Entry ID and entry status
-- Submission timestamp
-- Page URL where form was submitted
-- Hidden field values (UTM source, UTM medium, UTM campaign, referrer, etc.)
+Authorization: Basic base64(username:application_password)
+```
 
-## Connecting to Action Platforms
+### Search posts or records
 
-After selecting GravityKit as the trigger in Bit Integrations, connect it to any of these action platforms:
+```bash
+GET https://example.com/wp-json/wp/v2/search?search=customer&per_page=20
 
-| Action Platform | Common Use Case |
-|----------------|----------------|
-| HubSpot | Create CRM contact from form data |
-| Mailchimp / ActiveCampaign / MailerLite | Add subscriber to email list |
-| Google Sheets | Log submission as spreadsheet row |
-| Slack | Send team notification on new lead |
-| Zapier / Make / n8n | Route to any downstream app |
-| Pipedrive / Zoho CRM | Create deal or lead record |
-| Telegram / WhatsApp | Instant lead notification to phone |
+Authorization: Basic base64(username:application_password)
+```
 
-## Setup Steps
+### Create a WordPress post or content record
 
-1. Install and activate Gravity Forms and GravityKit on your WordPress site.
-2. Install and activate Bit Integrations (free from wordpress.org/plugins/bit-integrations/).
-3. Create a form in Gravity Forms and publish it on a page.
-4. Go to Bit Integrations > Create Integration.
-5. Select GravityKit as the trigger.
-6. Select the specific form you want to connect (or "all forms").
-7. Select your action platform (HubSpot, Mailchimp, Google Sheets, etc.).
-8. Map the form fields to the destination platform fields.
-9. Save and test by submitting the form with real data.
-10. Check the destination platform to confirm the data arrived correctly.
+```bash
+POST https://example.com/wp-json/wp/v2/posts
 
-## Field Mapping Tips
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
 
-- Always map the email field — it is the primary identifier in most action platforms.
-- Use hidden fields in your form to capture UTM parameters and pass them as lead source data to your CRM.
-- Map the form name or page URL field so you can track which form generated each lead.
-- If the action platform supports tags, apply a tag matching the form name for easy segmentation.
+{
+  "title": "New Website Lead",
+  "status": "draft",
+  "content": "Lead source: website form"
+}
+```
+
+### Update metadata through a plugin endpoint
+
+```bash
+POST https://example.com/wp-json/gravitykit/v1/records/{record_id}
+
+Authorization: Basic base64(username:application_password)
+Content-Type: application/json
+
+{
+  "status": "active",
+  "source": "website",
+  "notes": "Updated by automation"
+}
+```
+
+### Inspect plugin options
+
+```bash
+wp option list --search='gravitykit' --format=table
+```
+
+## Key Fields
+
+- `id` - WordPress post, user, entry, order, or plugin record ID
+- `post_id` - Related content object
+- `user_id` - Related WordPress user
+- `email` - User, customer, or form submitter email
+- `status` - Plugin-specific state such as active, pending, completed, or failed
+- `meta` - Custom fields stored as post meta, user meta, order meta, or plugin tables
+- `created_at` - Creation timestamp where available
+- `updated_at` - Last update timestamp where available
+
+## Parameters
+
+- `per_page` - Number of records per request
+- `page` - Pagination page number
+- `search` - Full-text search term
+- `status` - Filter by record status
+- `orderby` - Sort field
+- `order` - `asc` or `desc`
 
 ## When to Use
 
-- Capturing leads from Gravity Forms submissions with GravityKit workflows and sending them to a CRM
-- Growing an email list by connecting Gravity Forms opt-in forms to email marketing platforms
-- Logging all form submissions to a Google Sheet for team review
-- Triggering actions when GravityKit approves or rejects an entry
-- Passing UTM data from forms into CRM contact records for attribution
+- Manage WordPress-native records and plugin data
+- Audit plugin configuration
+- Connect forms, users, orders, courses, memberships, or content workflows
+- Build internal operational reports from WordPress data
+- Automate routine site administration tasks
 
-## Related Integrations
+## Rate Limits
 
-- gravity-forms.md
-- hubspot.md
-- mailchimp.md
-- google-sheets.md
-- slack.md
-- zapier.md
+- WordPress does not enforce one universal REST API limit by default
+- Hosting firewalls, security plugins, and CDN rules may throttle requests
+- Use pagination for large datasets
+- Avoid unauthenticated write operations
+
+## Relevant Skills
+
+- landing-page-cro
+- customer-service
+- analytics
