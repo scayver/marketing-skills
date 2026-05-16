@@ -12,7 +12,7 @@ This library fixes that. It gives your agent 57 specialized marketing and growth
 >
 > ☕ [Buy me a coffee](https://buymeacoffee.com/dorcelusalain) — buymeacoffee.com/dorcelusalain
 >
-> 💸 CashApp — **$AlainDorcelus**
+>  CashApp — **$AlainDorcelus**
 >
 > Every contribution directly funds new skills, improved frameworks, and continued maintenance of this library.
 
