@@ -108,3 +108,9 @@ Prevent outreach to:
 - [RB2B pricing](https://www.rb2b.com/pricing)
 - [RB2B plans comparison](https://support.rb2b.com/en/articles/9173659-rb2b-plans-side-by-side-comparisons)
 - [RB2B API Partner Program](https://support.rb2b.com/en/articles/12579420-rb2b-apis-rb2b-s-api-partner-program)
+
+## Rate Limits
+
+- Credit usage and export limits vary by plan.
+- CRM pushes, Slack alerts, and enrichment workflows may have separate platform limits.
+- API Partner Program limits are assigned per partner agreement.

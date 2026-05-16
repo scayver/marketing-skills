@@ -1,506 +1,376 @@
 # Marketing Tools Registry
 
-Quick reference for AI agents to discover tool capabilities and integration methods.
+Quick reference for AI agents to discover standalone platform integration guides.
 
-## How to Use This Registry
+This registry indexes every markdown guide in `tools/integrations/`. Each guide is written as an independent platform reference, not as a connector-specific setup note.
 
-1. **Find tools by category** - Browse sections below for tools in each domain
-2. **Check integration methods** - See what APIs, MCPs, CLIs, or SDKs are available
-3. **Read integration guides** - Detailed setup and common operations in `integrations/`
+## Inventory
 
----
+- **Standalone integration guides:** 346
+- **JavaScript CLI tools:** 61
+- **Composio docs:** 2
+- **Original Bit Integrations source list:** [`integrations/bit-integrations-registry.md`](integrations/bit-integrations-registry.md)
 
 ## Tool Index
 
 | Tool | Category | API | MCP | CLI | SDK | Guide |
 |------|----------|:---:|:---:|:---:|:---:|-------|
-| ga4 | Analytics | ✓ | ✓ | [✓](clis/ga4.js) | ✓ | [ga4.md](integrations/ga4.md) |
-| mixpanel | Analytics | ✓ | - | [✓](clis/mixpanel.js) | ✓ | [mixpanel.md](integrations/mixpanel.md) |
-| amplitude | Analytics | ✓ | - | [✓](clis/amplitude.js) | ✓ | [amplitude.md](integrations/amplitude.md) |
-| posthog | Analytics | ✓ | - | ✓ | ✓ | [posthog.md](integrations/posthog.md) |
-| segment | Analytics | ✓ | - | [✓](clis/segment.js) | ✓ | [segment.md](integrations/segment.md) |
-| adobe-analytics | Analytics | ✓ | - | [✓](clis/adobe-analytics.js) | ✓ | [adobe-analytics.md](integrations/adobe-analytics.md) |
-| plausible | Analytics | ✓ | - | [✓](clis/plausible.js) | - | [plausible.md](integrations/plausible.md) |
-| google-search-console | SEO | ✓ | - | [✓](clis/google-search-console.js) | ✓ | [google-search-console.md](integrations/google-search-console.md) |
-| semrush | SEO | ✓ | - | [✓](clis/semrush.js) | - | [semrush.md](integrations/semrush.md) |
-| ahrefs | SEO | ✓ | - | [✓](clis/ahrefs.js) | - | [ahrefs.md](integrations/ahrefs.md) |
-| dataforseo | SEO | ✓ | - | [✓](clis/dataforseo.js) | ✓ | [dataforseo.md](integrations/dataforseo.md) |
-| keywords-everywhere | SEO | ✓ | - | [✓](clis/keywords-everywhere.js) | - | [keywords-everywhere.md](integrations/keywords-everywhere.md) |
-| clearbit | Data Enrichment | ✓ | - | [✓](clis/clearbit.js) | ✓ | [clearbit.md](integrations/clearbit.md) |
-| apollo | Data Enrichment | ✓ | - | [✓](clis/apollo.js) | - | [apollo.md](integrations/apollo.md) |
-| zoominfo | Data Enrichment | ✓ | ✓ | [✓](clis/zoominfo.js) | - | [zoominfo.md](integrations/zoominfo.md) |
-| clay | Data Enrichment | ✓ | ✓ | [✓](clis/clay.js) | - | [clay.md](integrations/clay.md) |
-| supermetrics | Data Aggregation | ✓ | ✓ | [✓](clis/supermetrics.js) | - | [supermetrics.md](integrations/supermetrics.md) |
-| coupler | Data Aggregation | ✓ | ✓ | [✓](clis/coupler.js) | - | [coupler.md](integrations/coupler.md) |
-| hubspot | CRM | ✓ | - | ✓ | ✓ | [hubspot.md](integrations/hubspot.md) |
-| salesforce | CRM | ✓ | - | ✓ | ✓ | [salesforce.md](integrations/salesforce.md) |
-| close | CRM | ✓ | - | [✓](clis/close.js) | - | [close.md](integrations/close.md) |
-| stripe | Payments | ✓ | ✓ | ✓ | ✓ | [stripe.md](integrations/stripe.md) |
-| paddle | Payments | ✓ | - | [✓](clis/paddle.js) | ✓ | [paddle.md](integrations/paddle.md) |
-| rewardful | Referral | ✓ | - | [✓](clis/rewardful.js) | - | [rewardful.md](integrations/rewardful.md) |
-| tolt | Referral | ✓ | - | [✓](clis/tolt.js) | - | [tolt.md](integrations/tolt.md) |
-| dub-co | Links | ✓ | - | [✓](clis/dub.js) | ✓ | [dub-co.md](integrations/dub-co.md) |
-| mention-me | Referral | ✓ | - | [✓](clis/mention-me.js) | - | [mention-me.md](integrations/mention-me.md) |
-| partnerstack | Affiliate | ✓ | - | [✓](clis/partnerstack.js) | - | [partnerstack.md](integrations/partnerstack.md) |
-| mailchimp | Email | ✓ | ✓ | [✓](clis/mailchimp.js) | ✓ | [mailchimp.md](integrations/mailchimp.md) |
-| customer-io | Email | ✓ | - | [✓](clis/customer-io.js) | ✓ | [customer-io.md](integrations/customer-io.md) |
-| sendgrid | Email | ✓ | - | [✓](clis/sendgrid.js) | ✓ | [sendgrid.md](integrations/sendgrid.md) |
-| resend | Email | ✓ | ✓ | [✓](clis/resend.js) | ✓ | [resend.md](integrations/resend.md) |
+| academy-lms | LMS | ✓ | - | - | - | [academy-lms.md](integrations/academy-lms.md) |
+| acpt | Social | ✓ | - | - | - | [acpt.md](integrations/acpt.md) |
+| action-hook | Events | - | - | ✓ | ✓ | [action-hook.md](integrations/action-hook.md) |
+| activecampaign | CRM | ✓ | - | - | ✓ | [activecampaign.md](integrations/activecampaign.md) |
+| acumbamail | Analytics | ✓ | - | - | - | [acumbamail.md](integrations/acumbamail.md) |
+| adobe-analytics | Analytics | ✓ | - | - | ✓ | [adobe-analytics.md](integrations/adobe-analytics.md) |
+| advanced-ads | Support | - | - | - | - | [advanced-ads.md](integrations/advanced-ads.md) |
+| advanced-coupons | Commerce | ✓ | - | ✓ | - | [advanced-coupons.md](integrations/advanced-coupons.md) |
+| advanced-custom-fields | Content | ✓ | - | ✓ | - | [advanced-custom-fields.md](integrations/advanced-custom-fields.md) |
+| advanced-form-integration | CRM | - | - | - | - | [advanced-form-integration.md](integrations/advanced-form-integration.md) |
+| affiliatewp | Affiliate | ✓ | - | ✓ | - | [affiliatewp.md](integrations/affiliatewp.md) |
+| agiled-crm | CRM | ✓ | - | - | - | [agiled-crm.md](integrations/agiled-crm.md) |
+| ahrefs | SEO | ✓ | - | - | - | [ahrefs.md](integrations/ahrefs.md) |
+| airops | SEO | ✓ | - | ✓ | - | [airops.md](integrations/airops.md) |
+| airtable | CRM | ✓ | - | - | ✓ | [airtable.md](integrations/airtable.md) |
+| albato | Forms | - | - | - | - | [albato.md](integrations/albato.md) |
+| amelia | Commerce | ✓ | - | - | - | [amelia.md](integrations/amelia.md) |
+| amplitude | Analytics | ✓ | - | - | ✓ | [amplitude.md](integrations/amplitude.md) |
+| ant-apps | CRM | ✓ | - | - | - | [ant-apps.md](integrations/ant-apps.md) |
+| apollo | Forms | ✓ | - | ✓ | - | [apollo.md](integrations/apollo.md) |
+| appointment-hour-booking | Commerce | ✓ | - | - | - | [appointment-hour-booking.md](integrations/appointment-hour-booking.md) |
+| arforms | Forms | - | - | - | - | [arforms.md](integrations/arforms.md) |
+| armember | Commerce | ✓ | - | - | - | [armember.md](integrations/armember.md) |
+| asana | Forms | ✓ | - | - | ✓ | [asana.md](integrations/asana.md) |
+| asgaros-forum | Support | - | - | - | - | [asgaros-forum.md](integrations/asgaros-forum.md) |
+| automatorwp | Automation | - | - | - | - | [automatorwp.md](integrations/automatorwp.md) |
+| avada-form | Forms | - | - | - | - | [avada-form.md](integrations/avada-form.md) |
+| bbpress | Content | ✓ | - | ✓ | - | [bbpress.md](integrations/bbpress.md) |
+| beaver-builder-form | Forms | - | - | - | - | [beaver-builder-form.md](integrations/beaver-builder-form.md) |
+| beehiiv | Analytics | ✓ | - | ✓ | - | [beehiiv.md](integrations/beehiiv.md) |
+| benchmark-email | Email | ✓ | - | - | - | [benchmark-email.md](integrations/benchmark-email.md) |
+| bento | Analytics | ✓ | - | - | ✓ | [bento.md](integrations/bento.md) |
+| better-messages | Support | ✓ | - | - | - | [better-messages.md](integrations/better-messages.md) |
+| bit-assist-form | Forms | ✓ | - | - | - | [bit-assist-form.md](integrations/bit-assist-form.md) |
+| bit-form | Forms | ✓ | - | ✓ | - | [bit-form.md](integrations/bit-form.md) |
+| bit-social | Social | ✓ | - | ✓ | - | [bit-social.md](integrations/bit-social.md) |
+| booking-calendar-contact-form | Forms | ✓ | - | ✓ | - | [booking-calendar-contact-form.md](integrations/booking-calendar-contact-form.md) |
+| breakdance-form | Forms | ✓ | - | ✓ | - | [breakdance-form.md](integrations/breakdance-form.md) |
+| brevo | CRM | ✓ | - | - | ✓ | [brevo.md](integrations/brevo.md) |
+| bricks-builder-form | Forms | ✓ | - | ✓ | - | [bricks-builder-form.md](integrations/bricks-builder-form.md) |
+| bricksforge | Forms | ✓ | - | ✓ | - | [bricksforge.md](integrations/bricksforge.md) |
+| brizy-form | Forms | ✓ | - | ✓ | - | [brizy-form.md](integrations/brizy-form.md) |
+| buddyboss | Forms | ✓ | - | ✓ | - | [buddyboss.md](integrations/buddyboss.md) |
+| buddypress | Membership | ✓ | - | ✓ | - | [buddypress.md](integrations/buddypress.md) |
+| buffer | Analytics | ✓ | - | ✓ | - | [buffer.md](integrations/buffer.md) |
+| calculated-fields-form | Forms | - | - | - | - | [calculated-fields-form.md](integrations/calculated-fields-form.md) |
+| calendly | Forms | ✓ | - | ✓ | ✓ | [calendly.md](integrations/calendly.md) |
+| campaign-monitor | Analytics | ✓ | - | - | ✓ | [campaign-monitor.md](integrations/campaign-monitor.md) |
+| capsulecrm | CRM | ✓ | - | - | ✓ | [capsulecrm.md](integrations/capsulecrm.md) |
+| clay | Forms | ✓ | ✓ | ✓ | - | [clay.md](integrations/clay.md) |
+| clearbit | CRM | ✓ | - | ✓ | ✓ | [clearbit.md](integrations/clearbit.md) |
+| clickup | Forms | ✓ | - | - | ✓ | [clickup.md](integrations/clickup.md) |
+| clinchpad | CRM | ✓ | - | - | - | [clinchpad.md](integrations/clinchpad.md) |
+| close | CRM | ✓ | - | ✓ | - | [close.md](integrations/close.md) |
+| coblocks | Forms | - | - | - | - | [coblocks.md](integrations/coblocks.md) |
+| companyhub | CRM | ✓ | - | - | - | [companyhub.md](integrations/companyhub.md) |
+| composio | Support | ✓ | ✓ | ✓ | ✓ | [composio.md](integrations/composio.md) |
+| constant-contact | Email | ✓ | - | - | ✓ | [constant-contact.md](integrations/constant-contact.md) |
+| contact-form-7 | Forms | - | - | ✓ | - | [contact-form-7.md](integrations/contact-form-7.md) |
+| contact-form-email | Email | - | - | - | - | [contact-form-email.md](integrations/contact-form-email.md) |
+| contentful | Support | ✓ | - | ✓ | ✓ | [contentful.md](integrations/contentful.md) |
+| convert-pro | Email | - | - | - | - | [convert-pro.md](integrations/convert-pro.md) |
+| convertkit | Email | ✓ | - | - | ✓ | [convertkit.md](integrations/convertkit.md) |
+| copper-crm | CRM | ✓ | - | - | ✓ | [copper-crm.md](integrations/copper-crm.md) |
+| coupler | Analytics | ✓ | ✓ | ✓ | - | [coupler.md](integrations/coupler.md) |
+| creator-lms | LMS | - | - | - | - | [creator-lms.md](integrations/creator-lms.md) |
+| crossbeam | Forms | ✓ | ✓ | ✓ | - | [crossbeam.md](integrations/crossbeam.md) |
+| custom-api | Forms | ✓ | - | ✓ | - | [custom-api.md](integrations/custom-api.md) |
+| customer-io | Email | ✓ | - | - | ✓ | [customer-io.md](integrations/customer-io.md) |
+| dataforseo | SEO | ✓ | - | ✓ | ✓ | [dataforseo.md](integrations/dataforseo.md) |
+| demio | Analytics | ✓ | - | - | - | [demio.md](integrations/demio.md) |
+| directiq | Analytics | ✓ | - | - | - | [directiq.md](integrations/directiq.md) |
+| discord | Forms | ✓ | - | - | ✓ | [discord.md](integrations/discord.md) |
+| divi-form-builder | Forms | - | - | - | - | [divi-form-builder.md](integrations/divi-form-builder.md) |
+| divi-form | Forms | - | - | - | - | [divi-form.md](integrations/divi-form.md) |
+| dokan | Commerce | ✓ | - | ✓ | - | [dokan.md](integrations/dokan.md) |
+| drip | Analytics | ✓ | - | - | ✓ | [drip.md](integrations/drip.md) |
+| dropbox | Forms | ✓ | - | ✓ | ✓ | [dropbox.md](integrations/dropbox.md) |
+| dub-co | Analytics | ✓ | - | - | ✓ | [dub-co.md](integrations/dub-co.md) |
+| easy-digital-downloads | Commerce | ✓ | - | - | - | [easy-digital-downloads.md](integrations/easy-digital-downloads.md) |
+| easycommerce | Commerce | ✓ | - | - | - | [easycommerce.md](integrations/easycommerce.md) |
+| eform | Forms | - | - | - | - | [eform.md](integrations/eform.md) |
+| elastic-email | Email | ✓ | - | - | ✓ | [elastic-email.md](integrations/elastic-email.md) |
+| elementor-form | Forms | - | - | - | - | [elementor-form.md](integrations/elementor-form.md) |
+| emailoctopus | Email | ✓ | - | - | - | [emailoctopus.md](integrations/emailoctopus.md) |
+| encharge | Email | ✓ | - | - | - | [encharge.md](integrations/encharge.md) |
+| essential-addons-elementor | Forms | - | - | - | - | [essential-addons-elementor.md](integrations/essential-addons-elementor.md) |
+| essential-blocks | Forms | - | - | - | - | [essential-blocks.md](integrations/essential-blocks.md) |
+| eventin | Support | ✓ | - | - | - | [eventin.md](integrations/eventin.md) |
+| everest-forms | Forms | - | - | - | - | [everest-forms.md](integrations/everest-forms.md) |
+| fabman | Forms | ✓ | - | - | - | [fabman.md](integrations/fabman.md) |
+| firehose | Events | ✓ | - | - | - | [firehose.md](integrations/firehose.md) |
+| flowlu | CRM | ✓ | - | - | - | [flowlu.md](integrations/flowlu.md) |
+| flowmattic | Automation | - | - | - | - | [flowmattic.md](integrations/flowmattic.md) |
+| fluent-community | Forms | ✓ | - | - | - | [fluent-community.md](integrations/fluent-community.md) |
+| fluent-forms | Forms | ✓ | - | - | - | [fluent-forms.md](integrations/fluent-forms.md) |
+| fluent-support | Support | ✓ | - | - | - | [fluent-support.md](integrations/fluent-support.md) |
+| fluentaffiliate | Affiliate | ✓ | - | - | - | [fluentaffiliate.md](integrations/fluentaffiliate.md) |
+| fluentboards | Content | ✓ | - | - | - | [fluentboards.md](integrations/fluentboards.md) |
+| fluentbooking | Events | ✓ | - | - | - | [fluentbooking.md](integrations/fluentbooking.md) |
+| fluentcart | Commerce | ✓ | - | - | - | [fluentcart.md](integrations/fluentcart.md) |
+| fluentcrm | CRM | ✓ | - | - | - | [fluentcrm.md](integrations/fluentcrm.md) |
+| fluentsmtp | Email | - | - | - | - | [fluentsmtp.md](integrations/fluentsmtp.md) |
+| formcraft | Forms | - | - | - | - | [formcraft.md](integrations/formcraft.md) |
+| formgent | Forms | - | - | - | - | [formgent.md](integrations/formgent.md) |
+| formidable-forms | Forms | ✓ | - | - | - | [formidable-forms.md](integrations/formidable-forms.md) |
+| forminator | Forms | ✓ | - | - | - | [forminator.md](integrations/forminator.md) |
+| freshdesk | Forms | ✓ | - | - | ✓ | [freshdesk.md](integrations/freshdesk.md) |
+| freshsales | CRM | ✓ | - | - | - | [freshsales.md](integrations/freshsales.md) |
+| g2 | Forms | ✓ | - | ✓ | - | [g2.md](integrations/g2.md) |
+| ga4 | Analytics | ✓ | ✓ | - | ✓ | [ga4.md](integrations/ga4.md) |
+| gamipress | Content | ✓ | - | - | - | [gamipress.md](integrations/gamipress.md) |
+| geodirectory | Content | ✓ | - | - | - | [geodirectory.md](integrations/geodirectory.md) |
+| getgist | CRM | ✓ | - | - | - | [getgist.md](integrations/getgist.md) |
+| getresponse | Email | ✓ | - | - | ✓ | [getresponse.md](integrations/getresponse.md) |
+| givewp | Email | ✓ | - | - | - | [givewp.md](integrations/givewp.md) |
+| gohighlevel | CRM | ✓ | - | - | - | [gohighlevel.md](integrations/gohighlevel.md) |
+| gong | Email | ✓ | - | - | - | [gong.md](integrations/gong.md) |
+| google-ads | Email | ✓ | ✓ | - | ✓ | [google-ads.md](integrations/google-ads.md) |
+| google-calendar | Events | ✓ | ✓ | - | ✓ | [google-calendar.md](integrations/google-calendar.md) |
+| google-contacts | Operations | ✓ | - | - | ✓ | [google-contacts.md](integrations/google-contacts.md) |
+| google-drive | Forms | ✓ | ✓ | - | ✓ | [google-drive.md](integrations/google-drive.md) |
+| google-search-console | Analytics | ✓ | - | - | ✓ | [google-search-console.md](integrations/google-search-console.md) |
+| google-sheets | Forms | ✓ | ✓ | - | ✓ | [google-sheets.md](integrations/google-sheets.md) |
+| gravitec | Email | ✓ | - | - | ✓ | [gravitec.md](integrations/gravitec.md) |
+| gravity-forms | Forms | ✓ | - | ✓ | - | [gravity-forms.md](integrations/gravity-forms.md) |
+| gravitykit | Forms | ✓ | - | ✓ | - | [gravitykit.md](integrations/gravitykit.md) |
+| gutena-forms | Forms | ✓ | - | ✓ | - | [gutena-forms.md](integrations/gutena-forms.md) |
+| happyforms | Forms | - | - | - | - | [happyforms.md](integrations/happyforms.md) |
+| heygen | Forms | ✓ | ✓ | - | ✓ | [heygen.md](integrations/heygen.md) |
+| hotjar | Analytics | ✓ | - | ✓ | ✓ | [hotjar.md](integrations/hotjar.md) |
+| hubspot | CRM | ✓ | ✓ | - | ✓ | [hubspot.md](integrations/hubspot.md) |
+| hunter | Email | ✓ | - | ✓ | - | [hunter.md](integrations/hunter.md) |
+| hustle | Email | - | - | - | - | [hustle.md](integrations/hustle.md) |
+| hyperframes | Automation | - | - | ✓ | ✓ | [hyperframes.md](integrations/hyperframes.md) |
+| ifttt | Forms | ✓ | - | - | - | [ifttt.md](integrations/ifttt.md) |
+| insightly | CRM | ✓ | - | - | ✓ | [insightly.md](integrations/insightly.md) |
+| instantly | Analytics | ✓ | - | ✓ | - | [instantly.md](integrations/instantly.md) |
+| integrately | Forms | ✓ | - | - | - | [integrately.md](integrations/integrately.md) |
+| intercom | Forms | ✓ | - | ✓ | ✓ | [intercom.md](integrations/intercom.md) |
+| introw | Forms | - | ✓ | - | - | [introw.md](integrations/introw.md) |
+| jetengine | Social | ✓ | - | - | - | [jetengine.md](integrations/jetengine.md) |
+| jetformbuilder | Forms | ✓ | - | - | - | [jetformbuilder.md](integrations/jetformbuilder.md) |
+| jetpack-crm | CRM | ✓ | - | - | - | [jetpack-crm.md](integrations/jetpack-crm.md) |
+| kadence-blocks-form | Forms | - | - | - | - | [kadence-blocks-form.md](integrations/kadence-blocks-form.md) |
+| kali-forms | Forms | - | - | - | - | [kali-forms.md](integrations/kali-forms.md) |
+| keap | CRM | ✓ | - | - | ✓ | [keap.md](integrations/keap.md) |
+| keywords-everywhere | SEO | ✓ | - | ✓ | - | [keywords-everywhere.md](integrations/keywords-everywhere.md) |
+| kirim-email | Email | ✓ | - | - | - | [kirim-email.md](integrations/kirim-email.md) |
+| kit | Email | ✓ | - | - | ✓ | [kit.md](integrations/kit.md) |
+| klaviyo | Analytics | ✓ | - | - | ✓ | [klaviyo.md](integrations/klaviyo.md) |
+| konnectzit | Forms | ✓ | - | - | - | [konnectzit.md](integrations/konnectzit.md) |
+| learndash | Email | ✓ | - | - | - | [learndash.md](integrations/learndash.md) |
+| learnpress | LMS | ✓ | - | - | - | [learnpress.md](integrations/learnpress.md) |
+| lemlist | Email | ✓ | - | - | - | [lemlist.md](integrations/lemlist.md) |
+| license-manager-woocommerce | Commerce | ✓ | - | - | - | [license-manager-woocommerce.md](integrations/license-manager-woocommerce.md) |
+| lifterlms | Membership | ✓ | - | - | - | [lifterlms.md](integrations/lifterlms.md) |
+| line | Forms | ✓ | - | - | ✓ | [line.md](integrations/line.md) |
+| linkedin-ads | Analytics | ✓ | - | - | - | [linkedin-ads.md](integrations/linkedin-ads.md) |
+| liondesk | CRM | ✓ | - | - | - | [liondesk.md](integrations/liondesk.md) |
+| livestorm | Analytics | ✓ | - | - | - | [livestorm.md](integrations/livestorm.md) |
+| mail-mint | Email | ✓ | - | - | - | [mail-mint.md](integrations/mail-mint.md) |
+| mail-native | Email | - | - | ✓ | - | [mail-native.md](integrations/mail-native.md) |
+| mailbluster | Email | ✓ | - | - | - | [mailbluster.md](integrations/mailbluster.md) |
+| mailchimp | Analytics | ✓ | - | - | ✓ | [mailchimp.md](integrations/mailchimp.md) |
+| mailercloud | Analytics | ✓ | - | - | - | [mailercloud.md](integrations/mailercloud.md) |
+| mailerlite | Analytics | ✓ | - | - | ✓ | [mailerlite.md](integrations/mailerlite.md) |
+| mailerpress | Email | ✓ | - | - | - | [mailerpress.md](integrations/mailerpress.md) |
+| mailjet | Analytics | ✓ | - | - | ✓ | [mailjet.md](integrations/mailjet.md) |
+| mailpoet | Email | ✓ | - | ✓ | - | [mailpoet.md](integrations/mailpoet.md) |
+| mailrelay | Email | ✓ | - | - | ✓ | [mailrelay.md](integrations/mailrelay.md) |
+| mailster | Email | ✓ | - | - | - | [mailster.md](integrations/mailster.md) |
+| mailup | Email | ✓ | - | - | ✓ | [mailup.md](integrations/mailup.md) |
+| make | Forms | ✓ | - | - | - | [make.md](integrations/make.md) |
+| masteriyo-lms | Forms | ✓ | - | - | - | [masteriyo-lms.md](integrations/masteriyo-lms.md) |
+| masterstudy-lms | LMS | ✓ | - | - | - | [masterstudy-lms.md](integrations/masterstudy-lms.md) |
+| memberpress-courses | Membership | ✓ | - | - | - | [memberpress-courses.md](integrations/memberpress-courses.md) |
+| memberpress | Commerce | ✓ | - | - | - | [memberpress.md](integrations/memberpress.md) |
+| mention-me | Forms | ✓ | - | - | - | [mention-me.md](integrations/mention-me.md) |
+| meta-ads | Email | ✓ | - | - | ✓ | [meta-ads.md](integrations/meta-ads.md) |
+| metabox-frontend | Social | ✓ | - | - | - | [metabox-frontend.md](integrations/metabox-frontend.md) |
+| metform | Analytics | - | - | - | - | [metform.md](integrations/metform.md) |
+| mixpanel | Analytics | ✓ | - | - | ✓ | [mixpanel.md](integrations/mixpanel.md) |
+| modern-events-calendar | Support | ✓ | - | - | - | [modern-events-calendar.md](integrations/modern-events-calendar.md) |
+| moosend | Analytics | ✓ | - | - | - | [moosend.md](integrations/moosend.md) |
+| moxiecrm | CRM | ✓ | - | - | - | [moxiecrm.md](integrations/moxiecrm.md) |
+| mycred | Content | ✓ | - | - | - | [mycred.md](integrations/mycred.md) |
+| n8n | Forms | ✓ | - | ✓ | - | [n8n.md](integrations/n8n.md) |
+| new-user-approve | Content | - | - | - | - | [new-user-approve.md](integrations/new-user-approve.md) |
+| newsletter | Analytics | ✓ | - | - | - | [newsletter.md](integrations/newsletter.md) |
+| nex-forms | Analytics | - | - | - | - | [nex-forms.md](integrations/nex-forms.md) |
+| nimble | CRM | ✓ | - | - | - | [nimble.md](integrations/nimble.md) |
+| ninja-forms | CRM | ✓ | - | - | - | [ninja-forms.md](integrations/ninja-forms.md) |
+| ninja-tables | Content | ✓ | - | - | - | [ninja-tables.md](integrations/ninja-tables.md) |
 | nitrosend | Email | ✓ | ✓ | - | - | [nitrosend.md](integrations/nitrosend.md) |
-| kit | Email | ✓ | - | [✓](clis/kit.js) | ✓ | [kit.md](integrations/kit.md) |
-| beehiiv | Newsletter | ✓ | - | [✓](clis/beehiiv.js) | - | [beehiiv.md](integrations/beehiiv.md) |
-| klaviyo | Email/SMS | ✓ | - | [✓](clis/klaviyo.js) | ✓ | [klaviyo.md](integrations/klaviyo.md) |
-| postmark | Email | ✓ | - | [✓](clis/postmark.js) | ✓ | [postmark.md](integrations/postmark.md) |
-| brevo | Email/SMS | ✓ | - | [✓](clis/brevo.js) | ✓ | [brevo.md](integrations/brevo.md) |
-| activecampaign | Email/CRM | ✓ | - | [✓](clis/activecampaign.js) | ✓ | [activecampaign.md](integrations/activecampaign.md) |
-| hunter | Email Outreach | ✓ | - | [✓](clis/hunter.js) | - | [hunter.md](integrations/hunter.md) |
-| snov | Email Outreach | ✓ | - | [✓](clis/snov.js) | - | [snov.md](integrations/snov.md) |
-| lemlist | Email Outreach | ✓ | - | [✓](clis/lemlist.js) | - | [lemlist.md](integrations/lemlist.md) |
-| instantly | Email Outreach | ✓ | - | [✓](clis/instantly.js) | - | [instantly.md](integrations/instantly.md) |
-| google-ads | Ads | ✓ | ✓ | [✓](clis/google-ads.js) | ✓ | [google-ads.md](integrations/google-ads.md) |
-| meta-ads | Ads | ✓ | - | [✓](clis/meta-ads.js) | ✓ | [meta-ads.md](integrations/meta-ads.md) |
-| linkedin-ads | Ads | ✓ | - | [✓](clis/linkedin-ads.js) | - | [linkedin-ads.md](integrations/linkedin-ads.md) |
-| tiktok-ads | Ads | ✓ | - | [✓](clis/tiktok-ads.js) | ✓ | [tiktok-ads.md](integrations/tiktok-ads.md) |
-| zapier | Automation | ✓ | ✓ | [✓](clis/zapier.js) | ✓ | [zapier.md](integrations/zapier.md) |
-| hotjar | CRO | ✓ | - | [✓](clis/hotjar.js) | - | [hotjar.md](integrations/hotjar.md) |
-| optimizely | A/B Testing | ✓ | - | [✓](clis/optimizely.js) | ✓ | [optimizely.md](integrations/optimizely.md) |
-| calendly | Scheduling | ✓ | - | [✓](clis/calendly.js) | - | [calendly.md](integrations/calendly.md) |
-| savvycal | Scheduling | ✓ | - | [✓](clis/savvycal.js) | - | [savvycal.md](integrations/savvycal.md) |
-| typeform | Forms | ✓ | - | [✓](clis/typeform.js) | ✓ | [typeform.md](integrations/typeform.md) |
-| intercom | Messaging | ✓ | - | [✓](clis/intercom.js) | ✓ | [intercom.md](integrations/intercom.md) |
-| outreach | Sales Engagement | ✓ | ✓ | [✓](clis/outreach.js) | - | [outreach.md](integrations/outreach.md) |
-| crossbeam | Partner Ecosystem | ✓ | ✓ | [✓](clis/crossbeam.js) | - | [crossbeam.md](integrations/crossbeam.md) |
-| introw | Partner Ecosystem | - | ✓ | - | - | [introw.md](integrations/introw.md) |
-| pendo | Product Analytics | ✓ | - | [✓](clis/pendo.js) | - | [pendo.md](integrations/pendo.md) |
-| similarweb | Competitive Intelligence | ✓ | - | [✓](clis/similarweb.js) | - | [similarweb.md](integrations/similarweb.md) |
-| firehose | Competitive Intelligence | ✓ | - | - | - | [firehose.md](integrations/firehose.md) |
-| sparktoro | Audience Research | - | - | - | - | [sparktoro.md](integrations/sparktoro.md) |
-| rb2b | Visitor Identification | ✓ | - | - | - | [rb2b.md](integrations/rb2b.md) |
-| gong | Revenue Intelligence | ✓ | - | - | - | [gong.md](integrations/gong.md) |
-| airops | AI Content | ✓ | - | [✓](clis/airops.js) | - | [airops.md](integrations/airops.md) |
-| buffer | Social | ✓ | - | [✓](clis/buffer.js) | - | [buffer.md](integrations/buffer.md) |
-| wistia | Video | ✓ | - | [✓](clis/wistia.js) | - | [wistia.md](integrations/wistia.md) |
-| heygen | Video | ✓ | ✓ | - | ✓ | [heygen.md](integrations/heygen.md) |
-| hyperframes | Video | - | - | ✓ | ✓ | [hyperframes.md](integrations/hyperframes.md) |
-| trustpilot | Reviews | ✓ | - | [✓](clis/trustpilot.js) | - | [trustpilot.md](integrations/trustpilot.md) |
-| g2 | Reviews | ✓ | - | [✓](clis/g2.js) | - | [g2.md](integrations/g2.md) |
-| onesignal | Push | ✓ | - | [✓](clis/onesignal.js) | ✓ | [onesignal.md](integrations/onesignal.md) |
-| demio | Webinar | ✓ | - | [✓](clis/demio.js) | - | [demio.md](integrations/demio.md) |
-| livestorm | Webinar | ✓ | - | [✓](clis/livestorm.js) | - | [livestorm.md](integrations/livestorm.md) |
-| shopify | Commerce | ✓ | - | ✓ | ✓ | [shopify.md](integrations/shopify.md) |
-| wordpress | CMS | ✓ | - | ✓ | ✓ | [wordpress.md](integrations/wordpress.md) |
-| webflow | CMS | ✓ | - | ✓ | ✓ | [webflow.md](integrations/webflow.md) |
-| sanity | Headless CMS | ✓ | - | ✓ | ✓ | [sanity.md](integrations/sanity.md) |
-| contentful | Headless CMS | ✓ | - | ✓ | ✓ | [contentful.md](integrations/contentful.md) |
-| strapi | Headless CMS | ✓ | - | ✓ | ✓ | [strapi.md](integrations/strapi.md) |
-| composio | Integration Layer | ✓ | ✓ | ✓ | ✓ | [composio.md](integrations/composio.md) |
-
----
-
-## By Category
-
-### Analytics
-
-Track user behavior, measure conversions, and analyze marketing performance.
-
-| Tool | Best For | MCP Available |
-|------|----------|:-------------:|
-| **ga4** | Web analytics, Google ecosystem | ✓ |
-| **mixpanel** | Product analytics, event tracking | - |
-| **amplitude** | Product analytics, cohort analysis | - |
-| **posthog** | Open-source analytics, session replay | - |
-| **segment** | Customer data platform, routing | - |
-| **adobe-analytics** | Enterprise analytics | - |
-| **plausible** | Privacy-focused analytics | - |
-
-**Agent recommendation**: Start with GA4 if using Google ecosystem. Use Mixpanel or Amplitude for deeper product analytics. Plausible for privacy-focused sites.
-
-### SEO
-
-Search engine optimization tools for keyword research, rank tracking, and site audits.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **google-search-console** | Free, authoritative search data | Direct from Google |
-| **semrush** | Competitive analysis, keyword research | Comprehensive |
-| **ahrefs** | Backlink analysis, content research | Best for links |
-| **dataforseo** | SERP tracking, backlinks, on-page audits | Comprehensive API |
-| **keywords-everywhere** | Quick keyword research, traffic estimates | Credit-based |
-
-**Agent recommendation**: Google Search Console is essential (free). Add Semrush or Ahrefs for competitive research. DataForSEO for programmatic SERP data. Keywords Everywhere for quick keyword lookups.
-
-### CRM
-
-Customer relationship management and sales tools.
-
-| Tool | Best For | CLI Available |
-|------|----------|:-------------:|
-| **hubspot** | SMB, marketing + sales alignment | ✓ |
-| **salesforce** | Enterprise, complex sales processes | ✓ |
-| **close** | SMB, high-velocity sales | [✓](clis/close.js) |
-
-**Agent recommendation**: HubSpot for startups/SMBs. Close for high-velocity inside sales. Salesforce for enterprise.
-
-### Payments
-
-Payment processing and subscription management.
-
-| Tool | Best For | MCP Available |
-|------|----------|:-------------:|
-| **stripe** | SaaS subscriptions, developer-friendly | ✓ |
-| **paddle** | SaaS billing with tax handling | - |
-
-**Agent recommendation**: Stripe is the default for SaaS. Paddle for built-in tax compliance.
-
-### Referral & Affiliate
-
-Tools for referral programs, affiliate tracking, and partner management.
-
-| Tool | Best For | Stripe Integration |
-|------|----------|:------------------:|
-| **rewardful** | Stripe-native affiliate programs | ✓ |
-| **tolt** | SaaS affiliate programs | ✓ |
-| **mention-me** | Enterprise referral programs | ✓ |
-| **dub-co** | Link tracking, attribution | - |
-| **partnerstack** | Enterprise partner programs | ✓ |
-
-**Agent recommendation**: Rewardful or Tolt for Stripe-based SaaS. PartnerStack for enterprise partner programs. Dub.co for link attribution.
-
-### Email
-
-Email marketing, transactional email, and automation platforms.
-
-| Tool | Best For | MCP Available |
-|------|----------|:-------------:|
-| **mailchimp** | SMB email marketing | ✓ |
-| **customer-io** | Behavior-based messaging | - |
-| **sendgrid** | Transactional email at scale | - |
-| **resend** | Developer-friendly transactional | ✓ |
-| **kit** | Creator/newsletter focused | - |
-| **beehiiv** | Newsletter platform | - |
-| **klaviyo** | E-commerce email + SMS | - |
-| **postmark** | Deliverability-focused transactional | - |
-| **brevo** | Email + SMS, popular in EU | - |
-| **activecampaign** | Email automation + CRM | - |
-
-**Agent recommendation**: Resend for transactional (dev-friendly). Postmark for deliverability. Customer.io for advanced automation. Kit for creators. Beehiiv for newsletters. Klaviyo for e-commerce email/SMS. ActiveCampaign for email + CRM combo.
-
-### Advertising
-
-Paid advertising platforms and campaign management.
-
-| Tool | Best For | MCP Available |
-|------|----------|:-------------:|
-| **google-ads** | Search intent, high-intent traffic | ✓ |
-| **meta-ads** | Demand gen, visual products, B2C | - |
-| **linkedin-ads** | B2B, job title targeting | - |
-| **tiktok-ads** | Younger demographics, video | - |
-
-**Agent recommendation**: Google Ads for search intent. Meta for demand generation. LinkedIn for B2B.
-
-### Automation
-
-Workflow automation and integration platforms.
-
-| Tool | Best For | MCP Available |
-|------|----------|:-------------:|
-| **zapier** | No-code integrations + SDK for 8,000+ apps | ✓ |
-
-**Agent recommendation**: Zapier SDK for agents that need to interact with any app directly. Zaps for always-on automations.
-
-### CRO & A/B Testing
-
-Conversion rate optimization, heatmaps, and experimentation.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **hotjar** | Heatmaps, recordings, surveys | Visual behavior data |
-| **optimizely** | A/B testing, feature flags | Enterprise experimentation |
-
-**Agent recommendation**: Hotjar for understanding user behavior. Optimizely for running experiments.
-
-### Scheduling
-
-Booking and appointment scheduling tools.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **calendly** | Meeting scheduling, lead gen | Most popular |
-| **savvycal** | Personalized scheduling | Developer-friendly |
-
-**Agent recommendation**: Calendly for general use. SavvyCal for personalized booking experiences.
-
-### Forms & Surveys
-
-Form builders and survey platforms.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **typeform** | Interactive forms, surveys | Conversational UX |
-
-**Agent recommendation**: Typeform for engaging forms and surveys.
-
-### Messaging
-
-In-app messaging, chat, and customer communication.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **intercom** | In-app messaging, support, product tours | Full customer platform |
-
-**Agent recommendation**: Intercom for in-app messaging and customer support.
-
-### Social Media
-
-Social media scheduling, management, and analytics.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **buffer** | Social scheduling, analytics | Multi-platform |
-
-**Agent recommendation**: Buffer for scheduling and analytics across social platforms.
-
-### Video
-
-Video hosting, creation, and AI generation.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **wistia** | Video hosting, marketing analytics | Best for marketing video hosting |
-| **heygen** | AI avatars, talking-head videos | MCP server available |
-| **hyperframes** | Programmatic video from HTML/CSS | Open source, agent-native |
-
-**Agent recommendation**: HeyGen for AI avatar videos (MCP-enabled). Hyperframes for templated, data-driven video from code. Wistia for hosting and analytics.
-
-### Data Enrichment
-
-Company and person data enrichment for sales and marketing.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **clearbit** | Company/person enrichment | Now HubSpot Breeze |
-| **apollo** | B2B prospecting, email finding | Large database |
-| **zoominfo** | B2B contacts, intent data | Enterprise-grade |
-| **clay** | Waterfall enrichment, outbound | 75+ data providers |
-
-**Agent recommendation**: Clearbit for enrichment. Apollo for prospecting and outbound. ZoomInfo for enterprise B2B data with intent signals. Clay for waterfall enrichment across multiple providers.
-
-### Reviews
-
-Review management and social proof platforms.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **trustpilot** | Consumer business reviews | Most recognized |
-| **g2** | Software/B2B reviews | Best for SaaS |
-
-**Agent recommendation**: Trustpilot for consumer products. G2 for B2B software.
-
-### Push Notifications
-
-Push notification delivery platforms.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **onesignal** | Multi-channel push notifications | Web + mobile |
-
-**Agent recommendation**: OneSignal for web and mobile push notifications.
-
-### Webinar
-
-Webinar and virtual event platforms.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **demio** | Marketing webinars | Simple, focused |
-| **livestorm** | Video engagement, webinars | Full event platform |
-
-**Agent recommendation**: Demio for marketing-focused webinars. Livestorm for full event engagement.
-
-### Sales Engagement
-
-Sales engagement and outreach automation platforms.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **outreach** | Enterprise sales engagement | Sequences, tasks, analytics |
-
-**Agent recommendation**: Outreach for enterprise sales teams managing multi-touch sequences at scale.
-
-### Product Analytics
-
-Product analytics, feature adoption tracking, and in-app guidance.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **pendo** | Feature adoption, in-app guides | Product-led growth |
-
-**Agent recommendation**: Pendo for tracking feature adoption and delivering targeted in-app guidance.
-
-### Competitive Intelligence
-
-Traffic analytics, competitor benchmarking, and market research.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **similarweb** | Website traffic, competitor analysis | Traffic sources, keywords |
-
-**Agent recommendation**: Similarweb for competitor traffic analysis and market benchmarking.
-
-### Audience Research
-
-Audience intelligence and behavioral research tools.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **sparktoro** | Audience affinities, behavioral data | Clickstream + social data |
-
-**Agent recommendation**: SparkToro for discovering where your ICP spends time — what they read, watch, listen to, follow, and search for. Essential for customer research, content strategy, and media buying decisions.
-
-### Visitor Identification
-
-Website visitor de-anonymization for B2B sales and marketing.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **rb2b** | Person-level visitor ID, intent signals | LinkedIn profiles, emails, page-level data |
-
-**Agent recommendation**: RB2B for identifying anonymous B2B website visitors and routing high-intent visitors to outreach tools. Pairs well with Clay for enrichment and Instantly/Lemlist for cold email.
-
-### Revenue Intelligence
-
-Sales conversation analytics, call recording, and deal intelligence.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **gong** | Call recording, transcript analysis, deal insights | REST API, 10k API calls/day |
-
-**Agent recommendation**: Gong for mining sales call transcripts for customer research, competitive intelligence, and coaching insights. Essential for revenue attribution and win/loss analysis.
-
-### AI Content
-
-AI-powered content generation and optimization platforms.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **airops** | AI content workflows, SEO content | Flow-based automation |
-
-**Agent recommendation**: AirOps for building AI content workflows that generate SEO-optimized content at scale.
-
-### Partner Ecosystem
-
-Partner data sharing, co-sell, and ecosystem management.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **crossbeam** | Account overlaps, co-sell | Now part of Reveal |
-| **introw** | Partner management, deal registration, QBRs | MCP-enabled PRM |
-
-**Agent recommendation**: Crossbeam for identifying partner account overlaps and co-sell opportunities. Introw for full partner relationship management — partner pipeline, commissions, tasks, and automated business review prep.
-
-### Email Outreach
-
-Cold email outreach and email finding tools for link building and sales prospecting.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **hunter** | Email finding, domain search | Largest email database |
-| **snov** | Email finding, drip campaigns | Built-in sequences |
-| **lemlist** | Cold email campaigns | Personalization features |
-| **instantly** | Cold email at scale | Email warmup built-in |
-
-**Agent recommendation**: Hunter for finding emails. Lemlist or Instantly for sending cold email campaigns. Snov for combined finding + outreach.
-
-### Data Aggregation
-
-Marketing data pipeline tools that connect multiple platforms for unified reporting.
-
-| Tool | Best For | Notes |
-|------|----------|-------|
-| **supermetrics** | Cross-platform data pulling | 200+ connectors |
-| **coupler** | Automated data flows to sheets/BI | Scheduled pipelines |
-
-**Agent recommendation**: Supermetrics for pulling data from multiple marketing platforms into unified reports. Coupler.io for automated data flows to spreadsheets and BI tools.
-
-### Commerce & CMS
-
-E-commerce platforms and content management systems.
-
-| Tool | Best For | CLI Available |
-|------|----------|:-------------:|
-| **shopify** | E-commerce, product sales | ✓ |
-| **wordpress** | Blogs, content sites | ✓ |
-| **webflow** | Design-focused marketing sites | ✓ |
-| **sanity** | Headless CMS, structured content | ✓ |
-| **contentful** | Enterprise headless CMS, multi-locale | ✓ |
-| **strapi** | Open-source headless CMS, self-hosted | ✓ |
-
-**Agent recommendation**: Shopify for e-commerce. Webflow for marketing sites. WordPress for blogs. For headless CMS: Sanity for developer-flexible content, Contentful for enterprise multi-locale, Strapi for self-hosted/budget-conscious. See [headless CMS guide](../skills/content-strategy/references/headless-cms.md) for selection criteria.
-
----
-
-## CLI Tools
-
-Zero-dependency, single-file Node.js CLIs for tools that don't ship their own. See [`clis/README.md`](clis/README.md) for install instructions and usage.
-
-All CLIs follow a consistent pattern:
-- **No dependencies** — Node 18+ only, uses native `fetch`
-- **JSON output** — pipe to `jq`, save to file, or use in scripts
-- **Env var auth** — set `{TOOL}_API_KEY` and go
-- **Consistent commands** — `{tool} <resource> <action> [options]`
-
----
-
-## MCP-Enabled Tools
-
-These tools have Model Context Protocol servers available, enabling direct agent interaction:
-
-- **ga4** - Google Analytics 4 data access
-- **stripe** - Payment and subscription management
-- **mailchimp** - Email campaign management
-- **google-ads** - Ad campaign management
-- **resend** - Transactional email sending
-- **zapier** - Workflow automation + SDK for 8,000+ app integrations
-- **zoominfo** - B2B contacts and intent data
-- **clay** - Data enrichment and outbound automation
-- **supermetrics** - Cross-platform marketing data
-- **coupler** - Marketing data pipelines
-- **outreach** - Sales engagement sequences
-- **crossbeam** - Partner ecosystem data
-- **introw** - Partner relationship management
-
-To use MCP tools, ensure the appropriate MCP server is configured in your environment.
-
-### Composio Integration
-
-[Composio](integrations/composio.md) provides managed OAuth and pre-built connectors for 500+ tools via a single MCP server. It adds MCP access to tools that don't have native MCP servers, including HubSpot, Salesforce, Meta Ads, LinkedIn Ads, Google Sheets, Slack, Notion, and more.
-
-- **Setup**: `npx @composio/mcp@latest setup`
-- **Quick start**: See [tools/composio/README.md](composio/README.md)
-- **Marketing tool mapping**: See [tools/composio/marketing-tools.md](composio/marketing-tools.md)
-
-Use Composio when you need MCP access to OAuth-heavy tools. Prefer native MCP servers (GA4, Stripe, Mailchimp, etc.) when available — they have deeper coverage.
-
----
-
-## Quick Start by Use Case
-
-### Setting up analytics tracking
-1. Read [ga4.md](integrations/ga4.md) for web analytics
-2. Read [segment.md](integrations/segment.md) if routing to multiple tools
-
-### Launching a referral program
-1. Read [rewardful.md](integrations/rewardful.md) or [tolt.md](integrations/tolt.md) for Stripe-based programs
-2. Read [dub-co.md](integrations/dub-co.md) for link tracking
-
-### Setting up email automation
-1. Read [customer-io.md](integrations/customer-io.md) for behavior-based automation
-2. Read [resend.md](integrations/resend.md) for transactional email
-
-### Running email outreach for backlinks
-1. Read [hunter.md](integrations/hunter.md) for finding emails
-2. Read [lemlist.md](integrations/lemlist.md) or [instantly.md](integrations/instantly.md) for sending campaigns
-
-### Running paid ads
-1. Read [google-ads.md](integrations/google-ads.md) for search campaigns
-2. Read [meta-ads.md](integrations/meta-ads.md) for social campaigns
+| notificationx | Social | - | - | - | - | [notificationx.md](integrations/notificationx.md) |
+| notion | Operations | ✓ | ✓ | - | ✓ | [notion.md](integrations/notion.md) |
+| nutshell-crm | CRM | ✓ | - | - | - | [nutshell-crm.md](integrations/nutshell-crm.md) |
+| omnisend | Analytics | ✓ | - | - | - | [omnisend.md](integrations/omnisend.md) |
+| onedrive | Storage | ✓ | - | ✓ | ✓ | [onedrive.md](integrations/onedrive.md) |
+| onehash | CRM | ✓ | - | - | - | [onehash.md](integrations/onehash.md) |
+| onesignal | Analytics | ✓ | - | ✓ | ✓ | [onesignal.md](integrations/onesignal.md) |
+| optimizely | Email | ✓ | - | ✓ | ✓ | [optimizely.md](integrations/optimizely.md) |
+| optinmonster | Email | ✓ | - | - | ✓ | [optinmonster.md](integrations/optinmonster.md) |
+| outreach | Email | ✓ | ✓ | ✓ | - | [outreach.md](integrations/outreach.md) |
+| pabbly | Forms | ✓ | - | - | ✓ | [pabbly.md](integrations/pabbly.md) |
+| paddle | Forms | ✓ | - | ✓ | ✓ | [paddle.md](integrations/paddle.md) |
+| paid-memberships-pro | Membership | ✓ | - | ✓ | - | [paid-memberships-pro.md](integrations/paid-memberships-pro.md) |
+| partnerstack | Forms | ✓ | - | ✓ | - | [partnerstack.md](integrations/partnerstack.md) |
+| paymattic | Forms | ✓ | - | ✓ | - | [paymattic.md](integrations/paymattic.md) |
+| pcloud | Forms | ✓ | - | - | ✓ | [pcloud.md](integrations/pcloud.md) |
+| peepso | Membership | ✓ | - | - | - | [peepso.md](integrations/peepso.md) |
+| pendo | Analytics | ✓ | - | ✓ | - | [pendo.md](integrations/pendo.md) |
+| perfex-crm | CRM | ✓ | - | - | - | [perfex-crm.md](integrations/perfex-crm.md) |
+| pie-forms | CRM | - | - | - | - | [pie-forms.md](integrations/pie-forms.md) |
+| piotnet-addons-elementor | Forms | - | - | - | - | [piotnet-addons-elementor.md](integrations/piotnet-addons-elementor.md) |
+| piotnet-forms | CRM | - | - | - | - | [piotnet-forms.md](integrations/piotnet-forms.md) |
+| pipedrive | CRM | ✓ | - | - | ✓ | [pipedrive.md](integrations/pipedrive.md) |
+| plausible | Analytics | ✓ | - | ✓ | - | [plausible.md](integrations/plausible.md) |
+| pods | Support | ✓ | - | ✓ | - | [pods.md](integrations/pods.md) |
+| poptics | Email | - | - | - | - | [poptics.md](integrations/poptics.md) |
+| popup-maker | Automation | - | - | - | - | [popup-maker.md](integrations/popup-maker.md) |
+| post-creation | Content | ✓ | - | ✓ | - | [post-creation.md](integrations/post-creation.md) |
+| posthog | Analytics | ✓ | - | ✓ | ✓ | [posthog.md](integrations/posthog.md) |
+| postmark | Analytics | ✓ | - | ✓ | ✓ | [postmark.md](integrations/postmark.md) |
+| presto-player | Email | ✓ | - | - | - | [presto-player.md](integrations/presto-player.md) |
+| profile-builder | Forms | ✓ | - | - | - | [profile-builder.md](integrations/profile-builder.md) |
+| profilegrid | Membership | ✓ | - | - | - | [profilegrid.md](integrations/profilegrid.md) |
+| propovoice-crm | CRM | ✓ | - | - | - | [propovoice-crm.md](integrations/propovoice-crm.md) |
+| quill-forms | Forms | - | - | - | - | [quill-forms.md](integrations/quill-forms.md) |
+| rafflepress | Email | ✓ | - | - | - | [rafflepress.md](integrations/rafflepress.md) |
+| rapidmail | Email | ✓ | - | - | - | [rapidmail.md](integrations/rapidmail.md) |
+| rb2b | CRM | - | - | - | - | [rb2b.md](integrations/rb2b.md) |
+| resend | Email | ✓ | ✓ | ✓ | ✓ | [resend.md](integrations/resend.md) |
+| restrict-content | Commerce | ✓ | - | - | - | [restrict-content.md](integrations/restrict-content.md) |
+| rewardful | Commerce | ✓ | - | - | - | [rewardful.md](integrations/rewardful.md) |
+| salesflare | CRM | ✓ | - | - | - | [salesflare.md](integrations/salesflare.md) |
+| salesforce | Analytics | ✓ | - | ✓ | ✓ | [salesforce.md](integrations/salesforce.md) |
+| salesmate | CRM | ✓ | - | - | - | [salesmate.md](integrations/salesmate.md) |
+| sanity | SEO | ✓ | - | ✓ | ✓ | [sanity.md](integrations/sanity.md) |
+| sarbacane | Email | ✓ | - | - | - | [sarbacane.md](integrations/sarbacane.md) |
+| savvycal | Forms | ✓ | - | ✓ | - | [savvycal.md](integrations/savvycal.md) |
+| segment | Analytics | ✓ | - | - | ✓ | [segment.md](integrations/segment.md) |
+| selzy | Analytics | ✓ | - | - | - | [selzy.md](integrations/selzy.md) |
+| semrush | Analytics | ✓ | - | - | - | [semrush.md](integrations/semrush.md) |
+| sendfox | Email | ✓ | - | - | - | [sendfox.md](integrations/sendfox.md) |
+| sendgrid | Analytics | ✓ | - | - | ✓ | [sendgrid.md](integrations/sendgrid.md) |
+| sendpulse | Email | ✓ | - | - | ✓ | [sendpulse.md](integrations/sendpulse.md) |
+| sendy | Email | ✓ | - | - | ✓ | [sendy.md](integrations/sendy.md) |
+| sensei-lms | LMS | ✓ | - | ✓ | - | [sensei-lms.md](integrations/sensei-lms.md) |
+| seopress | SEO | ✓ | - | ✓ | - | [seopress.md](integrations/seopress.md) |
+| shopify | Forms | ✓ | - | ✓ | ✓ | [shopify.md](integrations/shopify.md) |
+| similarweb | Analytics | ✓ | - | ✓ | - | [similarweb.md](integrations/similarweb.md) |
+| simply-schedule-appointments | Events | ✓ | - | ✓ | - | [simply-schedule-appointments.md](integrations/simply-schedule-appointments.md) |
+| siteorigin-widgets | Content | ✓ | - | ✓ | - | [siteorigin-widgets.md](integrations/siteorigin-widgets.md) |
+| slack | Forms | ✓ | - | - | ✓ | [slack.md](integrations/slack.md) |
+| slicewp | Affiliate | ✓ | - | ✓ | - | [slicewp.md](integrations/slicewp.md) |
+| smaily | Email | ✓ | - | - | ✓ | [smaily.md](integrations/smaily.md) |
+| smartsuite | Forms | ✓ | - | - | - | [smartsuite.md](integrations/smartsuite.md) |
+| snov | Email | ✓ | - | ✓ | - | [snov.md](integrations/snov.md) |
+| solid-affiliate | Commerce | ✓ | - | - | - | [solid-affiliate.md](integrations/solid-affiliate.md) |
+| sparktoro | Forms | - | - | - | - | [sparktoro.md](integrations/sparktoro.md) |
+| spectra | Forms | ✓ | - | - | - | [spectra.md](integrations/spectra.md) |
+| sperse | Forms | ✓ | - | - | - | [sperse.md](integrations/sperse.md) |
+| storeengine | Commerce | ✓ | - | - | - | [storeengine.md](integrations/storeengine.md) |
+| strapi | Content | ✓ | - | ✓ | ✓ | [strapi.md](integrations/strapi.md) |
+| stripe | Automation | ✓ | ✓ | ✓ | ✓ | [stripe.md](integrations/stripe.md) |
+| studiocart | Forms | ✓ | - | - | - | [studiocart.md](integrations/studiocart.md) |
+| suitedash | CRM | ✓ | - | - | - | [suitedash.md](integrations/suitedash.md) |
+| supermetrics | Analytics | ✓ | ✓ | ✓ | - | [supermetrics.md](integrations/supermetrics.md) |
+| surecart | Forms | ✓ | - | - | - | [surecart.md](integrations/surecart.md) |
+| surefeedback | Content | ✓ | - | - | - | [surefeedback.md](integrations/surefeedback.md) |
+| sureforms | Forms | ✓ | - | - | - | [sureforms.md](integrations/sureforms.md) |
+| suremail | Email | - | - | - | - | [suremail.md](integrations/suremail.md) |
+| suremembers | Membership | ✓ | - | - | - | [suremembers.md](integrations/suremembers.md) |
+| suretriggers | Forms | ✓ | - | - | - | [suretriggers.md](integrations/suretriggers.md) |
+| syncspider | Forms | ✓ | - | - | - | [syncspider.md](integrations/syncspider.md) |
+| teams-woocommerce-memberships | Commerce | ✓ | - | - | - | [teams-woocommerce-memberships.md](integrations/teams-woocommerce-memberships.md) |
+| telegram | Forms | ✓ | - | - | ✓ | [telegram.md](integrations/telegram.md) |
+| the-events-calendar | Support | ✓ | - | - | - | [the-events-calendar.md](integrations/the-events-calendar.md) |
+| thrive-apprentice | LMS | ✓ | - | - | - | [thrive-apprentice.md](integrations/thrive-apprentice.md) |
+| thrive-automator | Automation | - | - | - | - | [thrive-automator.md](integrations/thrive-automator.md) |
+| thrive-leads | Forms | - | - | - | - | [thrive-leads.md](integrations/thrive-leads.md) |
+| tiktok-ads | Email | ✓ | - | - | ✓ | [tiktok-ads.md](integrations/tiktok-ads.md) |
+| tolt | Commerce | ✓ | - | - | - | [tolt.md](integrations/tolt.md) |
+| trello | Operations | ✓ | - | - | ✓ | [trello.md](integrations/trello.md) |
+| tripetto | Forms | - | - | - | ✓ | [tripetto.md](integrations/tripetto.md) |
+| trustpilot | Forms | ✓ | - | ✓ | ✓ | [trustpilot.md](integrations/trustpilot.md) |
+| tutorlms | LMS | ✓ | - | - | - | [tutorlms.md](integrations/tutorlms.md) |
+| twilio | Email | ✓ | - | ✓ | ✓ | [twilio.md](integrations/twilio.md) |
+| typeform | Forms | ✓ | - | ✓ | ✓ | [typeform.md](integrations/typeform.md) |
+| ultimate-affiliate-pro | Social | ✓ | - | - | - | [ultimate-affiliate-pro.md](integrations/ultimate-affiliate-pro.md) |
+| ultimate-member | Membership | ✓ | - | - | - | [ultimate-member.md](integrations/ultimate-member.md) |
+| uncanny-automator | Automation | - | - | - | - | [uncanny-automator.md](integrations/uncanny-automator.md) |
+| user-registration-membership | Forms | ✓ | - | - | - | [user-registration-membership.md](integrations/user-registration-membership.md) |
+| user-registration | Forms | ✓ | - | - | - | [user-registration.md](integrations/user-registration.md) |
+| userfeedback | Content | ✓ | - | - | - | [userfeedback.md](integrations/userfeedback.md) |
+| vbout | Email | ✓ | - | - | - | [vbout.md](integrations/vbout.md) |
+| voxel | Forms | ✓ | - | - | - | [voxel.md](integrations/voxel.md) |
+| wc-affiliate | Commerce | ✓ | - | - | - | [wc-affiliate.md](integrations/wc-affiliate.md) |
+| webflow | Forms | ✓ | - | ✓ | ✓ | [webflow.md](integrations/webflow.md) |
+| webhook-incoming | Automation | ✓ | - | ✓ | - | [webhook-incoming.md](integrations/webhook-incoming.md) |
+| webhook-outgoing | Automation | ✓ | - | - | - | [webhook-outgoing.md](integrations/webhook-outgoing.md) |
+| wedocs | Content | ✓ | - | ✓ | - | [wedocs.md](integrations/wedocs.md) |
+| weforms | Forms | ✓ | - | ✓ | - | [weforms.md](integrations/weforms.md) |
+| whatsapp | Social | ✓ | - | - | ✓ | [whatsapp.md](integrations/whatsapp.md) |
+| wishlist-member | Commerce | ✓ | - | - | - | [wishlist-member.md](integrations/wishlist-member.md) |
+| wistia | Analytics | ✓ | - | ✓ | ✓ | [wistia.md](integrations/wistia.md) |
+| woocommerce-bookings | Commerce | ✓ | - | ✓ | - | [woocommerce-bookings.md](integrations/woocommerce-bookings.md) |
+| woocommerce-memberships | Commerce | ✓ | - | ✓ | - | [woocommerce-memberships.md](integrations/woocommerce-memberships.md) |
+| woocommerce-subscriptions | Commerce | ✓ | - | ✓ | - | [woocommerce-subscriptions.md](integrations/woocommerce-subscriptions.md) |
+| woocommerce | Forms | ✓ | - | ✓ | ✓ | [woocommerce.md](integrations/woocommerce.md) |
+| woodpecker | Email | ✓ | - | - | - | [woodpecker.md](integrations/woodpecker.md) |
+| wordpress | Content | ✓ | - | ✓ | ✓ | [wordpress.md](integrations/wordpress.md) |
+| wp-all-import | Forms | ✓ | - | ✓ | - | [wp-all-import.md](integrations/wp-all-import.md) |
+| wp-courseware | Email | ✓ | - | ✓ | - | [wp-courseware.md](integrations/wp-courseware.md) |
+| wp-fusion | CRM | ✓ | - | ✓ | - | [wp-fusion.md](integrations/wp-fusion.md) |
+| wp-job-manager | Content | ✓ | - | ✓ | - | [wp-job-manager.md](integrations/wp-job-manager.md) |
+| wp-polls | Analytics | - | - | ✓ | - | [wp-polls.md](integrations/wp-polls.md) |
+| wp-post | Content | ✓ | - | ✓ | ✓ | [wp-post.md](integrations/wp-post.md) |
+| wp-simple-pay | Forms | ✓ | - | - | - | [wp-simple-pay.md](integrations/wp-simple-pay.md) |
+| wp-travel-engine | Events | ✓ | - | ✓ | - | [wp-travel-engine.md](integrations/wp-travel-engine.md) |
+| wp-user-frontend | Content | ✓ | - | ✓ | - | [wp-user-frontend.md](integrations/wp-user-frontend.md) |
+| wp-user-registration | Forms | ✓ | - | ✓ | - | [wp-user-registration.md](integrations/wp-user-registration.md) |
+| wp-webhooks | Automation | ✓ | - | ✓ | - | [wp-webhooks.md](integrations/wp-webhooks.md) |
+| wpcafe | Content | ✓ | - | ✓ | - | [wpcafe.md](integrations/wpcafe.md) |
+| wpforms | Forms | ✓ | - | ✓ | - | [wpforms.md](integrations/wpforms.md) |
+| wpforo | Content | ✓ | - | ✓ | - | [wpforo.md](integrations/wpforo.md) |
+| wplms | Forms | ✓ | - | ✓ | - | [wplms.md](integrations/wplms.md) |
+| wployalty | Commerce | ✓ | - | ✓ | - | [wployalty.md](integrations/wployalty.md) |
+| wpsubscription | Automation | ✓ | - | ✓ | - | [wpsubscription.md](integrations/wpsubscription.md) |
+| wsform | Forms | ✓ | - | ✓ | - | [wsform.md](integrations/wsform.md) |
+| zagomail | Email | ✓ | - | - | ✓ | [zagomail.md](integrations/zagomail.md) |
+| zapier | Forms | ✓ | - | - | ✓ | [zapier.md](integrations/zapier.md) |
+| zendesk-sell | CRM | ✓ | - | - | ✓ | [zendesk-sell.md](integrations/zendesk-sell.md) |
+| zoho-bigin | CRM | ✓ | - | - | ✓ | [zoho-bigin.md](integrations/zoho-bigin.md) |
+| zoho-campaigns | Email | ✓ | - | - | ✓ | [zoho-campaigns.md](integrations/zoho-campaigns.md) |
+| zoho-crm | CRM | ✓ | - | - | ✓ | [zoho-crm.md](integrations/zoho-crm.md) |
+| zoho-desk | Forms | ✓ | - | - | ✓ | [zoho-desk.md](integrations/zoho-desk.md) |
+| zoho-flow | Forms | ✓ | - | - | ✓ | [zoho-flow.md](integrations/zoho-flow.md) |
+| zoho-marketinghub | Email | ✓ | - | - | ✓ | [zoho-marketinghub.md](integrations/zoho-marketinghub.md) |
+| zoho-recruit | Forms | ✓ | - | - | ✓ | [zoho-recruit.md](integrations/zoho-recruit.md) |
+| zoho-sheet | Forms | ✓ | - | - | ✓ | [zoho-sheet.md](integrations/zoho-sheet.md) |
+| zoom-meeting | Forms | ✓ | - | - | ✓ | [zoom-meeting.md](integrations/zoom-meeting.md) |
+| zoom-webinar | Analytics | ✓ | - | - | ✓ | [zoom-webinar.md](integrations/zoom-webinar.md) |
+| zoominfo | Forms | ✓ | ✓ | ✓ | - | [zoominfo.md](integrations/zoominfo.md) |
+
+## How Agents Should Use This Registry
+
+1. Find the platform in the index.
+2. Open the linked guide before making API, CLI, webhook, or WordPress REST recommendations.
+3. Use the guide's `Authentication`, `Common Agent Operations`, `Key Fields`, `Parameters`, `Rate Limits`, and `Relevant Skills` sections.
+4. Prefer direct platform APIs, official CLIs, SDKs, WordPress REST endpoints, or documented webhook patterns.
+
+## Notes
+
+- Some WordPress plugins expose data through WordPress REST routes, WP-CLI, admin AJAX, PHP hooks, or plugin-specific endpoints instead of a hosted SaaS API.
+- Registry availability reflects what the local guide documents. Verify live platform limits and pricing before production use.
+- Guides intentionally avoid connector-specific framing so they stay useful across Claude Code, OpenAI Codex, Cursor, Windsurf, and any agent that can read markdown tool references.

@@ -42,7 +42,7 @@ On first use, authenticates via browser OAuth. The MCP server exposes tools for:
 - Managing templates
 - Checking video status
 
-## API Quick Start
+## Common Agent Operations
 
 ### Create a Video
 
@@ -124,3 +124,9 @@ Check [heygen.com/pricing](https://www.heygen.com/pricing) for current prices â€
 - social
 - ad-creative
 - sales-enablement
+
+## When to Use
+
+- Generate avatar videos from scripts.
+- Create product explainers, sales enablement clips, and multilingual short-form videos.
+- Turn written launch or educational content into presenter-led video assets.

@@ -125,3 +125,9 @@ SparkToro aggregates from three sources:
 - ads
 - social
 - cold-email
+
+## Rate Limits
+
+- Free tier includes limited monthly searches.
+- Paid tiers increase monthly report limits and export depth.
+- No public API rate limit applies because SparkToro is primarily web-interface based.

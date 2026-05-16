@@ -83,8 +83,14 @@ node tools/clis/hunter.js account info
 - Paid plans scale with tier
 - API rate limit: 10 requests/second
 
-## Use Cases
+## When to Use
 
 - **Link building**: Find email contacts at target domains for outreach
 - **Prospecting**: Build lead lists from company domains
 - **Verification**: Clean email lists before sending campaigns
+
+## Relevant Skills
+
+- cold-email
+- sales-enablement
+- competitors

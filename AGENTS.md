@@ -83,10 +83,10 @@ marketing-skills/
 │   ├── social-content-planner/   ← NEW v1.1.0
 │   └── video/
 ├── tools/
-│   ├── clis/
-│   ├── integrations/
-│   ├── composio/
-│   └── REGISTRY.md
+│   ├── clis/            # 61 JavaScript CLI tools
+│   ├── integrations/    # 346 standalone platform guides
+│   ├── composio/        # Composio marketing tool references
+│   └── REGISTRY.md      # Generated tool index
 ├── package.json
 ├── README.md
 ├── AGENTS.md
@@ -95,6 +95,17 @@ marketing-skills/
 ```
 
 ---
+
+## Tool References
+
+The `tools/` directory contains standalone platform references agents can use alongside skills.
+
+- `tools/REGISTRY.md` indexes all 346 integration guides.
+- `tools/integrations/` contains platform-independent docs with authentication, common agent operations, key fields, parameters, rate limits, and relevant skills.
+- `tools/clis/` contains 61 JavaScript CLI helpers for high-use marketing platforms.
+- `tools/integrations/bit-integrations-registry.md` preserves the original source list used to expand the tool library.
+
+When a task requires a platform, read the matching integration guide before giving setup instructions or API examples. Prefer direct platform APIs, official CLIs, SDKs, WordPress REST endpoints, or documented webhook patterns.
 
 ## Skill Activation
 

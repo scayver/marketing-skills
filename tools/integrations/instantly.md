@@ -96,9 +96,15 @@ node tools/clis/instantly.js blocklist add --entries "competitor.com,spam@exampl
 - API rate limits vary by plan
 - Recommended: stay under 10 requests/second
 
-## Use Cases
+## When to Use
 
 - **Link building at scale**: Run large-volume outreach campaigns with built-in warmup
 - **Campaign management**: Launch, pause, and monitor cold email campaigns
 - **Account health**: Monitor email account warmup and deliverability
 - **Analytics**: Track open rates, reply rates, and campaign performance
+
+## Relevant Skills
+
+- cold-email
+- email-marketing
+- revops

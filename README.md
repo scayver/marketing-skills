@@ -20,7 +20,7 @@ This library fixes that. It gives your agent 57 specialized marketing and growth
 
 Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)** · [ScayverGraphix](https://github.com/ScayverGraphix)
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue)](VERSIONS.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)](VERSIONS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-57-orange)](skills/)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
@@ -290,19 +290,21 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 
 ## Tools
 
-The `tools/` directory gives your agent direct access to marketing platforms.
+The `tools/` directory gives your agent standalone platform references it can use beside the skills.
 
-```
+```text
 tools/
-  clis/           63 JavaScript CLI tools
-  integrations/   80+ integration documentation files
-  composio/       Composio marketing tool configurations
+  clis/           61 JavaScript CLI tools
+  integrations/   346 standalone platform integration guides
+  composio/       Composio marketing tool references
   REGISTRY.md     Full tool index
 ```
 
-**CLI tools include:** GA4, Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Klaviyo, Mailchimp, HubSpot, Segment, Mixpanel, Amplitude, Ahrefs, SEMrush, Hotjar, Intercom, Stripe, Paddle, and more.
+**CLI tools include:** GA4, Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Klaviyo, Mailchimp, HubSpot, Segment, Mixpanel, Amplitude, Ahrefs, SEMrush, Hotjar, Intercom, Paddle, and more.
 
-**Integration docs cover:** how to connect each platform, what data to pull, how to use it in context with the skills, and which skills reference each tool.
+**Integration docs cover:** direct APIs, authentication, common agent operations, key fields, parameters, rate limits, and relevant skills for each platform. They are independent platform references, not connector-specific setup notes.
+
+The original Bit Integrations source list is preserved at [`tools/integrations/bit-integrations-registry.md`](tools/integrations/bit-integrations-registry.md), while the individual platform docs now live directly in [`tools/integrations/`](tools/integrations/).
 
 ---
 
@@ -331,6 +333,8 @@ Every section ends with a specific, actionable next step. No section closes with
 ## Changelog
 
 Full history in [VERSIONS.md](VERSIONS.md).
+
+**v1.2.0 (2026-05-15)** — Tool system expansion and cleanup. The project now includes 346 standalone integration guides, 61 JavaScript CLI tools, and a regenerated tools registry. The former Bit Integrations tool docs were flattened into `tools/integrations/` and rewritten as independent platform references.
 
 **v1.1.0 (2026-05-15)** — 17 new skills added by Alain Dorcelus: sales-copywriting, instagram-carousel, social-content-planner, brand-storytelling, business-strategy, content-repurposing, landing-page-cro, customer-service, ecommerce-content, seo-blog-writer, ai-image-creator, education-content, email-marketing, linkedin-strategy, local-seo, pr-communications, seo-content-strategy. Total skill count: 57.
 

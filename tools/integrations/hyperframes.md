@@ -178,3 +178,41 @@ const frames = metrics.map(m => ({
 - video
 - social
 - ad-creative
+
+## Authentication
+
+- **Type**: Local package execution.
+- **Header**: Not applicable.
+- **Get token**: No hosted API token is required for local rendering.
+
+## Common Agent Operations
+
+### Install package
+
+```bash
+npm install hyperframes
+```
+
+### Render a video
+
+```bash
+npx hyperframes render ./video.html --output output.mp4
+```
+
+### Use from Node.js
+
+```bash
+node render-video.js
+```
+
+## When to Use
+
+- Generate programmatic videos from HTML, CSS, and JavaScript.
+- Create repeatable social video templates.
+- Render data-driven product, metrics, testimonial, or announcement videos.
+
+## Rate Limits
+
+- No hosted API limit for local rendering.
+- Throughput depends on local CPU, memory, Chrome, and video duration.
+- Batch jobs should queue renders to avoid exhausting system resources.

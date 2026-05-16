@@ -2,6 +2,36 @@
 
 ---
 
+## v1.2.0 (2026-05-15)
+
+**Tool system expansion and standalone integration reference cleanup.**
+
+> Support this work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
+
+This release turns the tools directory into a much larger agent-ready integration reference system.
+
+**Tools**
+
+- Expanded `tools/integrations/` to 346 standalone platform guides.
+- Moved the former Bit Integrations-derived tool docs out of `tools/integrations/bit-integrations/` and into the main `tools/integrations/` directory.
+- Removed the nested `bit-integrations` folder.
+- Preserved the original source registry as `tools/integrations/bit-integrations-registry.md`.
+- Rewrote individual tool docs to use a platform-independent reference format: description, capabilities, authentication, common agent operations, key fields, parameters, when to use, rate limits, and relevant skills.
+- Regenerated `tools/REGISTRY.md` so agents can discover all integration guides from one index.
+- Standardized 9 older integration guides that were missing required sections.
+
+**Metadata**
+
+- Updated `package.json` to v1.2.0.
+- Updated repository and homepage URLs to `scayver/marketing-skills`.
+- Updated project description to reflect 57 skills and 346 standalone integration guides.
+
+**Author**
+
+v1.2.0 tool expansion and documentation cleanup by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
+
+---
+
 ## v1.1.0 (2026-05-15)
 
 **17 new skills added by Alain Dorcelus ([ScayverGraphix](https://github.com/ScayverGraphix)).**

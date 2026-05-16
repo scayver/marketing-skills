@@ -86,9 +86,15 @@ node tools/clis/snov.js drips add-prospect --id 12345 --email john@example.com
 - Rate limits vary by plan
 - OAuth tokens expire after a set period; CLI handles refresh automatically
 
-## Use Cases
+## When to Use
 
 - **Link building**: Find contacts and run automated drip outreach
 - **Prospecting**: Build and manage prospect lists
 - **Technology research**: Check what tech stack a target domain uses
 - **Email verification**: Clean lists before sending
+
+## Relevant Skills
+
+- cold-email
+- email-marketing
+- competitors

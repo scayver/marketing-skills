@@ -111,3 +111,9 @@ For BYO plan users: bring your own SendGrid, Postmark, SES, or Resend account an
 - onboarding
 - churn-prevention
 - lead-magnets
+
+## Rate Limits
+
+- Free tier includes limited monthly sending volume.
+- Paid plan limits vary by tier and sending infrastructure.
+- BYO infrastructure depends on the connected provider's limits.

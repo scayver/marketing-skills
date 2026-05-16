@@ -157,3 +157,9 @@ query: "best [category] tools" OR "top [category] software" AND publish_time:[no
 - content-strategy
 - cold-email
 - marketing-ideas
+
+## Rate Limits
+
+- Varies by plan and beta access level.
+- Use long-lived streaming connections instead of aggressive polling.
+- Back off reconnect attempts after network failures.
