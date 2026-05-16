@@ -1,150 +1,111 @@
 # Mailchimp
 
-Email marketing platform for campaigns, automation, and audience management.
+Email marketing and audience management platform for building lists, sending campaigns, and running automations.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | Marketing API for campaigns, audiences, automation |
-| MCP | ✓ | Available via Mailchimp MCP server |
+| API | ✓ | Full REST API for lists, members, campaigns, tags, segments |
+| MCP | - | Not available |
 | CLI | - | Not available |
-| SDK | ✓ | Official SDKs for multiple languages |
+| SDK | ✓ | Official Python SDK; community SDKs for PHP, Ruby, Node |
 
 ## Authentication
 
-- **Type**: API Key or OAuth 2.0
-- **Header**: `Authorization: Bearer {api_key}` or `Authorization: apikey {api_key}`
-- **Base URL**: `https://{dc}.api.mailchimp.com/3.0/` (dc = datacenter from API key)
+- **Type**: API Key (Basic Auth)
+- **Header**: `Authorization: Basic {base64(anystring:api_key)}`
+- **Base URL**: `https://{dc}.api.mailchimp.com/3.0/` (dc is server prefix from API key, e.g., us14)
+- **Get key**: Mailchimp Account > Extras > API Keys > Create A Key
 
 ## Common Agent Operations
 
-### List audiences (lists)
-
-```bash
-GET https://{dc}.api.mailchimp.com/3.0/lists
-```
-
-### Get audience members
-
-```bash
-GET https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members?count=100
-```
-
-### Add subscriber
+### Add a subscriber to an audience
 
 ```bash
 POST https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members
 
-{
-  "email_address": "user@example.com",
-  "status": "subscribed",
-  "merge_fields": {
-    "FNAME": "John",
-    "LNAME": "Doe"
-  }
-}
+Authorization: Basic {base64(anystring:api_key)}
+Content-Type: application/json
+
+{"email_address": "jane@example.com", "status": "subscribed", "merge_fields": {"FNAME": "Jane", "LNAME": "Doe"}}
 ```
 
-### Update subscriber
+### Add or update a subscriber (upsert)
 
 ```bash
-PATCH https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}
+PUT https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}
 
-{
-  "merge_fields": {
-    "FNAME": "Jane"
-  },
-  "tags": ["customer", "premium"]
-}
+Authorization: Basic {base64(anystring:api_key)}
+Content-Type: application/json
+
+{"email_address": "jane@example.com", "status_if_new": "subscribed", "merge_fields": {"FNAME": "Jane"}}
 ```
 
-### Get campaigns
+### Add a tag to a subscriber
 
 ```bash
-GET https://{dc}.api.mailchimp.com/3.0/campaigns?count=20
+POST https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}/tags
+
+Authorization: Basic {base64(anystring:api_key)}
+Content-Type: application/json
+
+{"tags": [{"name": "LeadMagnet", "status": "active"}]}
 ```
 
-### Get campaign report
+### Get all audiences (lists)
 
 ```bash
-GET https://{dc}.api.mailchimp.com/3.0/reports/{campaign_id}
+GET https://{dc}.api.mailchimp.com/3.0/lists?count=50
+
+Authorization: Basic {base64(anystring:api_key)}
 ```
 
-### Create campaign
+### Get members of an audience
 
 ```bash
-POST https://{dc}.api.mailchimp.com/3.0/campaigns
+GET https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members?count=100&status=subscribed
 
-{
-  "type": "regular",
-  "recipients": {
-    "list_id": "{list_id}"
-  },
-  "settings": {
-    "subject_line": "Your Subject",
-    "from_name": "Your Name",
-    "reply_to": "reply@example.com"
-  }
-}
+Authorization: Basic {base64(anystring:api_key)}
 ```
 
-### Send campaign
+## Key Fields
 
-```bash
-POST https://{dc}.api.mailchimp.com/3.0/campaigns/{campaign_id}/actions/send
-```
+### Member Object
+- `email_address` - Subscriber email
+- `status` - subscribed | unsubscribed | pending | cleaned
+- `merge_fields` - Object with FNAME, LNAME, PHONE, and custom fields
+- `tags` - Array of tag objects applied to the member
+- `timestamp_signup` - When they first subscribed
 
-### List automations
+### List (Audience) Object
+- `id` - List ID
+- `name` - Audience name
+- `stats.member_count` - Total active subscribers
+- `double_optin` - Whether double opt-in is enabled
 
-```bash
-GET https://{dc}.api.mailchimp.com/3.0/automations
-```
+## Parameters
 
-## Key Metrics
-
-### Campaign Report Fields
-- `emails_sent` - Total sent
-- `opens` - Open count
-- `unique_opens` - Unique opens
-- `open_rate` - Open rate
-- `clicks` - Click count
-- `click_rate` - Click rate
-- `unsubscribes` - Unsubscribe count
-- `bounces` - Bounce count
-
-### Subscriber Hash
-
-Calculate subscriber hash for updates:
-```javascript
-const hash = md5(email.toLowerCase());
-```
-
-## Subscriber Statuses
-
-- `subscribed` - Active subscriber
-- `unsubscribed` - Unsubscribed
-- `cleaned` - Hard bounce
-- `pending` - Awaiting confirmation
-- `transactional` - Transactional only
+- `count` - Results per page (max 1000)
+- `offset` - Pagination offset
+- `status` - Filter members by subscription status
+- `subscriber_hash` - MD5 hash of lowercase email address
 
 ## When to Use
 
-- Managing email lists and subscribers
-- Creating and sending email campaigns
-- Setting up email automation
-- Analyzing campaign performance
-- Segmenting audiences
-- A/B testing emails
+- Growing and managing email subscriber audiences
+- Sending broadcast newsletters and automated campaigns
+- Segmenting subscribers by tags, groups, or merge field values
+- Running drip sequences triggered by subscriber events
 
 ## Rate Limits
 
-- 10 concurrent connections
-- 10 requests per second
-- Batch endpoints for bulk operations
+- 10 simultaneous connections per account
+- No hard per-minute limit; rate limiting applies for high-volume use
+- Batch endpoint available for bulk operations
 
 ## Relevant Skills
 
-- emails
-- analytics
-- referrals
+- email-marketing
+- lead-generation
+- ecommerce

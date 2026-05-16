@@ -1,30 +1,33 @@
 # HubSpot
 
-CRM platform for marketing, sales, and customer service.
+CRM and marketing automation platform for managing contacts, deals, companies, and email campaigns.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | REST API for CRM, Marketing, Sales |
-| MCP | - | Not available |
-| CLI | ✓ | `hs` CLI for local development |
-| SDK | ✓ | Official client libraries |
+| API | ✓ | Full REST API for CRM objects, marketing, and reporting |
+| MCP | ✓ | HubSpot MCP server available |
+| CLI | - | Not available |
+| SDK | ✓ | Official SDKs for Node, Python, PHP, Ruby |
 
 ## Authentication
 
-- **Type**: Private App Token or OAuth 2.0
+- **Type**: Private App Access Token
 - **Header**: `Authorization: Bearer {access_token}`
-- **Get token**: Settings > Integrations > Private Apps
+- **Get token**: HubSpot Settings > Integrations > Private Apps > Create a private app
 
 ## Common Agent Operations
 
-### Get contacts
+### Create a contact
 
 ```bash
-GET https://api.hubapi.com/crm/v3/objects/contacts?limit=10
+POST https://api.hubapi.com/crm/v3/objects/contacts
 
 Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"properties": {"email": "user@example.com", "firstname": "Jane", "lastname": "Doe", "phone": "+15555550100"}}
 ```
 
 ### Search contacts
@@ -32,147 +35,82 @@ Authorization: Bearer {access_token}
 ```bash
 POST https://api.hubapi.com/crm/v3/objects/contacts/search
 
-{
-  "filterGroups": [{
-    "filters": [{
-      "propertyName": "email",
-      "operator": "EQ",
-      "value": "user@example.com"
-    }]
-  }]
-}
-```
-
-### Create contact
-
-```bash
-POST https://api.hubapi.com/crm/v3/objects/contacts
-
-{
-  "properties": {
-    "email": "user@example.com",
-    "firstname": "John",
-    "lastname": "Doe",
-    "company": "Example Inc"
-  }
-}
-```
-
-### Update contact
-
-```bash
-PATCH https://api.hubapi.com/crm/v3/objects/contacts/{contact_id}
-
-{
-  "properties": {
-    "lifecyclestage": "customer"
-  }
-}
-```
-
-### Get deals
-
-```bash
-GET https://api.hubapi.com/crm/v3/objects/deals?limit=10&properties=dealname,amount,dealstage
-
 Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"filterGroups": [{"filters": [{"propertyName": "email", "operator": "EQ", "value": "user@example.com"}]}]}
 ```
 
-### Create deal
+### Create a deal
 
 ```bash
 POST https://api.hubapi.com/crm/v3/objects/deals
 
-{
-  "properties": {
-    "dealname": "New Deal",
-    "amount": "10000",
-    "dealstage": "appointmentscheduled",
-    "pipeline": "default"
-  }
-}
+Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"properties": {"dealname": "New Deal", "dealstage": "appointmentscheduled", "amount": "5000"}}
 ```
 
-### Associate contact with deal
+### Get all contacts
 
 ```bash
-PUT https://api.hubapi.com/crm/v3/objects/deals/{deal_id}/associations/contacts/{contact_id}/deal_to_contact
-```
-
-### Get form submissions
-
-```bash
-GET https://api.hubapi.com/form-integrations/v1/submissions/forms/{form_guid}
+GET https://api.hubapi.com/crm/v3/objects/contacts?limit=100&properties=email,firstname,lastname
 
 Authorization: Bearer {access_token}
 ```
 
-### Get marketing emails
+### Add contact to a static list
 
 ```bash
-GET https://api.hubapi.com/marketing/v3/emails?limit=10
+POST https://api.hubapi.com/contacts/v1/lists/{list_id}/add
 
 Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"vids": [12345]}
 ```
 
-## CLI Commands
+## Key Fields
 
-```bash
-# Install
-npm install -g @hubspot/cli
+### Contact Object
+- `email` - Primary contact identifier
+- `firstname`, `lastname` - Name fields
+- `phone` - Phone number
+- `company` - Associated company name
+- `hs_lead_status` - Lead status (NEW, OPEN, IN_PROGRESS, etc.)
+- `lifecyclestage` - subscriber, lead, marketingqualifiedlead, opportunity, customer
 
-# Initialize project
-hs init
-
-# Upload files
-hs upload src dest
-
-# Watch for changes
-hs watch src dest
-
-# List portals
-hs accounts list
-```
-
-## Key Objects
-
-- **Contacts** - People in CRM
-- **Companies** - Organizations
-- **Deals** - Sales opportunities
-- **Tickets** - Support tickets
-- **Products** - Items for sale
-- **Line Items** - Deal line items
-
-## Common Properties
-
-### Contact Properties
-- `email` - Email address
-- `firstname`, `lastname` - Name
-- `lifecyclestage` - Funnel stage
-- `hs_lead_status` - Lead status
-
-### Deal Properties
-- `dealname` - Deal name
+### Deal Object
+- `dealname` - Name of the deal
 - `amount` - Deal value
-- `dealstage` - Pipeline stage
-- `closedate` - Expected close
+- `dealstage` - Pipeline stage ID
+- `closedate` - Expected close date (Unix ms)
+- `pipeline` - Pipeline ID
+
+## Parameters
+
+- `limit` - Results per page (max 100)
+- `after` - Cursor for pagination
+- `properties` - Comma-separated list of properties to return
+- `associations` - Include associated objects
 
 ## When to Use
 
-- Managing contacts and leads
-- Tracking sales deals
-- Marketing automation
-- Form submissions
-- Email campaigns
-- Customer service tickets
+- Managing inbound leads from forms and landing pages
+- Tracking sales pipeline and deal stages
+- Running email marketing campaigns and sequences
+- Scoring and segmenting leads by lifecycle stage
+- Reporting on marketing attribution and revenue
 
 ## Rate Limits
 
-- 100 requests per 10 seconds
-- Higher limits on enterprise plans
+- 100 requests per 10 seconds (private apps)
+- 150,000 requests per day (varies by tier)
 
 ## Relevant Skills
 
-- emails
-- analytics
-- referrals
+- crm-management
+- lead-generation
+- email-marketing
+- sales:pipeline-review

@@ -1,182 +1,107 @@
 # Demio
 
-Webinar platform for hosting live, automated, and on-demand webinars with built-in registration and attendee tracking.
+Browser-based webinar platform designed for marketers, offering live events, automated webinars, on-demand replays, and built-in engagement and analytics tools.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | Events, Registration, Participants, Sessions |
+| API | ✓ | REST API v1 at my.demio.com/api/v1 |
 | MCP | - | Not available |
-| CLI | ✓ | [demio.js](../clis/demio.js) |
-| SDK | ✓ | PHP (official), Ruby (community) |
+| CLI | - | Not available |
+| SDK | - | No official SDK |
 
 ## Authentication
 
-- **Type**: API Key + API Secret
-- **Headers**: `Api-Key: {key}` and `Api-Secret: {secret}`
-- **Get credentials**: Account Settings > API (Owner access required)
-- **Docs**: https://publicdemioapi.docs.apiary.io/
+- **Type**: API Key + API Secret (two required headers)
+- **Headers**:
+  - `Api-Key: {api_key}`
+  - `Api-Secret: {api_secret}`
+- **Get token**: Demio account > Settings > API
 
 ## Common Agent Operations
 
-### Ping (health check)
-
-```bash
-GET https://my.demio.com/api/v1/ping
-
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
-```
-
 ### List all events
+```
+GET https://my.demio.com/api/v1/event
 
-```bash
-GET https://my.demio.com/api/v1/events
-
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
+Api-Key: {api_key}
+Api-Secret: {api_secret}
 ```
 
-### List events by type
-
-```bash
-GET https://my.demio.com/api/v1/events?type=upcoming
-
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
+### Get event details
 ```
-
-### Get a specific event
-
-```bash
 GET https://my.demio.com/api/v1/event/{event_id}
 
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
+Api-Key: {api_key}
+Api-Secret: {api_secret}
 ```
 
-### Get event date details
-
-```bash
-GET https://my.demio.com/api/v1/event/{event_id}/date/{date_id}
-
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
+### Register an attendee for an event
 ```
-
-### Register attendee for event
-
-```bash
 POST https://my.demio.com/api/v1/event/register
 
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
-  Content-Type: application/json
+Api-Key: {api_key}
+Api-Secret: {api_secret}
+Content-Type: application/json
 
 {
-  "id": 12345,
-  "name": "Jane Doe",
+  "id": "{event_id}",
+  "date_id": "{session_date_id}",
+  "name": "Jane Smith",
   "email": "jane@example.com"
 }
 ```
 
-### Register attendee for specific date
+### Get registrants for an event
+```
+GET https://my.demio.com/api/v1/event/{event_id}/participants
 
-```bash
-POST https://my.demio.com/api/v1/event/register
-
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
-  Content-Type: application/json
-
-{
-  "id": 12345,
-  "date_id": 67890,
-  "name": "Jane Doe",
-  "email": "jane@example.com"
-}
+Api-Key: {api_key}
+Api-Secret: {api_secret}
 ```
 
-### Get participants for event date
+## Key Fields
 
-```bash
-GET https://my.demio.com/api/v1/date/{date_id}/participants
+### Event
+- `id` - Unique event identifier
+- `name` - Webinar/event name
+- `status` - active / inactive
+- `type` - live, automated, or hybrid
+- `dates` - Array of scheduled session objects, each with a `date_id`
 
-Headers:
-  Api-Key: {API_KEY}
-  Api-Secret: {API_SECRET}
-```
+### Registration
+- `id` - Event ID (required)
+- `date_id` - Session date ID (required for scheduled sessions)
+- `name` - Registrant full name (required)
+- `email` - Registrant email (required)
+- `ref_url` - Optional referral or tracking URL
 
-## API Pattern
-
-Demio uses a straightforward REST API:
-- All requests require both `Api-Key` and `Api-Secret` headers
-- Responses are JSON objects
-- Registration returns a `join_link` URL for the attendee
-- Events have multiple "dates" (sessions), each with a unique `date_id`
-
-## Key Metrics
-
-### Event Metrics
-- `id` - Event ID
-- `name` - Event name
-- `date_id` - Session/date identifier
-- `status` - Event status (upcoming, past, active)
-- `type` - Event type (live, automated, on-demand)
-- `registration_url` - Public registration page URL
-
-### Participant Metrics
-- `name` - Participant name
-- `email` - Participant email
-- `status` - Attendance status (registered, attended, missed)
-- `attended_minutes` - Duration of attendance
-- `join_link` - Unique join URL for the participant
+### Participant Record
+- `name` - Attendee name
+- `email` - Attendee email
+- `attended` - Boolean attendance status
+- `join_time` / `leave_time` - Session timestamps
 
 ## Parameters
 
-### Event List Filters
-- `type` - Filter by event type: `upcoming`, `past`, `all`
-
-### Registration Fields
-- `id` - Event ID (required)
-- `name` - Registrant name (required)
-- `email` - Registrant email (required)
-- `date_id` - Specific session date ID (optional)
-- `ref_url` - Referral URL for tracking (optional)
-
-### Custom Fields
-- Custom fields are supported via their UID (not display name)
-- Check your event settings for available custom field UIDs
+- `event_id` - Targets a specific event for registration and participant queries
+- `date_id` - Targets a specific scheduled session within an event
+- `ref_url` - Referral tracking URL passed on registration
 
 ## When to Use
 
-- Automating webinar registration from landing pages or forms
-- Syncing webinar attendee data with CRM
-- Building custom registration flows for webinars
-- Tracking webinar attendance and engagement
-- Triggering follow-up sequences based on attendance status
-- Managing multiple webinar sessions programmatically
+- Registering leads from a landing page or opt-in form directly into a Demio webinar
+- Granting webinar access automatically after an e-commerce purchase
+- Enrolling email subscribers in automated webinar funnels for lead nurturing
+- Pulling attendee and no-show data post-event for follow-up segmentation
 
 ## Rate Limits
 
-- **180 requests per minute** (3 per second)
-- **Free Trial**: 100 API calls per day
-- **Paid Plans**: 5,000 API calls per day (reset at 00:00 UTC)
-- Contact Demio to request higher daily limits
-- Exceeding limits returns an error response
+- See [demio.com/developers](https://demio.com/developers) or contact Demio support for current limits
 
 ## Relevant Skills
 
-- webinar-marketing
-- lead-generation
 - event-marketing
-- content-strategy
-- lifecycle-marketing
+- lead-generation
+- email-marketing

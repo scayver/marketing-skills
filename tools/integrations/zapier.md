@@ -1,244 +1,125 @@
 # Zapier
 
-Workflow automation platform connecting 8,000+ apps. The Zapier SDK gives AI agents direct access to any app's actions without building OAuth flows or reverse-engineering APIs.
+Workflow automation platform for connecting apps with triggers, actions, filters, and webhooks.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | REST API for Zaps, tasks, and webhooks |
-| MCP | ✓ | Available via Zapier MCP server |
-| CLI | ✓ | `@zapier/zapier-sdk-cli` for app discovery and type generation |
-| SDK | ✓ | `@zapier/zapier-sdk` — TypeScript SDK for 8,000+ app integrations |
+| API | ✓ | REST API or webhook API for core platform operations |
+| MCP | - | Not available |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-### Legacy API (Zaps management)
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
+- **Header**: `Webhook URL token in request path`
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Zapier dashboard
 
-- **Type**: API Key
-- **Header**: `X-API-Key: {api_key}`
-- **Get key**: Settings > API in Zapier account
+## Common Agent Operations
 
-### SDK Authentication
-
-**Browser-based login (development):**
-```bash
-npx zapier-sdk login
-```
-
-**Server-side (production):**
-- Client Credentials — store as environment variables
-- Direct token — set `ZAPIER_CREDENTIALS` env var
-
-Browser-based login only works locally. Use Client Credentials for any server-side deployment.
-
-## SDK Quick Start
-
-### Install
+### List records
 
 ```bash
-npm install @zapier/zapier-sdk
-npm install -D @zapier/zapier-sdk-cli @types/node typescript
-npm pkg set type=module
+GET https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records?limit=50
+
+Webhook URL token in request path
 ```
 
-### Initialize
-
-```typescript
-import { createZapierSdk } from "@zapier/zapier-sdk";
-const zapier = createZapierSdk();
-```
-
-### CLI Commands
-
-| Command | Purpose |
-|---------|---------|
-| `npx zapier-sdk login` | Authenticate (dev only) |
-| `npx zapier-sdk list-apps --search "query"` | Search available apps |
-| `npx zapier-sdk list-actions APP_KEY` | List actions for an app |
-| `npx zapier-sdk add [app-key]` | Generate TypeScript types |
-
-### SDK Methods
-
-| Method | Purpose |
-|--------|---------|
-| `zapier.listConnections()` | List authenticated app connections |
-| `zapier.findFirstConnection()` | Find a specific connection |
-| `zapier.runAction()` | Execute an action on a connected app |
-| `zapier.apps.slack()` | App proxy pattern for clean syntax |
-| `zapier.fetch()` | Custom authenticated API calls |
-
-### Example: Send a Slack Message
-
-```typescript
-import { createZapierSdk } from "@zapier/zapier-sdk";
-
-const zapier = createZapierSdk();
-const slack = await zapier.apps.slack();
-
-await slack.sendChannelMessage({
-  channel: "#marketing",
-  message: "Campaign launched!"
-});
-```
-
-### Example: Create a HubSpot Contact
-
-```typescript
-const hubspot = await zapier.apps.hubspot();
-
-await hubspot.createContact({
-  email: "lead@example.com",
-  firstName: "Jane",
-  lastName: "Doe"
-});
-```
-
-### Pagination
-
-Use `.items()` for large datasets:
-
-```typescript
-const contacts = await hubspot.listContacts({ maxItems: 100 });
-for await (const contact of contacts.items()) {
-  console.log(contact.email);
-}
-```
-
-### Governance Note
-
-Direct API calls via `zapier.fetch()` are not subject to org app/action restriction policies. Use pre-built actions where possible if your org has governance requirements.
-
----
-
-## Zaps API (Legacy)
-
-### List Zaps
+### Get one record
 
 ```bash
-GET https://api.zapier.com/v1/zaps
+GET https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records/{record_id}
+
+Webhook URL token in request path
 ```
 
-### Get Zap details
+### Create record
 
 ```bash
-GET https://api.zapier.com/v1/zaps/{zap_id}
-```
+POST https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records
 
-### Turn Zap on/off
-
-```bash
-POST https://api.zapier.com/v1/zaps/{zap_id}/on
-POST https://api.zapier.com/v1/zaps/{zap_id}/off
-```
-
-### Get task history
-
-```bash
-GET https://api.zapier.com/v1/zaps/{zap_id}/tasks
-```
-
-### Get profile info
-
-```bash
-GET https://api.zapier.com/v1/profiles/me
-```
-
-## Webhooks (Triggers)
-
-### Catch Hook (receive data)
-
-Create a "Webhooks by Zapier" trigger to receive data:
-
-```bash
-POST https://hooks.zapier.com/hooks/catch/{webhook_id}/
+Webhook URL token in request path
+Content-Type: application/json
 
 {
-  "event": "user.created",
-  "user_id": "123",
-  "email": "user@example.com"
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
 }
 ```
 
-### Send data to Zapier
-
-Most common: trigger a Zap from your app:
+### Update record
 
 ```bash
-POST https://hooks.zapier.com/hooks/catch/{account_id}/{hook_id}/
+PATCH https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/records/{record_id}
+
+Webhook URL token in request path
+Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "plan": "pro"
+  "status": "active",
+  "tags": ["lead", "website"]
 }
 ```
 
-## Common Marketing Automations
+### Send event or webhook payload
 
-### With SDK (recommended for agents)
+```bash
+POST https://hooks.zapier.com/hooks/catch/{hook_id}/{token}/events
 
-```typescript
-// Lead capture to CRM
-const hubspot = await zapier.apps.hubspot();
-await hubspot.createContact({ email, firstName, lastName });
+Webhook URL token in request path
+Content-Type: application/json
 
-// New customer notification
-const slack = await zapier.apps.slack();
-await slack.sendChannelMessage({ channel: "#revenue", message: `New customer: ${email}` });
-
-// Add to email sequence
-const customerio = await zapier.apps.customerio();
-await customerio.createOrUpdatePerson({ email, plan: "pro" });
-```
-
-### With Zaps (no-code)
-
-- Typeform → Zapier → HubSpot (lead capture)
-- Stripe → Zapier → Slack (new customer alerts)
-- Form submission → Zapier → Customer.io (email sequences)
-- New review → Zapier → Slack (social proof)
-- New referral → Zapier → Spreadsheet + Slack (referral tracking)
-
-## Webhook Payload Structure
-
-When sending to Zapier, structure data as flat JSON:
-
-```json
 {
-  "customer_name": "John Doe",
-  "customer_email": "john@example.com",
-  "plan_name": "Pro",
-  "plan_price": 99,
-  "signup_date": "2024-01-15"
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
 }
 ```
 
-## Key Concepts
+## Key Fields
 
-- **Zap** - Automated workflow (no-code)
-- **SDK** - Programmatic access to 8,000+ app integrations
-- **Trigger** - Event that starts a Zap
-- **Action** - Task performed by Zap or SDK
-- **Task** - Single action execution
-- **Connection** - Authenticated link to an app (shared between Zaps and SDK)
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
+
+## Parameters
+
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- **SDK**: When an AI agent needs to interact with any app directly — send messages, create records, sync data
-- **Zaps**: When you need always-on automation without code
-- **Webhooks**: When triggering workflows from your own app
-- **API**: When managing Zaps programmatically
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
 ## Rate Limits
 
-- API: 100 requests per minute
-- SDK: Rate limits per connected app
-- Task limits by plan tier
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
 
 ## Relevant Skills
 
-- emails
-- analytics
-- referrals
 - revops
+- analytics
+- business-strategy

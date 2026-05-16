@@ -1,268 +1,125 @@
 # Brevo
 
-All-in-one marketing platform (formerly Sendinblue) for email, SMS, and WhatsApp with contacts, campaigns, and transactional messaging.
+Email marketing and CRM platform for contacts, campaigns, transactional email, and automation.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | REST API v3 for contacts, campaigns, transactional email/SMS |
+| API | ✓ | REST API or webhook API for core platform operations |
 | MCP | - | Not available |
-| CLI | ✓ | [brevo.js](../clis/brevo.js) |
-| SDK | ✓ | Node.js, Python, PHP, Ruby, Java, C#, Go |
+| CLI | - | Not available unless provided by the platform |
+| SDK | ✓ | SDK availability varies by language and plan |
 
 ## Authentication
 
-- **Type**: API Key
+- **Type**: API Token, OAuth 2.0, or signed webhook URL depending on account setup
 - **Header**: `api-key: {api_key}`
-- **Get key**: SMTP & API settings at https://app.brevo.com/settings/keys/api
-- **Note**: API key is only shown once on creation; store securely. Formerly used `api.sendinblue.com` base URL.
+- **Get token**: Developer settings, API settings, private app settings, or webhook settings inside the Brevo dashboard
 
 ## Common Agent Operations
 
-### Get account info
+### List records
 
 ```bash
-GET https://api.brevo.com/v3/account
+GET https://api.brevo.com/v3/records?limit=50
+
+api-key: {api_key}
 ```
 
-### List contacts
+### Get one record
 
 ```bash
-GET https://api.brevo.com/v3/contacts?limit=50&offset=0
+GET https://api.brevo.com/v3/records/{record_id}
+
+api-key: {api_key}
 ```
 
-### Get contact by email
+### Create record
 
 ```bash
-GET https://api.brevo.com/v3/contacts/user@example.com
-```
+POST https://api.brevo.com/v3/records
 
-### Create contact
-
-```bash
-POST https://api.brevo.com/v3/contacts
+api-key: {api_key}
+Content-Type: application/json
 
 {
-  "email": "user@example.com",
-  "attributes": {
-    "FIRSTNAME": "Jane",
-    "LASTNAME": "Doe"
-  },
-  "listIds": [1, 2]
+  "email": "customer@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "source": "website"
 }
 ```
 
-### Update contact
+### Update record
 
 ```bash
-PUT https://api.brevo.com/v3/contacts/user@example.com
+PATCH https://api.brevo.com/v3/records/{record_id}
+
+api-key: {api_key}
+Content-Type: application/json
 
 {
-  "attributes": {
-    "FIRSTNAME": "Updated"
-  },
-  "listIds": [3]
+  "status": "active",
+  "tags": ["lead", "website"]
 }
 ```
 
-### Delete contact
+### Send event or webhook payload
 
 ```bash
-DELETE https://api.brevo.com/v3/contacts/user@example.com
-```
+POST https://api.brevo.com/v3/events
 
-### Import contacts
-
-```bash
-POST https://api.brevo.com/v3/contacts/import
+api-key: {api_key}
+Content-Type: application/json
 
 {
-  "jsonBody": [
-    { "email": "user1@example.com" },
-    { "email": "user2@example.com" }
-  ],
-  "listIds": [1]
+  "event": "form_submitted",
+  "email": "customer@example.com",
+  "properties": {
+    "page_url": "https://example.com/contact",
+    "campaign": "spring-launch"
+  }
 }
 ```
 
-### List contact lists
+## Key Fields
 
-```bash
-GET https://api.brevo.com/v3/contacts/lists?limit=50&offset=0
-```
-
-### Create list
-
-```bash
-POST https://api.brevo.com/v3/contacts/lists
-
-{
-  "name": "Newsletter Subscribers",
-  "folderId": 1
-}
-```
-
-### Add contacts to list
-
-```bash
-POST https://api.brevo.com/v3/contacts/lists/{listId}/contacts/add
-
-{
-  "emails": ["user1@example.com", "user2@example.com"]
-}
-```
-
-### Remove contacts from list
-
-```bash
-POST https://api.brevo.com/v3/contacts/lists/{listId}/contacts/remove
-
-{
-  "emails": ["user1@example.com"]
-}
-```
-
-### Send transactional email
-
-```bash
-POST https://api.brevo.com/v3/smtp/email
-
-{
-  "sender": {
-    "name": "My App",
-    "email": "noreply@example.com"
-  },
-  "to": [
-    { "email": "user@example.com", "name": "Jane Doe" }
-  ],
-  "subject": "Order Confirmation",
-  "htmlContent": "<html><body><p>Your order is confirmed.</p></body></html>"
-}
-```
-
-### List email campaigns
-
-```bash
-GET https://api.brevo.com/v3/emailCampaigns?limit=50&offset=0&type=classic&status=sent
-```
-
-### Create email campaign
-
-```bash
-POST https://api.brevo.com/v3/emailCampaigns
-
-{
-  "name": "January Newsletter",
-  "subject": "Monthly Update",
-  "sender": { "name": "My Brand", "email": "news@example.com" },
-  "htmlContent": "<html><body><p>Newsletter content</p></body></html>",
-  "recipients": { "listIds": [1, 2] }
-}
-```
-
-### Send campaign immediately
-
-```bash
-POST https://api.brevo.com/v3/emailCampaigns/{campaignId}/sendNow
-```
-
-### Send test email for campaign
-
-```bash
-POST https://api.brevo.com/v3/emailCampaigns/{campaignId}/sendTest
-
-{
-  "emailTo": ["test@example.com"]
-}
-```
-
-### Send transactional SMS
-
-```bash
-POST https://api.brevo.com/v3/transactionalSMS/sms
-
-{
-  "sender": "MyApp",
-  "recipient": "+15551234567",
-  "content": "Your verification code is 123456",
-  "type": "transactional"
-}
-```
-
-### List SMS campaigns
-
-```bash
-GET https://api.brevo.com/v3/smsCampaigns?limit=50&offset=0
-```
-
-### List senders
-
-```bash
-GET https://api.brevo.com/v3/senders
-```
-
-## API Pattern
-
-Brevo uses standard REST with offset-based pagination (`limit` and `offset` parameters). Contact attributes use uppercase field names (FIRSTNAME, LASTNAME). Lists are nested under the contacts resource path. Transactional email uses the `/smtp/email` endpoint despite being REST-based.
-
-## Key Metrics
-
-### Contact Fields
-- `email` - Email address
-- `attributes` - Custom attributes (FIRSTNAME, LASTNAME, SMS, etc.)
-- `listIds` - Associated list IDs
-- `emailBlacklisted` - Email opt-out status
-- `smsBlacklisted` - SMS opt-out status
-- `statistics` - Engagement stats (with expand)
-
-### Campaign Metrics
-- `sent` - Total sends
-- `delivered` - Successful deliveries
-- `openRate` - Open percentage
-- `clickRate` - Click percentage
-- `unsubscribed` - Unsubscribe count
-- `hardBounces`, `softBounces` - Bounce counts
-
-### Transactional Email Response
-- `messageId` - Unique message identifier for tracking
+- `id` - Unique platform record identifier
+- `email` - Contact or user email address
+- `first_name` - First name
+- `last_name` - Last name
+- `phone` - Phone number when supported
+- `status` - Record, subscriber, deal, ticket, or workflow state
+- `tags` - Segmentation, source, or lifecycle labels
+- `created_at` - Record creation timestamp
+- `updated_at` - Last update timestamp
 
 ## Parameters
 
-### Contact Parameters
-- `email` - Contact email address
-- `attributes` - Key-value object of custom attributes
-- `listIds` - Array of list IDs to subscribe to
-- `unlinkListIds` - Array of list IDs to unsubscribe from
-
-### Campaign Parameters
-- `name` - Campaign name
-- `subject` - Email subject line
-- `sender` - Object with `name` and `email`
-- `htmlContent` / `textContent` - Email body
-- `recipients` - Object with `listIds` array
-- `type` - classic or trigger
+- `limit` - Number of records returned per request
+- `offset` or `page` - Pagination position
+- `sort` - Sort field and direction when supported
+- `filter` - Field-level filter expression
+- `query` - Search term for matching records
 
 ## When to Use
 
-- Multi-channel marketing (email + SMS + WhatsApp)
-- Transactional email sending with tracking
-- Managing contacts and segmented lists
-- Creating and scheduling email campaigns
-- SMS notifications and marketing
-- Affordable all-in-one marketing automation
+- Sync website leads or customer records
+- Enrich customer profiles
+- Trigger follow-up workflows
+- Report on campaign or lifecycle performance
+- Connect marketing, sales, support, and operations data
 
 ## Rate Limits
 
-- API rate limits depend on plan (free tier: limited sends/day)
-- Transactional email: varies by plan
-- Contact imports: batch processing with async status
-- Rate limit headers returned with responses
+- Varies by plan and endpoint
+- OAuth apps often receive per-minute and daily limits
+- Bulk imports may use separate async limits
+- Use pagination and backoff for large sync jobs
 
 ## Relevant Skills
 
+- email-marketing
 - emails
-- sms-marketing
-- transactional-email
-- lifecycle-marketing
-- contact-management
+- analytics

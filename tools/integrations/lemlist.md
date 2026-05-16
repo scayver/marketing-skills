@@ -1,110 +1,112 @@
-# Lemlist
+# lemlist
 
-Cold email outreach platform with personalization and campaign management.
+Cold outreach platform with personalized image and video emails, multi-channel sequences, and deliverability tools for B2B sales.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | REST API for campaigns, leads, activities, webhooks |
+| API | ✓ | REST API for campaigns, leads, and activities |
 | MCP | - | Not available |
-| CLI | [✓](../clis/lemlist.js) | Zero-dependency Node.js CLI |
-| SDK | - | API-only |
+| CLI | - | Not available |
+| SDK | - | API only |
 
 ## Authentication
 
-- **Type**: Basic Auth (empty username, API key as password)
-- **Header**: `Authorization: Basic base64(:api_key)`
-- **Env var**: `LEMLIST_API_KEY`
-- **Get key**: [Lemlist Settings > Integrations](https://app.lemlist.com/settings/integrations)
+- **Type**: API Key (Basic Auth)
+- **Header**: `Authorization: Basic {base64(api_key:)}`  (API key as username, empty password)
+- **Alternate header**: `X-Api-Key: {api_key}` on some endpoints
+- **Get key**: lemlist Settings > Integrations > API
 
 ## Common Agent Operations
 
-### List campaigns
+### Add a lead to a campaign
 
 ```bash
-node tools/clis/lemlist.js campaigns list --offset 0 --limit 20
+POST https://api.lemlist.com/api/campaigns/{campaign_id}/leads/{email}
+
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
+
+{"firstName": "Jane", "lastName": "Doe", "companyName": "Acme Corp"}
 ```
 
-### Get campaign details and stats
+### Get all campaigns
 
 ```bash
-# Get campaign
-node tools/clis/lemlist.js campaigns get --id cam_abc123
+GET https://api.lemlist.com/api/campaigns
 
-# Get campaign stats
-node tools/clis/lemlist.js campaigns stats --id cam_abc123
-
-# Export campaign data
-node tools/clis/lemlist.js campaigns export --id cam_abc123
+Authorization: Basic {base64(api_key:)}
 ```
 
-### Manage leads in a campaign
+### Get leads in a campaign
 
 ```bash
-# List leads
-node tools/clis/lemlist.js leads list --campaign-id cam_abc123
+GET https://api.lemlist.com/api/campaigns/{campaign_id}/leads
 
-# Add a lead
-node tools/clis/lemlist.js leads add --campaign-id cam_abc123 --email john@example.com --first-name John --last-name Doe --company "Example Inc"
-
-# Get lead details
-node tools/clis/lemlist.js leads get --campaign-id cam_abc123 --email john@example.com
-
-# Remove a lead
-node tools/clis/lemlist.js leads delete --campaign-id cam_abc123 --email john@example.com
+Authorization: Basic {base64(api_key:)}
 ```
 
-### Manage unsubscribes
+### Update lead data
 
 ```bash
-# List unsubscribed emails
-node tools/clis/lemlist.js unsubscribes list
+PATCH https://api.lemlist.com/api/leads/{email}
 
-# Add to unsubscribe list
-node tools/clis/lemlist.js unsubscribes add --email john@example.com
+Authorization: Basic {base64(api_key:)}
+Content-Type: application/json
 
-# Remove from unsubscribe list
-node tools/clis/lemlist.js unsubscribes delete --email john@example.com
+{"companyName": "New Corp", "phone": "+15555550100"}
 ```
 
-### View activities
+### Get lead activity
 
 ```bash
-# All activities
-node tools/clis/lemlist.js activities list
+GET https://api.lemlist.com/api/activities?leadEmail={email}
 
-# Filter by campaign and type
-node tools/clis/lemlist.js activities list --campaign-id cam_abc123 --type emailsOpened
+Authorization: Basic {base64(api_key:)}
 ```
 
-### Manage webhooks
+## Key Fields
 
-```bash
-# List hooks
-node tools/clis/lemlist.js hooks list
+### Lead Object
+- `email` - Primary lead identifier
+- `firstName`, `lastName` - Name fields
+- `companyName` - Company
+- `phone` - Phone number
+- `icebreaker` - Personalization variable for email copy
+- Custom variables - Any field used in campaign templates
 
-# Create a webhook
-node tools/clis/lemlist.js hooks create --target-url https://example.com/webhook --event emailsOpened
+### Campaign Object
+- `_id` - Unique campaign ID
+- `name` - Campaign name
+- `status` - active | paused | draft
+- `sendingSchedule` - Days and hours for sending
 
-# Delete a webhook
-node tools/clis/lemlist.js hooks delete --id hook_123
-```
+### Activity Object
+- `type` - emailSent | emailOpened | emailClicked | replied
+- `campaignId` - Source campaign
+- `createdAt` - Event timestamp
 
-### Team info
+## Parameters
 
-```bash
-node tools/clis/lemlist.js team info
-```
+- `campaign_id` - Target campaign for lead operations
+- `email` - Lead identifier in URL path
+- `offset` - Pagination offset
+- `limit` - Results per page (max 100)
+
+## When to Use
+
+- Running personalized cold email outreach for B2B lead generation
+- Managing multi-channel sequences (email + LinkedIn + calls)
+- Tracking email engagement (opens, clicks, replies) per lead
+- Enrolling inbound leads into automated outreach sequences
 
 ## Rate Limits
 
-- API rate limits vary by plan
-- Recommended: stay under 10 requests/second
+- See lemlist.com/api documentation for current rate limits by plan
 
-## Use Cases
+## Relevant Skills
 
-- **Link building outreach**: Add prospects to campaigns for backlink requests
-- **Campaign management**: Monitor open/reply rates across outreach campaigns
-- **Lead management**: Add, remove, and track leads across campaigns
-- **Webhook integration**: Get real-time notifications for email events
+- lead-generation
+- sales:draft-outreach
+- email-marketing

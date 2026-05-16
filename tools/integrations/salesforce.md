@@ -1,150 +1,118 @@
 # Salesforce
 
-Enterprise CRM platform for sales, service, and marketing.
+Enterprise CRM platform providing sales, service, marketing, and analytics tools with a flexible object model and extensive API surface.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | REST API, SOAP API, Bulk API |
+| API | ✓ | REST API at `https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/` |
 | MCP | - | Not available |
-| CLI | ✓ | Salesforce CLI (`sf`) |
-| SDK | ✓ | JSforce, simple-salesforce, etc. |
+| CLI | ✓ | Salesforce CLI (`sf` / `sfdx`) |
+| SDK | ✓ | Official SDKs for Java, Python, Node.js, .NET, PHP |
 
 ## Authentication
 
-- **Type**: OAuth 2.0 (Web Server Flow or JWT Bearer)
+- **Type**: OAuth 2.0 (Connected App)
 - **Header**: `Authorization: Bearer {access_token}`
-- **Instance URL**: Use instance_url from auth response
+- **Get token**: Salesforce Setup > App Manager > New Connected App, then POST to `/services/oauth2/token`
 
 ## Common Agent Operations
 
 ### Query records (SOQL)
 
 ```bash
-GET https://{instance}.salesforce.com/services/data/v59.0/query?q=SELECT+Id,Name,Email+FROM+Contact+LIMIT+10
+GET https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/query?q=SELECT+Id,Name,Email+FROM+Contact+LIMIT+100
 
 Authorization: Bearer {access_token}
 ```
 
-### Get record by ID
+### Create a Lead
 
 ```bash
-GET https://{instance}.salesforce.com/services/data/v59.0/sobjects/Contact/{record_id}
+POST https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Lead
 
 Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"FirstName": "Jane", "LastName": "Doe", "Email": "jane@example.com", "Company": "Acme Corp", "LeadSource": "Web"}
 ```
 
-### Create record
+### Create a Contact
 
 ```bash
-POST https://{instance}.salesforce.com/services/data/v59.0/sobjects/Contact
-
-{
-  "FirstName": "John",
-  "LastName": "Doe",
-  "Email": "john@example.com",
-  "AccountId": "{account_id}"
-}
-```
-
-### Update record
-
-```bash
-PATCH https://{instance}.salesforce.com/services/data/v59.0/sobjects/Contact/{record_id}
-
-{
-  "Title": "Senior Developer"
-}
-```
-
-### Search records (SOSL)
-
-```bash
-GET https://{instance}.salesforce.com/services/data/v59.0/search?q=FIND+{searchTerm}+IN+ALL+FIELDS+RETURNING+Contact(Id,Name,Email)
+POST https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Contact
 
 Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"FirstName": "Jane", "LastName": "Doe", "Email": "jane@example.com", "AccountId": "001Xx000003GYkQ"}
 ```
 
-### Get opportunities
+### Create an Opportunity
 
 ```bash
-GET https://{instance}.salesforce.com/services/data/v59.0/query?q=SELECT+Id,Name,Amount,StageName,CloseDate+FROM+Opportunity+WHERE+IsClosed=false
+POST https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Opportunity
 
 Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"Name": "Acme Deal Q2", "StageName": "Prospecting", "CloseDate": "2026-06-30", "AccountId": "001Xx000003GYkQ", "Amount": 25000}
 ```
 
-### Describe object
+### Update a record
 
 ```bash
-GET https://{instance}.salesforce.com/services/data/v59.0/sobjects/Contact/describe
+PATCH https://YOUR_INSTANCE.salesforce.com/services/data/v58.0/sobjects/Lead/{record_id}
 
 Authorization: Bearer {access_token}
+Content-Type: application/json
+
+{"Status": "Working"}
 ```
 
-## CLI Commands
+## Key Fields
 
-```bash
-# Authenticate
-sf org login web
+### Lead Object
+- `Id` - Salesforce record ID
+- `FirstName` / `LastName` - Name fields
+- `Email` - Email address
+- `Company` - Company name
+- `LeadSource` - Source (Web, Phone, etc.)
+- `Status` - Open / Working / Converted
 
-# Query records
-sf data query --query "SELECT Id, Name FROM Account LIMIT 10"
+### Contact Object
+- `Id` - Record ID
+- `AccountId` - Associated Account ID
+- `Email` - Email address
+- `Phone` - Phone number
 
-# Create record
-sf data create record --sobject Account --values "Name='New Account'"
+### Opportunity Object
+- `Name` - Opportunity name
+- `StageName` - Pipeline stage
+- `CloseDate` - Expected close date
+- `Amount` - Deal value
 
-# Deploy metadata
-sf project deploy start
+## Parameters
 
-# Run Apex
-sf apex run --file script.apex
-```
-
-## SOQL Examples
-
-```sql
--- Get contacts with accounts
-SELECT Id, Name, Email, Account.Name
-FROM Contact
-WHERE Account.Industry = 'Technology'
-
--- Get opportunities by stage
-SELECT StageName, COUNT(Id)
-FROM Opportunity
-GROUP BY StageName
-
--- Get recent leads
-SELECT Id, Name, Company, Status
-FROM Lead
-WHERE CreatedDate = LAST_N_DAYS:30
-ORDER BY CreatedDate DESC
-```
-
-## Key Objects
-
-- **Lead** - Potential customer
-- **Contact** - Person at account
-- **Account** - Company/organization
-- **Opportunity** - Sales deal
-- **Case** - Support ticket
-- **Campaign** - Marketing campaign
+- SOQL `WHERE` clause for filtering
+- `fields` - Comma-separated field list in queries
+- `limit` - Max records returned (max 2000 per query)
 
 ## When to Use
 
-- Enterprise CRM operations
-- Complex sales processes
-- Multi-object relationships
-- Custom object management
-- Marketing campaign tracking
+- Enterprise sales pipeline management and reporting
+- Syncing leads from external sources into Salesforce
+- Automating opportunity creation from marketing events
+- Running SOQL queries for custom analytics and reporting
 
 ## Rate Limits
 
-- 15,000 API calls per 24 hours (Enterprise)
-- Higher limits available
+- API call limits vary by edition (e.g., Essentials: 100K calls/day, Enterprise: 1M calls/day)
+- See Salesforce Platform API limits documentation
 
 ## Relevant Skills
 
-- emails
-- analytics
-- ads
+- sales:pipeline-review
+- sales:forecast
+- data:sql-queries

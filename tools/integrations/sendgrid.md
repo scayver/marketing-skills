@@ -1,21 +1,21 @@
 # SendGrid
 
-Email delivery platform for transactional and marketing emails.
+Cloud-based email delivery and marketing platform by Twilio for high-volume transactional and marketing email sending with advanced analytics.
 
 ## Capabilities
 
 | Integration | Available | Notes |
 |-------------|-----------|-------|
-| API | ✓ | Mail Send API, Marketing API |
+| API | ✓ | REST API at `https://api.sendgrid.com/v3/` |
 | MCP | - | Not available |
 | CLI | - | Not available |
-| SDK | ✓ | Official libraries for most languages |
+| SDK | ✓ | Official SDKs for Python, Node.js, Ruby, PHP, Go, Java, C# |
 
 ## Authentication
 
-- **Type**: API Key
+- **Type**: API Key (Bearer)
 - **Header**: `Authorization: Bearer {api_key}`
-- **Get key**: Settings > API Keys in SendGrid dashboard
+- **Get token**: SendGrid Settings > API Keys > Create API Key
 
 ## Common Agent Operations
 
@@ -25,51 +25,33 @@ Email delivery platform for transactional and marketing emails.
 POST https://api.sendgrid.com/v3/mail/send
 
 Authorization: Bearer {api_key}
+Content-Type: application/json
 
 {
-  "personalizations": [{
-    "to": [{"email": "user@example.com"}]
-  }],
-  "from": {"email": "hello@example.com"},
-  "subject": "Welcome!",
-  "content": [{
-    "type": "text/html",
-    "value": "<h1>Welcome!</h1>"
-  }]
+  "personalizations": [{"to": [{"email": "jane@example.com"}]}],
+  "from": {"email": "sender@yourdomain.com"},
+  "subject": "Hello, Jane!",
+  "content": [{"type": "text/plain", "value": "Your message here"}]
 }
 ```
 
-### Send with template
-
-```bash
-POST https://api.sendgrid.com/v3/mail/send
-
-{
-  "personalizations": [{
-    "to": [{"email": "user@example.com"}],
-    "dynamic_template_data": {
-      "name": "John",
-      "order_id": "12345"
-    }
-  }],
-  "from": {"email": "hello@example.com"},
-  "template_id": "d-xxx"
-}
-```
-
-### Add contact to list
+### Add/update marketing contacts
 
 ```bash
 PUT https://api.sendgrid.com/v3/marketing/contacts
 
-{
-  "list_ids": ["list-id"],
-  "contacts": [{
-    "email": "user@example.com",
-    "first_name": "John",
-    "last_name": "Doe"
-  }]
-}
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{"list_ids": ["abc123"], "contacts": [{"email": "jane@example.com", "first_name": "Jane", "last_name": "Doe"}]}
+```
+
+### List marketing lists
+
+```bash
+GET https://api.sendgrid.com/v3/marketing/lists
+
+Authorization: Bearer {api_key}
 ```
 
 ### Search contacts
@@ -77,85 +59,65 @@ PUT https://api.sendgrid.com/v3/marketing/contacts
 ```bash
 POST https://api.sendgrid.com/v3/marketing/contacts/search
 
-{
-  "query": "email LIKE 'user@%'"
-}
+Authorization: Bearer {api_key}
+Content-Type: application/json
+
+{"query": "email LIKE 'jane%'"}
 ```
 
 ### Get email statistics
 
 ```bash
-GET https://api.sendgrid.com/v3/stats?start_date=2024-01-01&end_date=2024-01-31
+GET https://api.sendgrid.com/v3/stats?start_date=2026-05-01&end_date=2026-05-15
 
 Authorization: Bearer {api_key}
 ```
 
-### Get bounces
+## Key Fields
 
-```bash
-GET https://api.sendgrid.com/v3/suppression/bounces
+### Contact Object
+- `id` - Contact ID
+- `email` - Email address
+- `first_name` - First name
+- `last_name` - Last name
+- `list_ids` - Array of list IDs
+- `custom_fields` - Custom field values
 
-Authorization: Bearer {api_key}
-```
+### Email Send Object
+- `personalizations` - Array of recipient objects
+- `from` - Sender email and name
+- `subject` - Email subject
+- `content` - Array of content objects (text/plain, text/html)
+- `template_id` - Dynamic template ID
 
-### Get spam reports
+### Statistics Object
+- `date` - Date
+- `stats[].metrics.delivered` - Delivered count
+- `stats[].metrics.opens` - Opens count
+- `stats[].metrics.clicks` - Clicks count
+- `stats[].metrics.bounces` - Bounce count
 
-```bash
-GET https://api.sendgrid.com/v3/suppression/spam_reports
+## Parameters
 
-Authorization: Bearer {api_key}
-```
-
-### Validate email
-
-```bash
-POST https://api.sendgrid.com/v3/validations/email
-
-{
-  "email": "user@example.com"
-}
-```
-
-## Webhook Events
-
-| Event | Description |
-|-------|-------------|
-| `processed` | Email accepted |
-| `delivered` | Email delivered |
-| `open` | Email opened |
-| `click` | Link clicked |
-| `bounce` | Hard/soft bounce |
-| `dropped` | Email dropped |
-| `spamreport` | Marked as spam |
-| `unsubscribe` | Unsubscribed |
-
-## Node.js SDK
-
-```javascript
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey('SG.xxx');
-
-await sgMail.send({
-  to: 'user@example.com',
-  from: 'hello@example.com',
-  subject: 'Welcome!',
-  html: '<h1>Welcome!</h1>'
-});
-```
+- `start_date` - Stats start date (YYYY-MM-DD)
+- `end_date` - Stats end date
+- `page_size` - Results per page (max 1000)
+- `page_token` - Pagination token
 
 ## When to Use
 
-- Transactional email at scale
-- Marketing email campaigns
-- Email validation
-- Deliverability management
+- Sending high-volume transactional emails (receipts, notifications, password resets)
+- Managing marketing contact lists and segmentation
+- Running email campaigns with dynamic templates
+- Monitoring deliverability metrics and bounce rates
 
 ## Rate Limits
 
-- Free: 100 emails/day
-- Paid: Varies by plan (up to millions/month)
+- Free: 100 emails/day; Essentials: 40K/month; Pro/Premier: higher limits
+- API: 3,000 requests/second burst, sustained limits by plan
 
 ## Relevant Skills
 
-- emails
-- analytics
+- marketing:email-sequence
+- marketing:campaign-plan
+- marketing:performance-report
