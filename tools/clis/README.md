@@ -54,6 +54,7 @@ Every CLI reads credentials from environment variables:
 | `ga4` | `GA4_ACCESS_TOKEN` |
 | `google-ads` | `GOOGLE_ADS_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `GOOGLE_ADS_CUSTOMER_ID` |
 | `google-search-console` | `GSC_ACCESS_TOKEN` |
+| `github-prospects` | `GITHUB_TOKEN` or `GH_TOKEN` (optional but recommended) |
 | `hotjar` | `HOTJAR_CLIENT_ID`, `HOTJAR_CLIENT_SECRET` |
 | `intercom` | `INTERCOM_API_KEY` |
 | `keywords-everywhere` | `KEYWORDS_EVERYWHERE_API_KEY` |
@@ -113,6 +114,7 @@ semrush keywords overview --phrase "marketing automation" --database us
 mailchimp campaigns list --limit 20
 resend send --from you@example.com --to them@example.com --subject "Hello" --html "<p>Hi</p>"
 dub links create --url https://example.com/landing --key summer-sale
+github-prospects prospects export --repo owner/repo --signals stargazers,forks,watchers --limit 100
 ```
 
 ## Output
@@ -152,6 +154,7 @@ DOMAINS=$(rewardful affiliates list | jq -r '.data[].email')
 | `ga4.js` | Analytics | [Google Analytics 4](https://analytics.google.com) |
 | `google-ads.js` | Ads | [Google Ads](https://ads.google.com) |
 | `google-search-console.js` | SEO | [Google Search Console](https://search.google.com/search-console) |
+| `github-prospects.js` | Developer Intent | [GitHub](https://github.com) |
 | `hotjar.js` | CRO | [Hotjar](https://hotjar.com) |
 | `hunter.js` | Email Outreach | [Hunter.io](https://hunter.io) |
 | `instantly.js` | Email Outreach | [Instantly.ai](https://instantly.ai) |

@@ -6,8 +6,8 @@ This registry indexes every markdown guide in `tools/integrations/`. Each guide 
 
 ## Inventory
 
-- **Standalone integration guides:** 346
-- **JavaScript CLI tools:** 61
+- **Standalone integration guides:** 347
+- **JavaScript CLI tools:** 62
 - **Composio docs:** 2
 - **Original Bit Integrations source list:** [`integrations/bit-integrations-registry.md`](integrations/bit-integrations-registry.md)
 
@@ -131,6 +131,7 @@ This registry indexes every markdown guide in `tools/integrations/`. Each guide 
 | getgist | CRM | ✓ | - | - | - | [getgist.md](integrations/getgist.md) |
 | getresponse | Email | ✓ | - | - | ✓ | [getresponse.md](integrations/getresponse.md) |
 | givewp | Email | ✓ | - | - | - | [givewp.md](integrations/givewp.md) |
+| github | Developer Intent | ✓ | ✓ | ✓ | ✓ | [github.md](integrations/github.md) |
 | gohighlevel | CRM | ✓ | - | - | - | [gohighlevel.md](integrations/gohighlevel.md) |
 | gong | Email | ✓ | - | - | - | [gong.md](integrations/gong.md) |
 | google-ads | Email | ✓ | ✓ | - | ✓ | [google-ads.md](integrations/google-ads.md) |

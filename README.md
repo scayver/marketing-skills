@@ -2,7 +2,7 @@
 
 Most AI agents know how to write code. Very few know how to market software, build a brand, or turn a landing page into a revenue engine.
 
-This library fixes that. It gives your agent 57 specialized marketing and growth skills, each one built around a real framework, a real process, and a real output format. You stop getting generic advice. You start getting structured, professional-grade marketing work on demand.
+This library fixes that. It gives your agent 58 specialized marketing and growth skills, each one built around a real framework, a real process, and a real output format. You stop getting generic advice. You start getting structured, professional-grade marketing work on demand.
 
 ---
 
@@ -22,8 +22,8 @@ Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)*
 
 [![Version](https://img.shields.io/badge/version-1.2.0-blue)](VERSIONS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-57-orange)](skills/)
-[![Tools](https://img.shields.io/badge/integration%20guides-346-purple)](tools/REGISTRY.md)
+[![Skills](https://img.shields.io/badge/skills-58-orange)](skills/)
+[![Tools](https://img.shields.io/badge/integration%20guides-347-purple)](tools/REGISTRY.md)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
 [![GitHub stars](https://img.shields.io/github/stars/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/forks)
@@ -39,7 +39,7 @@ This project gives Claude Code, OpenAI Codex, Cursor, Windsurf, and other Agent 
 - Strategy skills for positioning, launches, pricing, research, and business planning.
 - Revenue skills for CRO, email, sales copy, RevOps, referrals, churn, and analytics.
 - Content skills for SEO, blogs, LinkedIn, Instagram, ecommerce, PR, education, and customer support.
-- Tool references for 346 platforms, APIs, CLIs, WordPress plugins, CRMs, email tools, automation tools, LMS platforms, and more.
+- Tool references for 347 platforms, APIs, CLIs, WordPress plugins, CRMs, email tools, automation tools, LMS platforms, and more.
 
 If this saves you time, star it so more builders can find it.
 
@@ -140,8 +140,7 @@ product-marketing
 │   ├── ads
 │   ├── ad-creative
 │   ├── ab-testing
-│   ├── analytics
-│   └── analytics-review
+│   └── analytics
 ├── Growth and retention
 │   ├── referrals
 │   ├── free-tools
@@ -152,6 +151,7 @@ product-marketing
 │   └── directory-submissions
 ├── Sales and go-to-market
 │   ├── revops
+│   ├── prospect-research
 │   ├── sales-enablement
 │   ├── launch
 │   ├── pricing
@@ -172,6 +172,7 @@ product-marketing
 Cross-skill dependencies:
   copywriting        <-> cro                 <-> ab-testing
   revops             <-> sales-enablement    <-> cold-email
+  prospect-research  ->  cold-email, linkedin-strategy, revops
   seo-audit          <-> schema              <-> ai-seo
   seo-blog-writer    <-> seo-content-strategy
   customer-research  ->  copywriting, cro, competitors
@@ -202,7 +203,7 @@ Skills install to `.agents/skills/` by default. Claude Code also reads from `.cl
 
 ## Install
 
-**All 57 skills at once:**
+**All 58 skills at once:**
 
 ```bash
 npx skills add scayver/marketing-skills
@@ -284,7 +285,7 @@ More examples live in [`examples/README.md`](examples/README.md).
 
 ---
 
-## All 57 skills
+## All 58 skills
 
 ### SEO and discovery
 
@@ -356,6 +357,7 @@ More examples live in [`examples/README.md`](examples/README.md).
 | Skill | Description |
 |-------|-------------|
 | [`revops`](skills/revops/SKILL.md) | Lead scoring, routing, pipeline stages, CRM automation, and marketing-to-sales handoff |
+| [`prospect-research`](skills/prospect-research/SKILL.md) | Account research, GitHub stargazer and fork signals, firmographic targeting, Apollo/ZoomInfo/Sales Nav mapping, local SMB research, and compliance screening |
 | [`sales-enablement`](skills/sales-enablement/SKILL.md) | Pitch decks, one-pagers, objection handling, demo scripts, and battle cards |
 | [`launch`](skills/launch/SKILL.md) | Product launches: pre-launch prep, Product Hunt, launch day checklist, and post-launch |
 | [`pricing`](skills/pricing/SKILL.md) | Pricing models, tier structure, value metrics, and pricing page design |
@@ -391,13 +393,13 @@ The `tools/` directory gives your agent standalone platform references it can us
 
 ```text
 tools/
-  clis/           61 JavaScript CLI tools
-  integrations/   346 standalone platform integration guides
+  clis/           62 JavaScript CLI tools
+  integrations/   347 standalone platform integration guides
   composio/       Composio marketing tool references
   REGISTRY.md     Full tool index
 ```
 
-**CLI tools include:** GA4, Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Klaviyo, Mailchimp, HubSpot, Segment, Mixpanel, Amplitude, Ahrefs, SEMrush, Hotjar, Intercom, Paddle, and more.
+**CLI tools include:** GA4, Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Klaviyo, Mailchimp, HubSpot, Segment, Mixpanel, Amplitude, Ahrefs, SEMrush, Hotjar, Intercom, Paddle, GitHub prospecting, and more.
 
 **Integration docs cover:** direct APIs, authentication, common agent operations, key fields, parameters, rate limits, and relevant skills for each platform. They are independent platform references, not connector-specific setup notes.
 
@@ -428,6 +430,8 @@ Every section ends with a specific, actionable next step. No section closes with
 ---
 
 ## Changelog
+
+**v1.3.0 (2026-05-27)** — Added `prospect-research` for SaaS developer-intent signals, B2B trigger-event research, local SMB website classification, and outreach compliance checks. Added `github-prospects.js` plus a standalone GitHub integration guide for stargazers, forks, and watcher research.
 
 Full history in [VERSIONS.md](VERSIONS.md).
 

@@ -2,6 +2,37 @@
 
 ---
 
+## v1.3.0 (2026-05-27)
+
+**Prospect research, developer-intent signals, and GitHub prospecting CLI.**
+
+> Support this work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
+
+This release adds an outbound intelligence layer for agents that need to identify who to contact before writing outreach.
+
+**New Skill**
+
+| Skill | Category | Description |
+|-------|----------|-------------|
+| [`prospect-research`](skills/prospect-research/SKILL.md) | Content and Copy / Sales and Go-to-Market | Prospect list building, SaaS developer-intent signals, B2B firmographic and trigger-event research, decision-maker mapping through Apollo, ZoomInfo, and Sales Navigator, local SMB Google Maps research with four-tier website classification, and compliance checks for CAN-SPAM, GDPR, CASL, and platform terms. |
+
+**New Tools**
+
+- Added [`tools/clis/github-prospects.js`](tools/clis/github-prospects.js) to pull GitHub stargazers, forks, and repository subscribers as developer-intent signals.
+- Added [`tools/integrations/github.md`](tools/integrations/github.md) as a standalone GitHub API reference for agents.
+- Updated `tools/REGISTRY.md` and `tools/clis/README.md` so agents can discover the new GitHub prospecting workflow.
+
+**Metadata**
+
+- Updated `package.json` to v1.3.0.
+- Updated the project count to 58 skills, 347 standalone integration guides, and 62 JavaScript CLI tools.
+
+**Author**
+
+v1.3.0 designed and implemented by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
+
+---
+
 ## v1.2.0 (2026-05-15)
 
 **Tool system expansion and standalone integration reference cleanup.**

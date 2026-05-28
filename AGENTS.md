@@ -1,6 +1,6 @@
 # marketing-skills — Agent Instructions
 
-This repository contains 57 reusable marketing and growth skills for AI agents. Each skill lives in `skills/<skill-name>/SKILL.md`.
+This repository contains 58 reusable marketing and growth skills for AI agents. Each skill lives in `skills/<skill-name>/SKILL.md`.
 
 **Created and maintained by Alain Dorcelus ([ScayverGraphix](https://github.com/ScayverGraphix)).**
 Support the work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
@@ -37,6 +37,7 @@ marketing-skills/
 │   ├── churn-prevention/
 │   ├── co-marketing/
 │   ├── cold-email/
+│   ├── prospect-research/       ← NEW v1.3.0
 │   ├── community-marketing/
 │   ├── competitor-profiling/
 │   ├── competitors/
@@ -83,8 +84,8 @@ marketing-skills/
 │   ├── social-content-planner/   ← NEW v1.1.0
 │   └── video/
 ├── tools/
-│   ├── clis/            # 61 JavaScript CLI tools
-│   ├── integrations/    # 346 standalone platform guides
+│   ├── clis/            # 62 JavaScript CLI tools
+│   ├── integrations/    # 347 standalone platform guides
 │   ├── composio/        # Composio marketing tool references
 │   └── REGISTRY.md      # Generated tool index
 ├── package.json
@@ -100,9 +101,9 @@ marketing-skills/
 
 The `tools/` directory contains standalone platform references agents can use alongside skills.
 
-- `tools/REGISTRY.md` indexes all 346 integration guides.
+- `tools/REGISTRY.md` indexes all 347 integration guides.
 - `tools/integrations/` contains platform-independent docs with authentication, common agent operations, key fields, parameters, rate limits, and relevant skills.
-- `tools/clis/` contains 61 JavaScript CLI helpers for high-use marketing platforms.
+- `tools/clis/` contains 62 JavaScript CLI helpers for high-use marketing platforms.
 - `tools/integrations/bit-integrations-registry.md` preserves the original source list used to expand the tool library.
 
 When a task requires a platform, read the matching integration guide before giving setup instructions or API examples. Prefer direct platform APIs, official CLIs, SDKs, WordPress REST endpoints, or documented webhook patterns.
@@ -174,6 +175,7 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 
 ### Sales and Go-to-Market
 - `revops` — Lead scoring, pipeline stages, CRM automation
+- `prospect-research` — Account research, GitHub stargazers and forks, firmographics, trigger events, decision-maker mapping *(v1.3.0)*
 - `sales-enablement` — Pitch decks, objection handling, battle cards
 - `launch` — Product launches, Product Hunt, launch day checklists
 - `pricing` — Pricing models, tier structure, pricing page design
@@ -222,7 +224,7 @@ Every skill must produce actionable, structured output that the user can impleme
 
 ## Output Standards (Applied by Every Skill)
 
-All 57 skills enforce these rules on every word of output:
+All 58 skills enforce these rules on every word of output:
 
 - Output length: 1,500 to 10,000 words for full deliverables.
 - Voice: active voice only. No passive constructions.
