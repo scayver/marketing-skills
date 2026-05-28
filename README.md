@@ -23,6 +23,7 @@ Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)*
 [![Version](https://img.shields.io/badge/version-1.2.0-blue)](VERSIONS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-57-orange)](skills/)
+[![Tools](https://img.shields.io/badge/integration%20guides-346-purple)](tools/REGISTRY.md)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
 
 ---
@@ -224,6 +225,34 @@ npx skills add YOUR_GITHUB_USERNAME/marketing-skills
 
 ---
 
+## Quickstart examples
+
+Install the full library, then try one of these requests in your agent:
+
+```text
+Use product-marketing to build the positioning context for my SaaS.
+```
+
+```text
+Use landing-page-cro to audit this page and rewrite the hero, benefits, CTA, and FAQ section.
+```
+
+```text
+Use email-marketing to create a 5-email lead magnet nurture sequence for this offer.
+```
+
+```text
+Use local-seo to write a city page for HVAC repair in Austin, TX.
+```
+
+```text
+Use tools/REGISTRY.md to find the right CRM integration guide, then show me the contact sync API pattern.
+```
+
+More examples live in [`examples/README.md`](examples/README.md).
+
+---
+
 ## All 57 skills
 
 ### SEO and discovery
@@ -393,6 +422,16 @@ If this library saves you hours of prompting, gives your agent new capabilities,
 - 💸 CashApp: **$AlainDorcelus**
 
 This library also draws on the Agent Skills spec published by [vercel-labs/skills](https://github.com/vercel-labs/skills) and builds on work from the marketing skills community, including the original [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) project.
+
+---
+
+## Project files for maintainers
+
+- [`AGENTS.md`](AGENTS.md) tells coding agents how to use and extend the repo.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) explains how to add skills, tools, and docs.
+- [`VALIDATION.md`](VALIDATION.md) lists the local checks to run before pushing.
+- [`examples/README.md`](examples/README.md) gives copy-paste prompts for new users.
+- [`tools/REGISTRY.md`](tools/REGISTRY.md) indexes every standalone integration guide.
 
 ---
 
