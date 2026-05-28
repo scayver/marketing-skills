@@ -8,8 +8,8 @@ I launched `marketing-skills`, an open skill library that gives AI agents real m
 
 It includes:
 
-- 57 marketing and growth skills.
-- 346 standalone integration guides.
+- 58 marketing and growth skills.
+- 347 standalone integration guides.
 - 61 CLI tools.
 - Support for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.
 
@@ -35,9 +35,9 @@ It gives AI agents structured marketing workflows they can actually follow.
 
 Inside:
 
-- 57 marketing and growth skills.
-- 346 standalone integration guides.
-- 61 JavaScript CLI tools.
+- 58 marketing and growth skills.
+- 347 standalone integration guides.
+- 62 JavaScript CLI tools.
 - Frameworks for SEO, CRO, email, social, PR, local SEO, ecommerce, analytics, RevOps, and more.
 
 Install it:
@@ -56,8 +56,8 @@ Built by Alain Dorcelus, ScayverGraphix.
 
 I launched `marketing-skills`.
 
-57 agent skills.
-346 integration guides.
+58 agent skills.
+347 integration guides.
 61 CLI tools.
 
 Built for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.

@@ -20,13 +20,14 @@ This library fixes that. It gives your agent 58 specialized marketing and growth
 
 Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)** · [ScayverGraphix](https://github.com/ScayverGraphix)
 
-[![Version](https://img.shields.io/badge/version-1.2.0-blue)](VERSIONS.md)
+[![Version](https://img.shields.io/badge/version-1.4.0-blue)](VERSIONS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-58-orange)](skills/)
 [![Tools](https://img.shields.io/badge/integration%20guides-347-purple)](tools/REGISTRY.md)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
 [![GitHub stars](https://img.shields.io/github/stars/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/forks)
+[![Validation](https://github.com/scayver/marketing-skills/actions/workflows/validate.yml/badge.svg)](https://github.com/scayver/marketing-skills/actions/workflows/validate.yml)
 
 ---
 
@@ -407,6 +408,25 @@ The original Bit Integrations source list is preserved at [`tools/integrations/b
 
 ---
 
+## Quality and validation
+
+This repo now includes a validation layer so agents and contributors can trust the package before installing it.
+
+```bash
+npm run validate
+```
+
+The validator checks skill frontmatter, mandatory skill sections, integration registry coverage, CLI syntax, local documentation links, required community files, and current package counts. GitHub Actions runs the same validation on every push and pull request.
+
+Useful docs:
+
+- [Demo walkthrough](docs/DEMO.md).
+- [Compliance reference](docs/COMPLIANCE.md).
+- [Validation guide](VALIDATION.md).
+- [Security policy](SECURITY.md).
+
+---
+
 ## Output standards
 
 Every skill enforces the same rules on every word of output. There are no exceptions.
@@ -430,6 +450,8 @@ Every section ends with a specific, actionable next step. No section closes with
 ---
 
 ## Changelog
+
+**v1.4.0 (2026-05-27)** — Added repository validation automation, GitHub Actions CI, security and conduct docs, compliance and demo docs, expanded issue templates, `.gitignore`, and CLI index coverage.
 
 **v1.3.0 (2026-05-27)** — Added `prospect-research` for SaaS developer-intent signals, B2B trigger-event research, local SMB website classification, and outreach compliance checks. Added `github-prospects.js` plus a standalone GitHub integration guide for stargazers, forks, and watcher research.
 

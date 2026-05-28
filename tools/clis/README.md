@@ -39,8 +39,13 @@ Every CLI reads credentials from environment variables:
 | `activecampaign` | `ACTIVECAMPAIGN_API_KEY`, `ACTIVECAMPAIGN_API_URL` |
 | `adobe-analytics` | `ADOBE_ACCESS_TOKEN`, `ADOBE_CLIENT_ID`, `ADOBE_COMPANY_ID` |
 | `ahrefs` | `AHREFS_API_KEY` |
+| `airops` | `AIROPS_API_KEY`, `AIROPS_WORKSPACE_ID` |
 | `amplitude` | `AMPLITUDE_API_KEY`, `AMPLITUDE_SECRET_KEY` |
 | `apollo` | `APOLLO_API_KEY` |
+| `clay` | `CLAY_API_KEY` |
+| `close` | `CLOSE_API_KEY` |
+| `coupler` | `COUPLER_API_KEY` |
+| `crossbeam` | `CROSSBEAM_API_KEY` |
 | `beehiiv` | `BEEHIIV_API_KEY` |
 | `brevo` | `BREVO_API_KEY` |
 | `buffer` | `BUFFER_API_KEY` |
@@ -68,14 +73,17 @@ Every CLI reads credentials from environment variables:
 | `mixpanel` | `MIXPANEL_TOKEN` (ingestion), `MIXPANEL_API_KEY` + `MIXPANEL_SECRET` (query) |
 | `onesignal` | `ONESIGNAL_REST_API_KEY`, `ONESIGNAL_APP_ID` |
 | `optimizely` | `OPTIMIZELY_API_KEY` |
+| `outreach` | `OUTREACH_ACCESS_TOKEN` |
 | `paddle` | `PADDLE_API_KEY`, `PADDLE_SANDBOX` (optional) |
 | `partnerstack` | `PARTNERSTACK_PUBLIC_KEY`, `PARTNERSTACK_SECRET_KEY` |
+| `pendo` | `PENDO_INTEGRATION_KEY` |
 | `plausible` | `PLAUSIBLE_API_KEY`, `PLAUSIBLE_BASE_URL` (optional, for self-hosted) |
 | `postmark` | `POSTMARK_API_KEY` |
 | `resend` | `RESEND_API_KEY` |
 | `rewardful` | `REWARDFUL_API_KEY` |
 | `savvycal` | `SAVVYCAL_API_KEY` |
 | `segment` | `SEGMENT_WRITE_KEY` (tracking), `SEGMENT_ACCESS_TOKEN` (profile) |
+| `similarweb` | `SIMILARWEB_API_KEY` |
 | `semrush` | `SEMRUSH_API_KEY` |
 | `sendgrid` | `SENDGRID_API_KEY` |
 | `tiktok-ads` | `TIKTOK_ACCESS_TOKEN`, `TIKTOK_ADVERTISER_ID` |
@@ -86,8 +94,10 @@ Every CLI reads credentials from environment variables:
 | `instantly` | `INSTANTLY_API_KEY` |
 | `lemlist` | `LEMLIST_API_KEY` |
 | `snov` | `SNOV_CLIENT_ID`, `SNOV_CLIENT_SECRET` |
+| `supermetrics` | `SUPERMETRICS_API_KEY` |
 | `wistia` | `WISTIA_API_KEY` |
 | `zapier` | `ZAPIER_API_KEY` |
+| `zoominfo` | `ZOOMINFO_ACCESS_TOKEN` or `ZOOMINFO_USERNAME`, `ZOOMINFO_PRIVATE_KEY` |
 
 ## Security
 
@@ -139,8 +149,13 @@ DOMAINS=$(rewardful affiliates list | jq -r '.data[].email')
 | `activecampaign.js` | Email/CRM | [ActiveCampaign](https://activecampaign.com) |
 | `adobe-analytics.js` | Analytics | [Adobe Analytics](https://business.adobe.com/products/analytics) |
 | `ahrefs.js` | SEO | [Ahrefs](https://ahrefs.com) |
+| `airops.js` | AI/SEO Workflows | [AirOps](https://airops.com) |
 | `amplitude.js` | Analytics | [Amplitude](https://amplitude.com) |
 | `apollo.js` | Data Enrichment | [Apollo.io](https://apollo.io) |
+| `clay.js` | Data Enrichment | [Clay](https://clay.com) |
+| `close.js` | CRM | [Close](https://close.com) |
+| `coupler.js` | Data Pipelines | [Coupler.io](https://coupler.io) |
+| `crossbeam.js` | Partnerships | [Crossbeam](https://crossbeam.com) |
 | `beehiiv.js` | Newsletter | [Beehiiv](https://beehiiv.com) |
 | `brevo.js` | Email/SMS | [Brevo](https://brevo.com) |
 | `buffer.js` | Social | [Buffer](https://buffer.com) |
@@ -171,8 +186,10 @@ DOMAINS=$(rewardful affiliates list | jq -r '.data[].email')
 | `mixpanel.js` | Analytics | [Mixpanel](https://mixpanel.com) |
 | `onesignal.js` | Push | [OneSignal](https://onesignal.com) |
 | `optimizely.js` | A/B Testing | [Optimizely](https://optimizely.com) |
+| `outreach.js` | Sales Engagement | [Outreach](https://outreach.io) |
 | `paddle.js` | Payments | [Paddle](https://paddle.com) |
 | `partnerstack.js` | Affiliate | [PartnerStack](https://partnerstack.com) |
+| `pendo.js` | Product Analytics | [Pendo](https://pendo.io) |
 | `plausible.js` | Analytics | [Plausible](https://plausible.io) |
 | `postmark.js` | Email | [Postmark](https://postmarkapp.com) |
 | `resend.js` | Email | [Resend](https://resend.com) |
@@ -180,11 +197,14 @@ DOMAINS=$(rewardful affiliates list | jq -r '.data[].email')
 | `savvycal.js` | Scheduling | [SavvyCal](https://savvycal.com) |
 | `segment.js` | Analytics | [Segment](https://segment.com) |
 | `semrush.js` | SEO | [SEMrush](https://semrush.com) |
+| `similarweb.js` | Competitive Intelligence | [Similarweb](https://similarweb.com) |
 | `sendgrid.js` | Email | [SendGrid](https://sendgrid.com) |
 | `snov.js` | Email Outreach | [Snov.io](https://snov.io) |
+| `supermetrics.js` | Marketing Data | [Supermetrics](https://supermetrics.com) |
 | `tiktok-ads.js` | Ads | [TikTok Ads](https://ads.tiktok.com) |
 | `tolt.js` | Referral | [Tolt](https://tolt.io) |
 | `trustpilot.js` | Reviews | [Trustpilot](https://trustpilot.com) |
 | `typeform.js` | Forms | [Typeform](https://typeform.com) |
 | `wistia.js` | Video | [Wistia](https://wistia.com) |
 | `zapier.js` | Automation | [Zapier](https://zapier.com) |
+| `zoominfo.js` | Data Enrichment | [ZoomInfo](https://zoominfo.com) |

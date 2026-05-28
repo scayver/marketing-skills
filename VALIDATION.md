@@ -8,7 +8,7 @@ Run these checks before committing changes.
 find skills -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l
 ```
 
-Expected current count: `57`.
+Expected current count: `58`.
 
 ## Integration Guide Count
 
@@ -16,7 +16,7 @@ Expected current count: `57`.
 find tools/integrations -maxdepth 1 -name '*.md' ! -iname '*registry*' | wc -l
 ```
 
-Expected current count: `346`.
+Expected current count: `347`.
 
 ## CLI Count
 
@@ -24,7 +24,7 @@ Expected current count: `346`.
 find tools/clis -maxdepth 1 -name '*.js' | wc -l
 ```
 
-Expected current count: `61`.
+Expected current count: `62`.
 
 ## Skill Frontmatter Check
 
@@ -114,3 +114,14 @@ PY
 ```
 
 Expected result: `missing registry targets 0`.
+
+
+## Automated Validation
+
+Run the repository validator before every pull request.
+
+```bash
+npm run validate
+```
+
+The command checks skill frontmatter, required skill sections, integration registry coverage, CLI syntax, local documentation links, package counts, and required community files. GitHub Actions runs the same check on push and pull request events.

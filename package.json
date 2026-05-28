@@ -1,7 +1,7 @@
 {
   "name": "marketing-skills",
-  "version": "1.3.0",
-  "description": "58 marketing and growth skills plus 347 standalone integration docs for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.",
+  "version": "1.4.0",
+  "description": "58 marketing and growth skills plus 347 standalone integration docs, 62 CLI tools, validation automation, and launch-ready docs for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.",
   "keywords": [
     "ads",
     "agent-skills",
@@ -34,5 +34,9 @@
     "type": "git",
     "url": "https://github.com/scayver/marketing-skills.git"
   },
-  "homepage": "https://github.com/scayver/marketing-skills#readme"
+  "homepage": "https://github.com/scayver/marketing-skills#readme",
+  "scripts": {
+    "validate": "node scripts/validate-repo.js",
+    "check": "npm run validate"
+  }
 }

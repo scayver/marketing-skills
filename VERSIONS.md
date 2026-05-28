@@ -2,6 +2,37 @@
 
 ---
 
+## v1.4.0 (2026-05-27)
+
+**Validation automation and trust polish.**
+
+> Support this work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
+
+This release adds the repository quality layer needed for safer contribution, easier agent trust, and a cleaner public GitHub launch.
+
+**Quality and Automation**
+
+- Added `scripts/validate-repo.js` for local validation.
+- Added `.github/workflows/validate.yml` to run validation on push, pull request, and manual dispatch.
+- Added `npm run validate` and `npm run check`.
+- Expanded CLI README coverage so all 62 JavaScript CLI files appear in the CLI index.
+- Added `.gitignore` for local environment files, dependencies, logs, and build artifacts.
+
+**Docs and Community**
+
+- Added `SECURITY.md`.
+- Added `CODE_OF_CONDUCT.md`.
+- Added `docs/DEMO.md`.
+- Added `docs/COMPLIANCE.md`.
+- Added separate bug and tool integration issue templates.
+- Updated README, AGENTS, VALIDATION, and LAUNCH_KIT with the validation workflow and current counts.
+
+**Author**
+
+v1.4.0 designed and implemented by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
+
+---
+
 ## v1.3.0 (2026-05-27)
 
 **Prospect research, developer-intent signals, and GitHub prospecting CLI.**

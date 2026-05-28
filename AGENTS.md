@@ -88,9 +88,20 @@ marketing-skills/
 │   ├── integrations/    # 347 standalone platform guides
 │   ├── composio/        # Composio marketing tool references
 │   └── REGISTRY.md      # Generated tool index
+├── scripts/
+│   └── validate-repo.js
+├── docs/
+│   ├── COMPLIANCE.md
+│   ├── DEMO.md
+│   ├── FAQ.md
+│   ├── LAUNCH_KIT.md
+│   ├── ROADMAP.md
+│   └── SHOWCASE.md
 ├── package.json
 ├── README.md
 ├── AGENTS.md
+├── SECURITY.md
+├── VALIDATION.md
 ├── VERSIONS.md
 └── LICENSE
 ```
@@ -107,6 +118,16 @@ The `tools/` directory contains standalone platform references agents can use al
 - `tools/integrations/bit-integrations-registry.md` preserves the original source list used to expand the tool library.
 
 When a task requires a platform, read the matching integration guide before giving setup instructions or API examples. Prefer direct platform APIs, official CLIs, SDKs, WordPress REST endpoints, or documented webhook patterns.
+
+## Repository Validation
+
+Run validation before committing skill, tool, or documentation changes.
+
+```bash
+npm run validate
+```
+
+The validator checks skill frontmatter, mandatory sections, registry coverage, CLI syntax, required community files, local documentation links, and package counts. The GitHub Actions workflow runs the same command on pushes and pull requests.
 
 ## Skill Activation
 
