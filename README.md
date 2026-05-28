@@ -25,6 +25,37 @@ Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)*
 [![Skills](https://img.shields.io/badge/skills-57-orange)](skills/)
 [![Tools](https://img.shields.io/badge/integration%20guides-346-purple)](tools/REGISTRY.md)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
+[![GitHub stars](https://img.shields.io/github/stars/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/forks)
+
+---
+
+## Why star this repo
+
+Star this repo if you want AI agents that can do more than write code.
+
+This project gives Claude Code, OpenAI Codex, Cursor, Windsurf, and other Agent Skills-compatible tools a full marketing operating system:
+
+- Strategy skills for positioning, launches, pricing, research, and business planning.
+- Revenue skills for CRO, email, sales copy, RevOps, referrals, churn, and analytics.
+- Content skills for SEO, blogs, LinkedIn, Instagram, ecommerce, PR, education, and customer support.
+- Tool references for 346 platforms, APIs, CLIs, WordPress plugins, CRMs, email tools, automation tools, LMS platforms, and more.
+
+If this saves you time, star it so more builders can find it.
+
+---
+
+## Popular use cases
+
+| Use Case | Start With | What You Get |
+|----------|------------|--------------|
+| Launch a SaaS product | `product-marketing`, `launch`, `email-marketing` | Positioning, launch plan, emails, social content, and PR assets |
+| Improve a landing page | `landing-page-cro`, `copywriting`, `ab-testing` | Audit, rewritten page sections, CTA tests, and FAQ schema |
+| Build SEO traffic | `seo-content-strategy`, `seo-blog-writer`, `schema` | Keyword map, content briefs, long-form posts, and structured data |
+| Grow local leads | `local-seo`, `customer-service`, `social-content-planner` | City pages, review replies, Google Business Profile copy, and local posts |
+| Sell ecommerce products | `ecommerce-content`, `email-marketing`, `ads` | Product pages, launch emails, ad hooks, and upsell copy |
+| Build founder authority | `linkedin-strategy`, `brand-storytelling`, `pr-communications` | Profile copy, thought leadership posts, founder story, and media pitches |
+| Automate marketing ops | `revops`, `analytics`, `tools/REGISTRY.md` | CRM fields, pipeline logic, reporting, and platform API references |
 
 ---
 
@@ -422,6 +453,15 @@ If this library saves you hours of prompting, gives your agent new capabilities,
 - 💸 CashApp: **$AlainDorcelus**
 
 This library also draws on the Agent Skills spec published by [vercel-labs/skills](https://github.com/vercel-labs/skills) and builds on work from the marketing skills community, including the original [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) project.
+
+---
+
+## More docs
+
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) shows what is planned next.
+- [`docs/SHOWCASE.md`](docs/SHOWCASE.md) explains the strongest demo workflows.
+- [`docs/FAQ.md`](docs/FAQ.md) answers common questions for new users.
+- [`docs/LAUNCH_KIT.md`](docs/LAUNCH_KIT.md) gives copy you can use to share the repo.
 
 ---
 
