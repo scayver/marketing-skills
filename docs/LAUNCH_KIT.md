@@ -1,16 +1,16 @@
 # Launch Kit
 
-Use this copy to share the repo.
+Use this copy to share Marketing Skills OS.
 
 ## Short Post
 
-I launched `marketing-skills`, an open skill library that gives AI agents real marketing workflows.
+I launched Marketing Skills OS, an open-source Marketing OS that gives AI agents real marketing workflows, tool context, CLI helpers, scorecards, and review loops.
 
 It includes:
 
-- 58 marketing and growth skills.
+- 59 marketing and growth skills.
 - 347 standalone integration guides.
-- 61 CLI tools.
+- 62 CLI tools.
 - Support for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.
 
 Install:
@@ -29,13 +29,15 @@ Most AI agents can write code.
 
 But when you ask them to plan a launch, improve a landing page, write better emails, create SEO content, or connect your marketing stack, the output can get generic fast.
 
-So I built `marketing-skills`.
+So I built Marketing Skills OS.
 
 It gives AI agents structured marketing workflows they can actually follow.
 
+It works as a Marketing OS: initialize a local `.marketing-os/` workspace, keep product context and scorecards in one place, then route execution through skills, integration guides, and CLI helpers.
+
 Inside:
 
-- 58 marketing and growth skills.
+- 59 marketing and growth skills.
 - 347 standalone integration guides.
 - 62 JavaScript CLI tools.
 - Frameworks for SEO, CRO, email, social, PR, local SEO, ecommerce, analytics, RevOps, and more.
@@ -54,11 +56,12 @@ Built by Alain Dorcelus, ScayverGraphix.
 
 ## X Post
 
-I launched `marketing-skills`.
+I launched Marketing Skills OS.
 
-58 agent skills.
+59 agent skills.
 347 integration guides.
-61 CLI tools.
+62 CLI tools.
+Open-source Marketing OS.
 
 Built for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.
 

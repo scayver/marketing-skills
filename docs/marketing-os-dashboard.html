@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marketing Skills OS Dashboard</title>
+  <style>
+    :root { color-scheme: light; --ink: #151515; --muted: #5e6470; --line: #dde1e7; --bg: #f7f8fa; --card: #ffffff; --accent: #0f766e; --accent-soft: #e5f4f1; --warm: #8a4b0f; --warm-soft: #fff2df; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.5; }
+    header { padding: 48px 24px 28px; background: #fff; border-bottom: 1px solid var(--line); }
+    main { width: min(1180px, calc(100vw - 32px)); margin: 0 auto; padding: 28px 0 56px; }
+    .hero { width: min(1180px, calc(100vw - 32px)); margin: 0 auto; }
+    h1 { margin: 0 0 12px; font-size: clamp(2rem, 4vw, 4rem); line-height: 1; letter-spacing: 0; }
+    h2 { margin: 0; font-size: 1.4rem; }
+    h3 { margin: 20px 0 8px; font-size: .95rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+    p { max-width: 760px; color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: "SFMono-Regular", Consolas, monospace; }
+    pre { overflow: auto; white-space: pre-wrap; background: #111827; color: #f9fafb; padding: 14px; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #f1f3f6; }
+    .stats { display: grid; grid-template-columns: repeat(5, minmax(120px, 1fr)); gap: 12px; margin-top: 24px; }
+    .stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+    .stat strong { display: block; font-size: 1.8rem; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+    .card-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .eyebrow { margin: 0 0 4px; color: var(--accent); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 9px; border-radius: 999px; background: var(--accent-soft); color: #075e57; font-size: .86rem; }
+    .chip.muted { background: #eef1f5; color: #424a55; }
+    .chip.accent { background: var(--warm-soft); color: var(--warm); }
+    .commands { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .command { background: #111827; color: #f9fafb; padding: 12px; border-radius: 8px; overflow: auto; }
+    @media (max-width: 820px) { .stats, .grid, .commands { grid-template-columns: 1fr; } header { padding-top: 32px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <h1>Marketing Skills OS Dashboard</h1>
+      <p>A generated dashboard for browsing Marketing Skills OS by outcome, workflow, stage, skill, integration, CLI helper, and next action.</p>
+      <pre>npx skills add scayver/marketing-skills</pre>
+      <div class="stats">
+        <div class="stat"><strong>59</strong><span>Skills</span></div>
+        <div class="stat"><strong>347</strong><span>Integration guides</span></div>
+        <div class="stat"><strong>62</strong><span>CLI tools</span></div>
+        <div class="stat"><strong>7</strong><span>Workflows</span></div>
+        <div class="stat"><strong>468</strong><span>Social posts</span></div>
+      </div>
+    </div>
+  </header>
+  <main>
+    <h2>OS Commands</h2>
+    <div class="commands">
+      <div class="command">npm run os:init -- --target ../my-project</div>
+      <div class="command">npm run os:run -- --target ../my-project --workflow saas-launch --force</div>
+      <div class="command">npm run os:review -- --target ../my-project --date 2026-05-28 --force</div>
+      <div class="command">npm run os:status -- --target ../my-project</div>
+      <div class="command">npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force</div>
+      <div class="command">npm run os:dashboard</div>
+    </div>
+
+    <h2 style="margin-top:32px">Outcome Routing</h2>
+    <table>
+      <thead><tr><th>Stage</th><th>Outcomes</th><th>Primary Skills</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Launch</td>
+          <td><a href="#saas-launch">SaaS Launch</a></td>
+          <td><code>marketing-os</code></td>
+        </tr>
+
+        <tr>
+          <td>Demand</td>
+          <td><a href="#seo-growth-engine">SEO Growth Engine</a><br><a href="#local-smb-growth">Local SMB Growth</a></td>
+          <td><code>seo-content-strategy</code><br><code>local-seo</code></td>
+        </tr>
+
+        <tr>
+          <td>Pipeline</td>
+          <td><a href="#developer-intent-outbound">Developer-Intent Outbound</a></td>
+          <td><code>prospect-research</code></td>
+        </tr>
+
+        <tr>
+          <td>Conversion</td>
+          <td><a href="#conversion-lab">Conversion Lab</a></td>
+          <td><code>cro</code></td>
+        </tr>
+
+        <tr>
+          <td>Revenue</td>
+          <td><a href="#ecommerce-revenue">Ecommerce Revenue</a></td>
+          <td><code>ecommerce-content</code></td>
+        </tr>
+
+        <tr>
+          <td>Retention</td>
+          <td><a href="#retention-and-advocacy">Retention and Advocacy</a></td>
+          <td><code>churn-prevention</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top:32px">Workflow Cards</h2>
+    <div class="grid">
+
+      <section class="card" id="saas-launch">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">Launch</p>
+            <h2>SaaS Launch</h2>
+          </div>
+          <code>marketing-os</code>
+        </div>
+        <p>Launch a SaaS product, feature, AI tool, open-source project, or agent product.</p>
+        <h3>Skills</h3>
+        <div class="chips"><span class="chip">product-marketing</span><span class="chip">business-strategy</span><span class="chip">launch</span><span class="chip">landing-page-cro</span><span class="chip">email-marketing</span><span class="chip">linkedin-strategy</span><span class="chip">pr-communications</span><span class="chip">analytics</span></div>
+        <h3>Integrations</h3>
+        <div class="chips"><span class="chip muted">github</span><span class="chip muted">ga4</span><span class="chip muted">hubspot</span><span class="chip muted">mailchimp</span><span class="chip muted">customer-io</span><span class="chip muted">activecampaign</span></div>
+        <h3>CLI Helpers</h3>
+        <div class="chips"><span class="chip accent">github-prospects</span><span class="chip accent">ga4</span><span class="chip accent">mailchimp</span></div>
+        <h3>Start Prompt</h3>
+        <pre>Use the marketing-os skill. Our outcome is SaaS Launch. Start with the `marketing-os` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.</pre>
+      </section>
+
+      <section class="card" id="developer-intent-outbound">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">Pipeline</p>
+            <h2>Developer-Intent Outbound</h2>
+          </div>
+          <code>prospect-research</code>
+        </div>
+        <p>Build a prospect list from GitHub activity and turn it into compliant outbound.</p>
+        <h3>Skills</h3>
+        <div class="chips"><span class="chip">product-marketing</span><span class="chip">prospect-research</span><span class="chip">cold-email</span><span class="chip">linkedin-strategy</span><span class="chip">sales-enablement</span><span class="chip">revops</span></div>
+        <h3>Integrations</h3>
+        <div class="chips"><span class="chip muted">github</span><span class="chip muted">apollo</span><span class="chip muted">zoominfo</span><span class="chip muted">hunter</span><span class="chip muted">clay</span><span class="chip muted">hubspot</span><span class="chip muted">salesforce</span></div>
+        <h3>CLI Helpers</h3>
+        <div class="chips"><span class="chip accent">github-prospects</span><span class="chip accent">apollo</span><span class="chip accent">hunter</span><span class="chip accent">zoominfo</span><span class="chip accent">clay</span></div>
+        <h3>Start Prompt</h3>
+        <pre>Use the marketing-os skill. Our outcome is Developer-Intent Outbound. Start with the `prospect-research` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.</pre>
+      </section>
+
+      <section class="card" id="seo-growth-engine">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">Demand</p>
+            <h2>SEO Growth Engine</h2>
+          </div>
+          <code>seo-content-strategy</code>
+        </div>
+        <p>Build organic traffic with content clusters, long-form posts, schema, and AI-search visibility.</p>
+        <h3>Skills</h3>
+        <div class="chips"><span class="chip">product-marketing</span><span class="chip">customer-research</span><span class="chip">seo-content-strategy</span><span class="chip">seo-blog-writer</span><span class="chip">schema</span><span class="chip">ai-seo</span><span class="chip">content-repurposing</span><span class="chip">analytics</span></div>
+        <h3>Integrations</h3>
+        <div class="chips"><span class="chip muted">ahrefs</span><span class="chip muted">semrush</span><span class="chip muted">google-search-console</span><span class="chip muted">dataforseo</span><span class="chip muted">ga4</span></div>
+        <h3>CLI Helpers</h3>
+        <div class="chips"><span class="chip accent">ahrefs</span><span class="chip accent">semrush</span><span class="chip accent">google-search-console</span><span class="chip accent">dataforseo</span><span class="chip accent">ga4</span></div>
+        <h3>Start Prompt</h3>
+        <pre>Use the marketing-os skill. Our outcome is SEO Growth Engine. Start with the `seo-content-strategy` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.</pre>
+      </section>
+
+      <section class="card" id="conversion-lab">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">Conversion</p>
+            <h2>Conversion Lab</h2>
+          </div>
+          <code>cro</code>
+        </div>
+        <p>Improve landing page, signup, pricing, checkout, or upgrade conversion.</p>
+        <h3>Skills</h3>
+        <div class="chips"><span class="chip">analytics</span><span class="chip">cro</span><span class="chip">landing-page-cro</span><span class="chip">copywriting</span><span class="chip">sales-copywriting</span><span class="chip">ab-testing</span><span class="chip">pricing</span><span class="chip">signup</span><span class="chip">paywalls</span></div>
+        <h3>Integrations</h3>
+        <div class="chips"><span class="chip muted">ga4</span><span class="chip muted">hotjar</span><span class="chip muted">mixpanel</span><span class="chip muted">amplitude</span><span class="chip muted">optimizely</span><span class="chip muted">segment</span></div>
+        <h3>CLI Helpers</h3>
+        <div class="chips"><span class="chip accent">ga4</span><span class="chip accent">hotjar</span><span class="chip accent">mixpanel</span><span class="chip accent">amplitude</span><span class="chip accent">optimizely</span><span class="chip accent">segment</span></div>
+        <h3>Start Prompt</h3>
+        <pre>Use the marketing-os skill. Our outcome is Conversion Lab. Start with the `cro` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.</pre>
+      </section>
+
+      <section class="card" id="local-smb-growth">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">Demand</p>
+            <h2>Local SMB Growth</h2>
+          </div>
+          <code>local-seo</code>
+        </div>
+        <p>Generate more local leads through Google Maps research, local pages, reviews, and conversion fixes.</p>
+        <h3>Skills</h3>
+        <div class="chips"><span class="chip">local-seo</span><span class="chip">prospect-research</span><span class="chip">customer-service</span><span class="chip">landing-page-cro</span><span class="chip">social-content-planner</span><span class="chip">analytics</span></div>
+        <h3>Integrations</h3>
+        <div class="chips"><span class="chip muted">google-sheets</span><span class="chip muted">google-calendar</span><span class="chip muted">google-drive</span><span class="chip muted">wpforms</span><span class="chip muted">contact-form-7</span><span class="chip muted">ga4</span></div>
+        <h3>CLI Helpers</h3>
+        <div class="chips"><span class="chip accent">google-sheets</span><span class="chip accent">ga4</span></div>
+        <h3>Start Prompt</h3>
+        <pre>Use the marketing-os skill. Our outcome is Local SMB Growth. Start with the `local-seo` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.</pre>
+      </section>
+
+      <section class="card" id="ecommerce-revenue">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">Revenue</p>
+            <h2>Ecommerce Revenue</h2>
+          </div>
+          <code>ecommerce-content</code>
+        </div>
+        <p>Improve product visibility, product page conversion, email revenue, paid ads, and repeat purchases.</p>
+        <h3>Skills</h3>
+        <div class="chips"><span class="chip">ecommerce-content</span><span class="chip">email-marketing</span><span class="chip">ads</span><span class="chip">ad-creative</span><span class="chip">pricing</span><span class="chip">analytics</span><span class="chip">customer-service</span></div>
+        <h3>Integrations</h3>
+        <div class="chips"><span class="chip muted">woocommerce</span><span class="chip muted">easy-digital-downloads</span><span class="chip muted">klaviyo</span><span class="chip muted">mailchimp</span><span class="chip muted">meta-ads</span><span class="chip muted">google-ads</span><span class="chip muted">shopify</span></div>
+        <h3>CLI Helpers</h3>
+        <div class="chips"><span class="chip accent">klaviyo</span><span class="chip accent">mailchimp</span><span class="chip accent">meta-ads</span><span class="chip accent">google-ads</span><span class="chip accent">ga4</span></div>
+        <h3>Start Prompt</h3>
+        <pre>Use the marketing-os skill. Our outcome is Ecommerce Revenue. Start with the `ecommerce-content` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.</pre>
+      </section>
+
+      <section class="card" id="retention-and-advocacy">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">Retention</p>
+            <h2>Retention and Advocacy</h2>
+          </div>
+          <code>churn-prevention</code>
+        </div>
+        <p>Reduce churn, improve onboarding, create customer education, and drive referrals.</p>
+        <h3>Skills</h3>
+        <div class="chips"><span class="chip">onboarding</span><span class="chip">churn-prevention</span><span class="chip">customer-service</span><span class="chip">emails</span><span class="chip">email-marketing</span><span class="chip">referrals</span><span class="chip">community-marketing</span><span class="chip">education-content</span></div>
+        <h3>Integrations</h3>
+        <div class="chips"><span class="chip muted">intercom</span><span class="chip muted">freshdesk</span><span class="chip muted">zendesk-sell</span><span class="chip muted">customer-io</span><span class="chip muted">discord</span><span class="chip muted">slack</span><span class="chip muted">mailchimp</span></div>
+        <h3>CLI Helpers</h3>
+        <div class="chips"><span class="chip accent">intercom</span><span class="chip accent">customer-io</span><span class="chip accent">mailchimp</span></div>
+        <h3>Start Prompt</h3>
+        <pre>Use the marketing-os skill. Our outcome is Retention and Advocacy. Start with the `churn-prevention` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.</pre>
+      </section>
+    </div>
+
+    <h2 style="margin-top:32px">Supporting Assets</h2>
+    <p><a href="../examples/social-posts/README.md">Social posting kit</a> · <a href="../examples/marketing-os-command-center.md">Command center template</a> · <a href="MARKETING_OS_OUTCOME_INDEX.md">Outcome index</a> · <a href="../templates/marketing-os/README.md">Workspace templates</a></p>
+  </main>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "name": "marketing-skills",
-  "version": "1.4.0",
-  "description": "58 marketing and growth skills plus 347 standalone integration docs, 62 CLI tools, validation automation, and launch-ready docs for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.",
+  "version": "1.7.0",
+  "description": "Marketing Skills OS is an open-source Marketing OS for AI agents, with 59 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, validation, and a local execution loop.",
   "keywords": [
     "ads",
     "agent-skills",
@@ -21,6 +21,8 @@
     "local-seo",
     "marketing",
     "marketing-automation",
+    "marketing-os",
+    "marketing-skills-os",
     "openai-codex",
     "public-relations",
     "seo",
@@ -37,6 +39,17 @@
   "homepage": "https://github.com/scayver/marketing-skills#readme",
   "scripts": {
     "validate": "node scripts/validate-repo.js",
-    "check": "npm run validate"
+    "check": "npm run validate",
+    "os:summary": "node scripts/print-marketing-os-summary.js",
+    "os:init": "node scripts/init-marketing-os.js",
+    "os:run": "node scripts/run-marketing-os-workflow.js",
+    "os:status": "node scripts/status-marketing-os.js",
+    "os:snapshot": "node scripts/snapshot-marketing-os.js",
+    "os:review": "node scripts/review-marketing-os-week.js",
+    "os:dashboard": "node scripts/generate-marketing-os-dashboard.js",
+    "os:dashboard:check": "node scripts/generate-marketing-os-dashboard.js --check",
+    "os:index": "node scripts/generate-marketing-os-index.js",
+    "os:index:check": "node scripts/generate-marketing-os-index.js --check",
+    "test:claude-code": "node scripts/test-claude-code-package.js"
   }
 }

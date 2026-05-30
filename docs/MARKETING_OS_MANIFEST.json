@@ -1,0 +1,431 @@
+{
+  "name": "Marketing Skills OS",
+  "version": "1.7.0-local",
+  "repo": "https://github.com/scayver/marketing-skills",
+  "install": "npx skills add scayver/marketing-skills",
+  "counts": {
+    "skills": 59,
+    "integration_guides": 347,
+    "cli_tools": 62
+  },
+  "layers": [
+    {
+      "id": "context",
+      "purpose": "Define ICP, positioning, offer, category, and product story.",
+      "skills": [
+        "product-marketing",
+        "customer-research",
+        "business-strategy",
+        "brand-storytelling"
+      ]
+    },
+    {
+      "id": "strategy",
+      "purpose": "Choose the growth motion and roadmap.",
+      "skills": [
+        "marketing-os",
+        "marketing-ideas",
+        "marketing-psychology",
+        "pricing"
+      ]
+    },
+    {
+      "id": "demand",
+      "purpose": "Create awareness and qualified demand.",
+      "skills": [
+        "seo-content-strategy",
+        "seo-blog-writer",
+        "ai-seo",
+        "social",
+        "linkedin-strategy",
+        "pr-communications",
+        "ads",
+        "directory-submissions"
+      ]
+    },
+    {
+      "id": "conversion",
+      "purpose": "Convert attention into leads, trials, demos, customers, or upgrades.",
+      "skills": [
+        "landing-page-cro",
+        "copywriting",
+        "sales-copywriting",
+        "cro",
+        "signup",
+        "paywalls",
+        "ab-testing"
+      ]
+    },
+    {
+      "id": "pipeline",
+      "purpose": "Create and manage sales opportunities.",
+      "skills": [
+        "prospect-research",
+        "cold-email",
+        "sales-enablement",
+        "revops",
+        "email-marketing"
+      ]
+    },
+    {
+      "id": "retention",
+      "purpose": "Increase activation, retention, advocacy, and expansion.",
+      "skills": [
+        "onboarding",
+        "churn-prevention",
+        "customer-service",
+        "emails",
+        "referrals",
+        "community-marketing",
+        "education-content"
+      ]
+    },
+    {
+      "id": "measurement",
+      "purpose": "Track performance and decide what to improve.",
+      "skills": [
+        "analytics",
+        "seo-audit",
+        "ab-testing",
+        "revops"
+      ]
+    },
+    {
+      "id": "assets",
+      "purpose": "Create reusable content, visuals, and campaigns.",
+      "skills": [
+        "content-repurposing",
+        "ai-image-creator",
+        "instagram-carousel",
+        "video",
+        "image",
+        "social-content-planner"
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "id": "saas-launch",
+      "name": "SaaS Launch",
+      "goal": "Launch a SaaS product, feature, AI tool, open-source project, or agent product.",
+      "stage": "Launch",
+      "primary_skill": "marketing-os",
+      "skills": [
+        "product-marketing",
+        "business-strategy",
+        "launch",
+        "landing-page-cro",
+        "email-marketing",
+        "linkedin-strategy",
+        "pr-communications",
+        "analytics"
+      ],
+      "integrations": [
+        "github",
+        "ga4",
+        "hubspot",
+        "mailchimp",
+        "customer-io",
+        "activecampaign"
+      ],
+      "clis": [
+        "github-prospects",
+        "ga4",
+        "mailchimp"
+      ],
+      "deliverables": [
+        "positioning context",
+        "launch plan",
+        "launch page",
+        "email sequence",
+        "social posts",
+        "press announcement",
+        "tracking plan"
+      ],
+      "metrics": [
+        "visitors",
+        "waitlist signups",
+        "trial starts",
+        "activation",
+        "demos",
+        "revenue"
+      ]
+    },
+    {
+      "id": "developer-intent-outbound",
+      "name": "Developer-Intent Outbound",
+      "goal": "Build a prospect list from GitHub activity and turn it into compliant outbound.",
+      "stage": "Pipeline",
+      "primary_skill": "prospect-research",
+      "skills": [
+        "product-marketing",
+        "prospect-research",
+        "cold-email",
+        "linkedin-strategy",
+        "sales-enablement",
+        "revops"
+      ],
+      "integrations": [
+        "github",
+        "apollo",
+        "zoominfo",
+        "hunter",
+        "clay",
+        "hubspot",
+        "salesforce"
+      ],
+      "clis": [
+        "github-prospects",
+        "apollo",
+        "hunter",
+        "zoominfo",
+        "clay"
+      ],
+      "deliverables": [
+        "ICP filter",
+        "intent signal export",
+        "account list",
+        "decision-maker map",
+        "cold email sequence",
+        "CRM fields"
+      ],
+      "metrics": [
+        "qualified accounts",
+        "reply rate",
+        "meetings booked",
+        "SQLs",
+        "pipeline value"
+      ]
+    },
+    {
+      "id": "seo-growth-engine",
+      "name": "SEO Growth Engine",
+      "goal": "Build organic traffic with content clusters, long-form posts, schema, and AI-search visibility.",
+      "stage": "Demand",
+      "primary_skill": "seo-content-strategy",
+      "skills": [
+        "product-marketing",
+        "customer-research",
+        "seo-content-strategy",
+        "seo-blog-writer",
+        "schema",
+        "ai-seo",
+        "content-repurposing",
+        "analytics"
+      ],
+      "integrations": [
+        "ahrefs",
+        "semrush",
+        "google-search-console",
+        "dataforseo",
+        "ga4"
+      ],
+      "clis": [
+        "ahrefs",
+        "semrush",
+        "google-search-console",
+        "dataforseo",
+        "ga4"
+      ],
+      "deliverables": [
+        "topic clusters",
+        "SEO briefs",
+        "blog posts",
+        "schema markup",
+        "AI-search snippets",
+        "repurposed social posts"
+      ],
+      "metrics": [
+        "impressions",
+        "clicks",
+        "rankings",
+        "organic signups",
+        "assisted conversions"
+      ]
+    },
+    {
+      "id": "conversion-lab",
+      "name": "Conversion Lab",
+      "goal": "Improve landing page, signup, pricing, checkout, or upgrade conversion.",
+      "stage": "Conversion",
+      "primary_skill": "cro",
+      "skills": [
+        "analytics",
+        "cro",
+        "landing-page-cro",
+        "copywriting",
+        "sales-copywriting",
+        "ab-testing",
+        "pricing",
+        "signup",
+        "paywalls"
+      ],
+      "integrations": [
+        "ga4",
+        "hotjar",
+        "mixpanel",
+        "amplitude",
+        "optimizely",
+        "segment"
+      ],
+      "clis": [
+        "ga4",
+        "hotjar",
+        "mixpanel",
+        "amplitude",
+        "optimizely",
+        "segment"
+      ],
+      "deliverables": [
+        "funnel diagnosis",
+        "friction map",
+        "hypothesis backlog",
+        "page rewrite",
+        "test plan",
+        "scorecard"
+      ],
+      "metrics": [
+        "conversion rate",
+        "CTA clicks",
+        "form completion",
+        "checkout starts",
+        "paid conversion"
+      ]
+    },
+    {
+      "id": "local-smb-growth",
+      "name": "Local SMB Growth",
+      "goal": "Generate more local leads through Google Maps research, local pages, reviews, and conversion fixes.",
+      "stage": "Demand",
+      "primary_skill": "local-seo",
+      "skills": [
+        "local-seo",
+        "prospect-research",
+        "customer-service",
+        "landing-page-cro",
+        "social-content-planner",
+        "analytics"
+      ],
+      "integrations": [
+        "google-sheets",
+        "google-calendar",
+        "google-drive",
+        "wpforms",
+        "contact-form-7",
+        "ga4"
+      ],
+      "clis": [
+        "google-sheets",
+        "ga4"
+      ],
+      "deliverables": [
+        "city page",
+        "service area page",
+        "GBP description",
+        "review replies",
+        "local post plan",
+        "lead tracking sheet"
+      ],
+      "metrics": [
+        "map pack visibility",
+        "calls",
+        "form leads",
+        "reviews",
+        "bookings"
+      ]
+    },
+    {
+      "id": "ecommerce-revenue",
+      "name": "Ecommerce Revenue",
+      "goal": "Improve product visibility, product page conversion, email revenue, paid ads, and repeat purchases.",
+      "stage": "Revenue",
+      "primary_skill": "ecommerce-content",
+      "skills": [
+        "ecommerce-content",
+        "email-marketing",
+        "ads",
+        "ad-creative",
+        "pricing",
+        "analytics",
+        "customer-service"
+      ],
+      "integrations": [
+        "woocommerce",
+        "easy-digital-downloads",
+        "klaviyo",
+        "mailchimp",
+        "meta-ads",
+        "google-ads",
+        "shopify"
+      ],
+      "clis": [
+        "klaviyo",
+        "mailchimp",
+        "meta-ads",
+        "google-ads",
+        "ga4"
+      ],
+      "deliverables": [
+        "product descriptions",
+        "category page copy",
+        "launch emails",
+        "ad variants",
+        "upsell copy",
+        "FAQ"
+      ],
+      "metrics": [
+        "conversion rate",
+        "AOV",
+        "cart recovery",
+        "ROAS",
+        "repeat purchase rate"
+      ]
+    },
+    {
+      "id": "retention-and-advocacy",
+      "name": "Retention and Advocacy",
+      "goal": "Reduce churn, improve onboarding, create customer education, and drive referrals.",
+      "stage": "Retention",
+      "primary_skill": "churn-prevention",
+      "skills": [
+        "onboarding",
+        "churn-prevention",
+        "customer-service",
+        "emails",
+        "email-marketing",
+        "referrals",
+        "community-marketing",
+        "education-content"
+      ],
+      "integrations": [
+        "intercom",
+        "freshdesk",
+        "zendesk-sell",
+        "customer-io",
+        "discord",
+        "slack",
+        "mailchimp"
+      ],
+      "clis": [
+        "intercom",
+        "customer-io",
+        "mailchimp"
+      ],
+      "deliverables": [
+        "onboarding flow",
+        "save offers",
+        "support templates",
+        "lifecycle emails",
+        "referral program",
+        "education content"
+      ],
+      "metrics": [
+        "activation",
+        "time-to-value",
+        "support volume",
+        "churn",
+        "referrals"
+      ]
+    }
+  ]
+}

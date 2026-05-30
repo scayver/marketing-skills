@@ -1,6 +1,8 @@
 # Roadmap
 
-This roadmap focuses on making `marketing-skills` the most useful marketing skill library for AI agents.
+This roadmap focuses on making Marketing Skills OS the most useful open-source Marketing OS for AI agents.
+
+Compatibility note: the install path remains `scayver/marketing-skills`.
 
 ## Near Term
 

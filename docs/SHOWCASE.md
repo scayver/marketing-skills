@@ -1,6 +1,6 @@
 # Showcase
 
-Use these workflows to demonstrate what the repo can do.
+Use these workflows to demonstrate what Marketing Skills OS can do.
 
 ## Workflow 1: Launch a SaaS Product
 

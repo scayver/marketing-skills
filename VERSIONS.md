@@ -2,6 +2,95 @@
 
 ---
 
+## Unreleased
+
+**Marketing Skills OS rebrand.**
+
+This update makes **Marketing Skills OS** the canonical public brand while preserving the `scayver/marketing-skills` repo, package name, install path, `marketing-os` skill slug, `.marketing-os` workspace folder, and `os:*` commands for compatibility.
+
+---
+
+## v1.7.0 (2026-05-28)
+
+**Marketing OS command center and workflow manifest.**
+
+> Support this work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
+
+This release adds operational assets that make the Marketing OS easier to run inside real projects.
+
+**New OS Assets**
+
+- Added [`docs/MARKETING_OS_WORKFLOWS.md`](docs/MARKETING_OS_WORKFLOWS.md) for goal-to-workflow routing.
+- Added [`docs/MARKETING_OS_MANIFEST.json`](docs/MARKETING_OS_MANIFEST.json) as a machine-readable OS map for agents and scripts.
+- Added [`examples/marketing-os-command-center.md`](examples/marketing-os-command-center.md) as a copyable weekly command center.
+- Added [`scripts/print-marketing-os-summary.js`](scripts/print-marketing-os-summary.js).
+- Added `npm run os:summary`.
+
+**Author**
+
+v1.7.0 designed and implemented by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
+
+---
+
+## v1.6.0 (2026-05-28)
+
+**Marketing OS orchestration layer.**
+
+> Support this work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
+
+This release turns the package from a broad skills and tools library into a clearer marketing operating system.
+
+**New Skill**
+
+| Skill | Category | Description |
+|-------|----------|-------------|
+| [`marketing-os`](skills/marketing-os/SKILL.md) | Operating System | Root orchestration skill for connecting strategy, demand generation, conversion, pipeline, retention, measurement, assets, tools, and weekly operating cadence. |
+
+**New Docs**
+
+- Added [`docs/MARKETING_OS.md`](docs/MARKETING_OS.md) for the system architecture.
+- Added [`docs/MARKETING_OS_PLAYBOOKS.md`](docs/MARKETING_OS_PLAYBOOKS.md) for workflow recipes.
+- Added [`docs/MARKETING_OS_SCORECARDS.md`](docs/MARKETING_OS_SCORECARDS.md) for measurement templates.
+
+**Counts**
+
+- 59 skills.
+- 347 standalone integration guides.
+- 62 JavaScript CLI tools.
+
+**Author**
+
+v1.6.0 designed and implemented by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
+
+---
+
+## v1.5.0 (2026-05-28)
+
+**Social launch content system.**
+
+> Support this work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
+
+This release adds reusable social content for promoting the library across LinkedIn, X, Threads, and GitHub Discussions.
+
+**New Content Assets**
+
+- Added [`docs/SOCIAL_POST_LIBRARY.md`](docs/SOCIAL_POST_LIBRARY.md) with posting strategy, weekly rhythm, CTA bank, platform notes, and mixed category posts.
+- Added [`examples/social-post-library.csv`](examples/social-post-library.csv) with one generated post for every skill, standalone integration guide, and CLI tool.
+- Updated README metadata and quality docs to reference the social post library.
+
+**Post Coverage**
+
+- 58 skill posts.
+- 347 integration guide posts.
+- 62 CLI tool posts.
+- 10 mixed category campaign posts.
+
+**Author**
+
+v1.5.0 designed and implemented by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
+
+---
+
 ## v1.4.0 (2026-05-27)
 
 **Validation automation and trust polish.**

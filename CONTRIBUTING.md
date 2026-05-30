@@ -1,6 +1,8 @@
 # Contributing
 
-Thanks for helping improve `marketing-skills`.
+Thanks for helping improve Marketing Skills OS.
+
+Compatibility note: the package name and install path remain `marketing-skills` and `scayver/marketing-skills`.
 
 This repo has two main contribution types:
 

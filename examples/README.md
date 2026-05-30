@@ -1,9 +1,23 @@
-# Example Prompts
+# Marketing Skills OS Example Prompts
 
-Use these prompts after installing the skills with:
+Use these prompts after installing Marketing Skills OS. The brand is Marketing Skills OS, and the install path remains `scayver/marketing-skills` for compatibility.
 
 ```bash
 npx skills add scayver/marketing-skills
+```
+
+## Marketing OS Workspace
+
+Create the local command center in your project.
+
+```bash
+npm run os:init -- --target ../my-product
+```
+
+Then ask your agent:
+
+```text
+Use the marketing-os skill. Read .marketing-os/product-context.md, .marketing-os/command-center.md, and .marketing-os/scoreboard.md. Recommend the next best workflow and produce the first deliverable.
 ```
 
 ## Foundation

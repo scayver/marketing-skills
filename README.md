@@ -1,28 +1,30 @@
-# marketing-skills
+# Marketing Skills OS
 
-Most AI agents know how to write code. Very few know how to market software, build a brand, or turn a landing page into a revenue engine.
+Marketing Skills OS is an open-source Marketing OS for AI agents.
 
-This library fixes that. It gives your agent 58 specialized marketing and growth skills, each one built around a real framework, a real process, and a real output format. You stop getting generic advice. You start getting structured, professional-grade marketing work on demand.
+It gives Claude Code, OpenAI Codex, Cursor, Windsurf, and other Agent Skills-compatible tools a complete operating layer for marketing strategy, workflows, tool references, CLI helpers, scorecards, reviews, launch assets, and execution loops.
+
+The repo includes 59 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, and validation. You keep the open-source install path, then run marketing work through a structured local OS instead of scattered prompts.
 
 ---
 
 > **Support this work**
 >
-> This library was researched, designed, and built by one person. If it saves you time, helps you ship better marketing, or gives your agent capabilities it did not have before, consider supporting the work that made it possible.
+> Marketing Skills OS was researched, designed, and built by one person. If it saves you time, helps you ship better marketing, or gives your agent capabilities it did not have before, consider supporting the work that made it possible.
 >
 > ☕ [Buy me a coffee](https://buymeacoffee.com/dorcelusalain) — buymeacoffee.com/dorcelusalain
 >
 >  CashApp — **$AlainDorcelus**
 >
-> Every contribution directly funds new skills, improved frameworks, and continued maintenance of this library.
+> Every contribution directly funds new skills, improved frameworks, and continued maintenance of Marketing Skills OS.
 
 ---
 
 Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)** · [ScayverGraphix](https://github.com/ScayverGraphix)
 
-[![Version](https://img.shields.io/badge/version-1.4.0-blue)](VERSIONS.md)
+[![Version](https://img.shields.io/badge/version-1.7.0-blue)](VERSIONS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-58-orange)](skills/)
+[![Skills](https://img.shields.io/badge/skills-59-orange)](skills/)
 [![Tools](https://img.shields.io/badge/integration%20guides-347-purple)](tools/REGISTRY.md)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
 [![GitHub stars](https://img.shields.io/github/stars/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/stargazers)
@@ -35,7 +37,7 @@ Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)*
 
 Star this repo if you want AI agents that can do more than write code.
 
-This project gives Claude Code, OpenAI Codex, Cursor, Windsurf, and other Agent Skills-compatible tools a full marketing operating system:
+Marketing Skills OS gives Claude Code, OpenAI Codex, Cursor, Windsurf, and other Agent Skills-compatible tools a full marketing operating system:
 
 - Strategy skills for positioning, launches, pricing, research, and business planning.
 - Revenue skills for CRO, email, sales copy, RevOps, referrals, churn, and analytics.
@@ -60,6 +62,10 @@ If this saves you time, star it so more builders can find it.
 
 ---
 
+## Compatibility note
+
+The public brand is **Marketing Skills OS**. The install path remains `scayver/marketing-skills` for compatibility with existing users, scripts, repo links, and Agent Skills tooling.
+
 ## The problem this solves
 
 You ask your agent to "write copy for this landing page." It produces something that sounds reasonable, hits no specific framework, and could apply to any product in any industry.
@@ -70,13 +76,13 @@ You ask it to "plan a LinkedIn content strategy." It lists five tactics you alre
 
 The problem is not the agent. The problem is that the agent has no domain depth. It has broad knowledge but no structured process for marketing work specifically.
 
-Skills give the agent that process. Each skill is a markdown file that tells the agent exactly how to approach a specific marketing task: what questions to ask first, what framework to apply, how to structure the output, and what a good result actually looks like. The agent reads the skill and works from it. You get consistent, structured, professional-grade marketing output every time.
+Marketing Skills OS gives the agent that process. Each skill is a markdown file that tells the agent exactly how to approach a specific marketing task: what questions to ask first, what framework to apply, how to structure the output, and what a good result actually looks like. The agent reads the skill and works from it while the OS connects context, workflow, tooling, measurement, and review.
 
 ---
 
 ## How it works
 
-Drop the skills into your project. Your agent picks them up automatically.
+Install Marketing Skills OS into your project. Your agent picks up the skills, workflow docs, integration guides, CLI helpers, and local `.marketing-os/` workspace pattern.
 
 When you describe a marketing task, the agent matches your request to the right skill and follows its process. You do not have to name the skill. You do not have to prompt engineer. You describe what you need and the agent does the work.
 
@@ -86,7 +92,7 @@ Every skill includes three things.
 
 **A process.** Each skill defines a step-by-step approach to the task. The `pr-communications` skill tells the agent to identify the media angle before writing a single line of the press release, produce the output table, then deliver the full press release with a wire summary and a social version. It does not let the agent skip steps.
 
-**An output standard.** Every skill in this library enforces the same content rules. Active voice. Short sentences. Direct address. No buzzwords. Between 1,500 and 10,000 words of actual instructional output per session. The agent delivers structured, readable work that you can act on immediately.
+**An output standard.** Every skill in Marketing Skills OS enforces the same content rules. Active voice. Short sentences. Direct address. No buzzwords. Between 1,500 and 10,000 words of actual instructional output per session. The agent delivers structured, readable work that you can act on immediately.
 
 ---
 
@@ -96,7 +102,7 @@ Before using any other skill, run `product-marketing` once in your project.
 
 It creates a context document that every other skill reads before doing any work. Your product name, target audience, positioning, value proposition, and competitive differentiation live there. You enter it once. Every skill uses it automatically. The `copywriting` skill does not ask you to re-explain your product. The `cro` skill does not ask who your users are. The `email-marketing` skill does not ask what you sell.
 
-This is the dependency that makes the whole library coherent.
+This is the dependency that makes the whole OS coherent.
 
 ---
 
@@ -106,6 +112,8 @@ This is the dependency that makes the whole library coherent.
 
 ```text
 product-marketing
+├── Operating system
+│   └── marketing-os
 ├── SEO and discovery
 │   ├── seo-audit
 │   ├── ai-seo
@@ -204,7 +212,7 @@ Skills install to `.agents/skills/` by default. Claude Code also reads from `.cl
 
 ## Install
 
-**All 58 skills at once:**
+**Install Marketing Skills OS with all 59 skills:**
 
 ```bash
 npx skills add scayver/marketing-skills
@@ -286,7 +294,13 @@ More examples live in [`examples/README.md`](examples/README.md).
 
 ---
 
-## All 58 skills
+## All 59 skills
+
+### Operating system
+
+| Skill | Description |
+|-------|-------------|
+| [`marketing-os`](skills/marketing-os/SKILL.md) | Root orchestration skill for building a full marketing operating system across strategy, demand, conversion, pipeline, retention, measurement, and assets |
 
 ### SEO and discovery
 
@@ -406,6 +420,58 @@ tools/
 
 The original Bit Integrations source list is preserved at [`tools/integrations/bit-integrations-registry.md`](tools/integrations/bit-integrations-registry.md), while the individual platform docs now live directly in [`tools/integrations/`](tools/integrations/).
 
+## Local Marketing OS workspace
+
+Create a working marketing command center inside any project:
+
+```bash
+npm run os:init -- --target ../my-project
+```
+
+This creates a local `.marketing-os/` folder with product context, campaign brief, command center, scorecard, experiment backlog, compliance checklist, customer learning log, workflow recipes, and the machine-readable Marketing OS manifest.
+
+Preview the OS inventory:
+
+```bash
+npm run os:summary
+```
+
+Activate a workflow in a project workspace:
+
+```bash
+npm run os:run -- --target ../my-project --workflow saas-launch --force
+```
+
+Create a weekly review from the active workflow:
+
+```bash
+npm run os:review -- --target ../my-project --date 2026-05-28 --force
+```
+
+Check the workspace status:
+
+```bash
+npm run os:status -- --target ../my-project
+```
+
+Persist the current OS state for future agent sessions:
+
+```bash
+npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force
+```
+
+Generate the dashboard:
+
+```bash
+npm run os:dashboard
+```
+
+Regenerate the outcome index after changing workflows, skills, integrations, or CLI helpers:
+
+```bash
+npm run os:index
+```
+
 ---
 
 ## Quality and validation
@@ -418,9 +484,34 @@ npm run validate
 
 The validator checks skill frontmatter, mandatory skill sections, integration registry coverage, CLI syntax, local documentation links, required community files, and current package counts. GitHub Actions runs the same validation on every push and pull request.
 
+Test the package in a Claude Code-style sandbox:
+
+```bash
+npm run test:claude-code
+```
+
+Keep the generated sandbox for manual Claude Code prompts:
+
+```bash
+npm run test:claude-code -- --keep
+```
+
 Useful docs:
 
+- [Marketing OS docs](docs/MARKETING_OS.md).
+- [Claude Code testing guide](docs/CLAUDE_CODE_TESTING.md).
+- [Marketing OS playbooks](docs/MARKETING_OS_PLAYBOOKS.md).
+- [Marketing OS workflows](docs/MARKETING_OS_WORKFLOWS.md).
+- [Marketing OS scorecards](docs/MARKETING_OS_SCORECARDS.md).
+- [Marketing OS manifest](docs/MARKETING_OS_MANIFEST.json).
+- [Marketing Skills OS dashboard](docs/MARKETING_OS_DASHBOARD.md).
+- [Static HTML dashboard](docs/marketing-os-dashboard.html).
+- [Marketing Skills OS outcome index](docs/MARKETING_OS_OUTCOME_INDEX.md).
+- [Marketing OS initializer templates](templates/marketing-os/README.md).
+- [Command center template](examples/marketing-os-command-center.md).
+- [Social posting kit](examples/social-posts/README.md).
 - [Demo walkthrough](docs/DEMO.md).
+- [Social post library](docs/SOCIAL_POST_LIBRARY.md).
 - [Compliance reference](docs/COMPLIANCE.md).
 - [Validation guide](VALIDATION.md).
 - [Security policy](SECURITY.md).
@@ -451,6 +542,12 @@ Every section ends with a specific, actionable next step. No section closes with
 
 ## Changelog
 
+**v1.7.0 (2026-05-28)** — Added Marketing OS workflow index, command-center template, machine-readable OS manifest, and `npm run os:summary`.
+
+**v1.6.0 (2026-05-28)** — Added the `marketing-os` orchestration skill plus Marketing OS architecture docs, playbooks, and scorecards.
+
+**v1.5.0 (2026-05-28)** — Added a generated social post library with one post for every skill, integration guide, and CLI tool, plus mixed category campaign posts for launch and education.
+
 **v1.4.0 (2026-05-27)** — Added repository validation automation, GitHub Actions CI, security and conduct docs, compliance and demo docs, expanded issue templates, `.gitignore`, and CLI index coverage.
 
 **v1.3.0 (2026-05-27)** — Added `prospect-research` for SaaS developer-intent signals, B2B trigger-event research, local SMB website classification, and outreach compliance checks. Added `github-prospects.js` plus a standalone GitHub integration guide for stargazers, forks, and watcher research.
@@ -467,18 +564,18 @@ Full history in [VERSIONS.md](VERSIONS.md).
 
 ## Credits and support
 
-This library was created and is maintained by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
+Marketing Skills OS was created and is maintained by **Alain Dorcelus** ([ScayverGraphix](https://github.com/ScayverGraphix)).
 
 The 17 custom skills added in v1.1.0 represent original instructional design work covering email marketing, brand storytelling, LinkedIn strategy, public relations, local SEO, e-commerce content, education content development, AI image creation, and more. Each skill was researched, structured, and written from scratch to meet the same output standards as the original library.
 
-If this library saves you hours of prompting, gives your agent new capabilities, or ships better marketing for your business, consider supporting the work directly.
+If Marketing Skills OS saves you hours of prompting, gives your agent new capabilities, or ships better marketing for your business, consider supporting the work directly.
 
 **Support Alain's work:**
 
 - ☕ [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain)
 - 💸 CashApp: **$AlainDorcelus**
 
-This library also draws on the Agent Skills spec published by [vercel-labs/skills](https://github.com/vercel-labs/skills) and builds on work from the marketing skills community, including the original [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) project.
+Marketing Skills OS also draws on the Agent Skills spec published by [vercel-labs/skills](https://github.com/vercel-labs/skills).
 
 ---
 

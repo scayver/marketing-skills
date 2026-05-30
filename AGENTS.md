@@ -1,6 +1,8 @@
-# marketing-skills — Agent Instructions
+# Marketing Skills OS — Agent Instructions
 
-This repository contains 58 reusable marketing and growth skills for AI agents. Each skill lives in `skills/<skill-name>/SKILL.md`.
+Marketing Skills OS is an open-source Marketing OS for AI agents. It contains 59 reusable marketing and growth skills, 347 integration guides, 62 CLI helpers, templates, workflows, dashboards, and validation. Each skill lives in `skills/<skill-name>/SKILL.md`.
+
+The package name and install path remain `marketing-skills` and `scayver/marketing-skills` for compatibility.
 
 **Created and maintained by Alain Dorcelus ([ScayverGraphix](https://github.com/ScayverGraphix)).**
 Support the work: [buymeacoffee.com/dorcelusalain](https://buymeacoffee.com/dorcelusalain) · CashApp $AlainDorcelus
@@ -61,6 +63,7 @@ marketing-skills/
 │   ├── lead-magnets/
 │   ├── linkedin-strategy/        ← NEW v1.1.0
 │   ├── local-seo/                ← NEW v1.1.0
+│   ├── marketing-os/             ← NEW v1.6.0
 │   ├── marketing-ideas/
 │   ├── marketing-psychology/
 │   ├── onboarding/
@@ -92,11 +95,17 @@ marketing-skills/
 │   └── validate-repo.js
 ├── docs/
 │   ├── COMPLIANCE.md
+│   ├── MARKETING_OS.md
+│   ├── MARKETING_OS_PLAYBOOKS.md
+│   ├── MARKETING_OS_SCORECARDS.md
+│   ├── MARKETING_OS_WORKFLOWS.md
+│   ├── MARKETING_OS_MANIFEST.json
 │   ├── DEMO.md
 │   ├── FAQ.md
 │   ├── LAUNCH_KIT.md
 │   ├── ROADMAP.md
-│   └── SHOWCASE.md
+│   ├── SHOWCASE.md
+│   └── SOCIAL_POST_LIBRARY.md
 ├── package.json
 ├── README.md
 ├── AGENTS.md
@@ -127,6 +136,12 @@ Run validation before committing skill, tool, or documentation changes.
 npm run validate
 ```
 
+Use this command to print the Marketing OS workflow summary.
+
+```bash
+npm run os:summary
+```
+
 The validator checks skill frontmatter, mandatory sections, registry coverage, CLI syntax, required community files, local documentation links, and package counts. The GitHub Actions workflow runs the same command on pushes and pull requests.
 
 ## Skill Activation
@@ -143,6 +158,9 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 ---
 
 ## Skill Index by Category
+
+### Operating System
+- `marketing-os` — Root orchestration skill for full-funnel marketing systems, campaign routing, operating cadence, scorecards, and tool mapping *(v1.6.0)*
 
 ### SEO and Discovery
 - `seo-audit` — Technical, on-page, content, and off-page SEO audit
@@ -245,7 +263,7 @@ Every skill must produce actionable, structured output that the user can impleme
 
 ## Output Standards (Applied by Every Skill)
 
-All 58 skills enforce these rules on every word of output:
+All 59 skills enforce these rules on every word of output:
 
 - Output length: 1,500 to 10,000 words for full deliverables.
 - Voice: active voice only. No passive constructions.

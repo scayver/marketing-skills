@@ -2,13 +2,15 @@
 
 Run these checks before committing changes.
 
+Marketing Skills OS keeps the `scayver/marketing-skills` install path for compatibility. Validation should protect both the public brand and the compatibility path.
+
 ## Skill Count
 
 ```bash
 find skills -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l
 ```
 
-Expected current count: `58`.
+Expected current count: `59`.
 
 ## Integration Guide Count
 
@@ -116,7 +118,77 @@ PY
 Expected result: `missing registry targets 0`.
 
 
+## Marketing OS Workflow Runner Check
+
+```bash
+npm run os:run -- --target /private/tmp/marketing-os-demo --workflow saas-launch --force
+```
+
+Expected result: `.marketing-os/active-workflow.md` is created for the selected workflow.
+
+## Marketing OS Status Check
+
+```bash
+npm run os:status -- --target /private/tmp/marketing-os-demo
+```
+
+Expected result: a Markdown status report showing active workflow, review count, missing files, manifest counts, and next actions.
+
+## Marketing OS State Snapshot Check
+
+```bash
+npm run os:snapshot -- --target /private/tmp/marketing-os-demo --date 2026-05-28 --force
+```
+
+Expected result: `.marketing-os/state/current-state.json`, `.marketing-os/state/current-state.md`, and `.marketing-os/state/snapshots/2026-05-28.json` are created.
+
+## Marketing OS Weekly Review Check
+
+```bash
+npm run os:review -- --target /private/tmp/marketing-os-demo --date 2026-05-28 --force
+```
+
+Expected result: `.marketing-os/current-weekly-review.md` and `.marketing-os/reviews/2026-05-28-weekly-review.md` are created.
+
+## Generated Outcome Index Check
+
+```bash
+npm run os:index:check
+```
+
+Expected result: `Marketing OS outcome index is current.`
+
+## Generated Dashboard Check
+
+```bash
+npm run os:dashboard:check
+```
+
+Expected result: `Marketing OS dashboard is current.`
+
+## Claude Code Smoke Test
+
+```bash
+npm run test:claude-code
+```
+
+Expected result: `Claude Code smoke test passed: 59 skills installed, 7 workflows exercised.`
+
+To keep the generated test project for manual Claude Code prompts:
+
+```bash
+npm run test:claude-code -- --keep
+```
+
 ## Automated Validation
+## Marketing OS Initializer Check
+
+```bash
+node scripts/init-marketing-os.js --target /private/tmp/marketing-os-demo --force
+```
+
+Expected result: a `.marketing-os/` folder with template files, workflow recipes, and `marketing-os-manifest.json`.
+
 
 Run the repository validator before every pull request.
 

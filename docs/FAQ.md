@@ -2,7 +2,9 @@
 
 ## What is this repo?
 
-`marketing-skills` is a library of skills and tool references that gives AI coding agents deeper marketing ability.
+Marketing Skills OS is an open-source Marketing OS for AI agents. It gives AI coding agents skills, workflows, integration guides, CLI helpers, templates, dashboards, scorecards, and review loops for running marketing work from strategy through execution.
+
+Compatibility note: the install path remains `scayver/marketing-skills`.
 
 ## Who is it for?
 
