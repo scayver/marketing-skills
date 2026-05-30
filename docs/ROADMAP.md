@@ -2,39 +2,270 @@
 
 This roadmap focuses on making Marketing Skills OS the most useful open-source Marketing OS for AI agents.
 
-Compatibility note: the install path remains `scayver/marketing-skills`.
+The project keeps the `scayver/marketing-skills` install path for compatibility.
 
-## Near Term
+## Roadmap Principles
 
-- Add more real-world examples for each major skill category.
-- Add short demo workflows that combine skills and tools.
-- Add validation scripts for skill frontmatter and integration guide structure.
-- Add a generated index for skills by category, trigger, and use case.
-- Improve tool docs with more official API links and endpoint-specific notes.
+- Build for real marketing work, not prompt demos.
+- Keep everything local-first, inspectable, and agent-readable.
+- Prefer durable workflows over one-off prompts.
+- Make every skill, integration guide, CLI helper, and template easier to validate.
+- Keep the install path stable while the OS layer becomes more capable.
+- Avoid adding dependencies unless they unlock clear value.
 
-## Next Skills
+## Current Foundation
 
-- Brand audit.
-- Landing page teardown.
-- YouTube content strategy.
-- Podcast growth strategy.
-- Newsletter growth strategy.
-- AI agent launch planning.
-- Founder-led sales.
-- Client onboarding.
-- Agency operations.
+| Area | Status | What Exists Today |
+|------|--------|-------------------|
+| Skills | Shipped | 59 marketing and growth skills with structured activation and output standards |
+| Integration guides | Shipped | 347 standalone platform references for APIs, webhooks, SDKs, auth, fields, and operations |
+| CLI helpers | Shipped | 62 zero-dependency JavaScript helpers for common marketing platforms |
+| Marketing OS skill | Shipped | `marketing-os` routes broad marketing goals into workflows, skills, tools, metrics, and next actions |
+| Local workspace | Shipped | `.marketing-os/` initializer, templates, active workflow files, reviews, and snapshots |
+| Dashboard layer | Shipped | Generated Markdown dashboard and static HTML dashboard |
+| Outcome index | Shipped | Generated routing index by workflow, stage, deliverable, metric, integration, and CLI |
+| First-run guide | Shipped | `docs/GETTING_STARTED.md` with checklist, workflow picker, quickstart prompts, troubleshooting, and dashboard links |
+| Social launch system | Shipped | Social post library, category posts, launch-week posts, and 30-day posting calendar |
+| Validation | Shipped | Local validator and GitHub Actions workflow for repo coherence |
 
-## Next Tool Work
+## Phase 1: Make The OS Easier To Start
+
+Goal: help a new user install the repo, understand what to do first, and get value in the first 10 minutes.
+
+### Planned Improvements
+
+- Expand `GETTING_STARTED.md` with screenshots or rendered previews of the dashboard outputs.
+- Add short demo videos or GIF-ready command sequences for the 7 OS workflows.
+- Add more copy-paste examples for first-run prompts by business type.
+- Add a quick "what should I run next?" prompt for users who do not know their workflow.
+
+### Success Criteria
+
+- A new user can install Marketing Skills OS and run one workflow without reading the whole README.
+- The README points clearly to one first action.
+- Each workflow has a copy-paste start prompt and expected deliverables.
+
+## Phase 2: Improve Skill Quality And Coverage
+
+Goal: make every skill more useful, more specific, and easier for agents to route correctly.
+
+### Priority Skill Refinements
+
+- Strengthen `product-marketing` as the root context skill.
+- Tighten `marketing-os` routing rules and readiness gates.
+- Add stronger examples to `prospect-research`, especially developer-intent, B2B, and local SMB research.
+- Expand `local-seo` with location page QA, review mining, Google Business Profile checks, and service-area templates.
+- Improve `seo-content-strategy` with clearer SERP analysis, cluster mapping, and content gap workflows.
+- Improve `landing-page-cro` with before-and-after examples, page-section scoring, and test prioritization.
+- Improve `email-marketing` with lifecycle campaign maps and segmentation examples.
+- Improve `analytics` with event taxonomy, attribution notes, and dashboard QA checks.
+
+### Candidate New Skills
+
+| Skill | Why It Matters |
+|-------|----------------|
+| `brand-audit` | Gives agents a structured way to assess positioning, voice, trust, and differentiation |
+| `landing-page-teardown` | Turns CRO review into a repeatable teardown artifact |
+| `youtube-strategy` | Supports video-led growth, search, thumbnails, scripts, and publishing cadence |
+| `podcast-growth` | Supports guesting, show positioning, episode repurposing, and audience growth |
+| `newsletter-growth` | Covers newsletter positioning, referral loops, editorial calendars, and sponsor readiness |
+| `founder-led-sales` | Connects founder positioning, outbound, content, and sales conversations |
+| `agency-operations` | Helps agencies turn Marketing Skills OS into client delivery workflows |
+| `client-onboarding` | Creates intake, kickoff, access, timeline, and expectation-setting systems |
+| `marketing-data-qa` | Validates tracking plans, field naming, attribution, and dashboard inputs |
+
+### Success Criteria
+
+- High-use skills include realistic examples and quality checks.
+- Broad prompts route reliably to the right starting skill.
+- Every major workflow has clear "do this first" and "do this next" instructions.
+
+## Phase 3: Upgrade Tool And Integration Guides
+
+Goal: make tool references reliable enough for agents to plan real platform work without guessing.
+
+### Planned Improvements
 
 - Add official documentation links to every integration guide.
-- Add environment variable names where relevant.
-- Add error handling notes for API authentication failures.
+- Add environment variable naming recommendations where relevant.
+- Add authentication failure notes and common error responses.
 - Add webhook payload examples for high-use platforms.
-- Add CLI coverage for more tools that have stable APIs.
+- Add pagination, rate-limit, and retry behavior where public docs define them.
+- Add field mapping notes for CRMs, email platforms, analytics tools, and forms.
+- Add "agent-safe operation" notes for destructive API calls.
+- Add a generated integration index grouped by category, auth type, API availability, and relevant skills.
 
-## Community Goals
+### Priority Guide Categories
 
-- Encourage examples from founders, marketers, agencies, and builders.
-- Collect before-and-after prompts and outputs.
-- Add real usage stories to the showcase.
-- Build a contributor bench around skills, tools, and docs.
+- CRM and sales platforms.
+- Email and lifecycle marketing platforms.
+- Analytics, product analytics, and attribution tools.
+- SEO and content intelligence tools.
+- Ads platforms.
+- Forms, surveys, and lead capture tools.
+- WordPress and ecommerce plugins.
+- Automation platforms and webhooks.
+
+### Success Criteria
+
+- Agents can identify auth type, endpoint pattern, common operations, and limits from each guide.
+- Tool guides are independent, platform-specific, and not framed around any single integration plugin.
+- Validation can detect incomplete or malformed integration guide sections.
+
+## Phase 4: Make CLI Helpers More Useful
+
+Goal: turn the CLI folder into practical, scriptable marketing operations.
+
+### Planned Improvements
+
+- Add a standard CLI output schema across all helper tools.
+- Add `--json`, `--dry-run`, and `--help` consistency checks.
+- Add example commands for every CLI in `tools/clis/README.md`.
+- Add environment variable documentation per CLI.
+- Add safer failure messages for missing credentials.
+- Add sample workflows that combine a CLI result with a skill output.
+- Add fixture-based tests for high-use CLIs.
+
+### Candidate New CLI Helpers
+
+| CLI | Purpose |
+|-----|---------|
+| `workflow-score.js` | Score a workflow plan against required context, deliverables, tools, and metrics |
+| `content-gap.js` | Compare planned content topics against existing files or CSV exports |
+| `campaign-brief.js` | Generate a campaign brief skeleton from product context and workflow id |
+| `repo-audit.js` | Check Marketing Skills OS installs inside another local project |
+| `social-calendar.js` | Turn the social post library into a dated posting plan |
+
+### Success Criteria
+
+- CLI helpers produce predictable JSON for agent consumption.
+- Missing credential errors are clear and non-destructive.
+- Users can combine scripts with `.marketing-os/` templates without extra setup.
+
+## Phase 5: Improve Generated Indexes And Dashboards
+
+Goal: make the repo easier to browse by outcome, stage, asset type, tool, and next action.
+
+### Planned Improvements
+
+- Add a generated skill index by category, trigger, workflow stage, and related tools.
+- Add a generated integration index by category, auth type, API availability, and relevant workflows.
+- Add a generated CLI index with command examples and required environment variables.
+- Add dashboard filters to the static HTML output.
+- Add anchor-safe links for every workflow, skill, integration, and CLI.
+- Add a validation mode that fails when generated indexes are stale.
+
+### Success Criteria
+
+- Users can browse the OS without knowing exact skill names.
+- Agents can route from a business goal to a workflow, then to skills, integrations, CLIs, templates, and metrics.
+- Generated files remain reproducible from local source files.
+
+## Phase 6: Add Real-World Examples
+
+Goal: prove what the OS can do with realistic scenarios and copy-pasteable artifacts.
+
+### Planned Examples
+
+- SaaS launch command center.
+- Developer-intent outbound workflow.
+- Local SMB lead-generation workflow.
+- Ecommerce product launch workflow.
+- SEO growth workflow.
+- Landing page conversion review.
+- Weekly marketing review.
+- Founder authority content plan.
+- Agency client delivery workflow.
+
+### Example Format
+
+Each example should include:
+
+- Business context.
+- Starting prompt.
+- Skills used.
+- Tool guides used.
+- CLI helpers used, if any.
+- Deliverables produced.
+- Metrics to review.
+- What to do next.
+
+### Success Criteria
+
+- Examples show full workflows, not isolated prompt outputs.
+- Users can copy an example and adapt it to their project.
+- Examples make the repo easier to understand from GitHub alone.
+
+## Phase 7: Contribution And Community Readiness
+
+Goal: make it easy for contributors to improve the OS without breaking consistency.
+
+### Planned Improvements
+
+- Add contribution templates for new skills, tool guides, CLI helpers, and examples.
+- Add style and quality checklists for each asset type.
+- Add issue labels for skill requests, integration requests, CLI requests, docs, examples, validation, and good first issues.
+- Add a contributor guide section on how to choose between a skill, tool guide, CLI, or example.
+- Add review criteria for accepting new marketing frameworks or platform references.
+
+### Success Criteria
+
+- Contributors know exactly what kind of asset to add.
+- New files follow local conventions.
+- Validation catches common mistakes before review.
+
+## Quality And Validation Roadmap
+
+Validation should become stricter over time without making contribution painful.
+
+### Planned Checks
+
+- Skill frontmatter schema validation.
+- Skill section requirements.
+- Integration guide section requirements.
+- CLI help and dry-run checks.
+- Local link checks across generated social assets.
+- Generated index freshness checks.
+- Count consistency checks across README, dashboard, registry, and validation docs.
+- Markdown whitespace and formatting checks.
+- Optional spelling and terminology checks for public docs.
+
+## Non-Goals
+
+These are not priorities right now:
+
+- A hosted SaaS version.
+- Paid cloud sync.
+- Heavy frontend framework dependencies.
+- A database-backed dashboard.
+- Renaming the package or install path.
+- Replacing existing agent skill standards with a custom format.
+
+## How To Contribute
+
+Useful contributions include:
+
+- Better examples for existing skills.
+- Official API documentation links for integration guides.
+- Safer auth and rate-limit notes.
+- More realistic workflow prompts.
+- New CLI helpers with predictable JSON output.
+- Validation improvements.
+- Before-and-after examples from real marketing work.
+
+Start with:
+
+- [`CONTRIBUTING.md`](../CONTRIBUTING.md).
+- [`VALIDATION.md`](../VALIDATION.md).
+- [`docs/MARKETING_OS.md`](MARKETING_OS.md).
+- [`docs/MARKETING_OS_DASHBOARD.md`](MARKETING_OS_DASHBOARD.md).
+
+## Release Themes
+
+| Release Theme | Focus |
+|---------------|-------|
+| Usability | First-run guide, quickstart prompts, workflow decision tree |
+| Quality | Stronger skill examples, stricter validation, better tool guide structure |
+| Execution | More CLI workflows, campaign briefs, social calendars, content gap helpers |
+| Navigation | Generated skill, integration, CLI, and outcome indexes |
+| Proof | Real examples, demo workflows, showcases, before-and-after artifacts |

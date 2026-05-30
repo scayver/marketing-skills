@@ -104,6 +104,8 @@ It creates a context document that every other skill reads before doing any work
 
 This is the dependency that makes the whole OS coherent.
 
+For the shortest path from install to first workflow, read [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md).
+
 ---
 
 ## Skill map
@@ -498,11 +500,10 @@ npm run test:claude-code -- --keep
 
 Useful docs:
 
+- [Getting started](docs/GETTING_STARTED.md).
+- [Documentation index](docs/README.md).
 - [Marketing OS docs](docs/MARKETING_OS.md).
 - [Claude Code testing guide](docs/CLAUDE_CODE_TESTING.md).
-- [Marketing OS playbooks](docs/MARKETING_OS_PLAYBOOKS.md).
-- [Marketing OS workflows](docs/MARKETING_OS_WORKFLOWS.md).
-- [Marketing OS scorecards](docs/MARKETING_OS_SCORECARDS.md).
 - [Marketing OS manifest](docs/MARKETING_OS_MANIFEST.json).
 - [Marketing Skills OS dashboard](docs/MARKETING_OS_DASHBOARD.md).
 - [Static HTML dashboard](docs/marketing-os-dashboard.html).
@@ -581,10 +582,14 @@ Marketing Skills OS also draws on the Agent Skills spec published by [vercel-lab
 
 ## More docs
 
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) shows what is planned next.
-- [`docs/SHOWCASE.md`](docs/SHOWCASE.md) explains the strongest demo workflows.
-- [`docs/FAQ.md`](docs/FAQ.md) answers common questions for new users.
-- [`docs/LAUNCH_KIT.md`](docs/LAUNCH_KIT.md) gives copy you can use to share the repo.
+Start with the [`docs/README.md`](docs/README.md) documentation index.
+
+The most important docs are:
+
+- [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md) for first-run setup.
+- [`docs/MARKETING_OS.md`](docs/MARKETING_OS.md) for the operating model, workflows, playbooks, and scorecards.
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) for planned improvements.
+- [`docs/FAQ.md`](docs/FAQ.md) for quick answers.
 
 ---
 

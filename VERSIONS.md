@@ -20,7 +20,7 @@ This release adds operational assets that make the Marketing OS easier to run in
 
 **New OS Assets**
 
-- Added [`docs/MARKETING_OS_WORKFLOWS.md`](docs/MARKETING_OS_WORKFLOWS.md) for goal-to-workflow routing.
+- Added goal-to-workflow routing, now consolidated in [`docs/MARKETING_OS.md`](docs/MARKETING_OS.md).
 - Added [`docs/MARKETING_OS_MANIFEST.json`](docs/MARKETING_OS_MANIFEST.json) as a machine-readable OS map for agents and scripts.
 - Added [`examples/marketing-os-command-center.md`](examples/marketing-os-command-center.md) as a copyable weekly command center.
 - Added [`scripts/print-marketing-os-summary.js`](scripts/print-marketing-os-summary.js).
@@ -49,8 +49,7 @@ This release turns the package from a broad skills and tools library into a clea
 **New Docs**
 
 - Added [`docs/MARKETING_OS.md`](docs/MARKETING_OS.md) for the system architecture.
-- Added [`docs/MARKETING_OS_PLAYBOOKS.md`](docs/MARKETING_OS_PLAYBOOKS.md) for workflow recipes.
-- Added [`docs/MARKETING_OS_SCORECARDS.md`](docs/MARKETING_OS_SCORECARDS.md) for measurement templates.
+- Added workflow recipes and measurement templates, now consolidated in [`docs/MARKETING_OS.md`](docs/MARKETING_OS.md).
 
 **Counts**
 

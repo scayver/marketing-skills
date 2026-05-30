@@ -284,7 +284,7 @@ Next step: do not run every skill. Pick the smallest set that moves the current 
 ## Related Files
 
 - `docs/MARKETING_OS.md` for the full system model.
-- `docs/MARKETING_OS_PLAYBOOKS.md` for ready workflows.
+- `docs/GETTING_STARTED.md` for first-run workflow setup.
 - `docs/DEMO.md` for install and usage examples.
 - `docs/SOCIAL_POST_LIBRARY.md` for launch content.
 - `tools/REGISTRY.md` for platform references.

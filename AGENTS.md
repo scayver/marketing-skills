@@ -95,10 +95,9 @@ marketing-skills/
 │   └── validate-repo.js
 ├── docs/
 │   ├── COMPLIANCE.md
+│   ├── README.md
 │   ├── MARKETING_OS.md
-│   ├── MARKETING_OS_PLAYBOOKS.md
-│   ├── MARKETING_OS_SCORECARDS.md
-│   ├── MARKETING_OS_WORKFLOWS.md
+│   ├── GETTING_STARTED.md
 │   ├── MARKETING_OS_MANIFEST.json
 │   ├── DEMO.md
 │   ├── FAQ.md
