@@ -10,7 +10,7 @@ Marketing Skills OS keeps the `scayver/marketing-skills` install path for compat
 find skills -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l
 ```
 
-Expected current count: `59`.
+Expected current count: `71`.
 
 ## Integration Guide Count
 
@@ -172,7 +172,7 @@ Expected result: `Marketing OS dashboard is current.`
 npm run test:claude-code
 ```
 
-Expected result: `Claude Code smoke test passed: 59 skills installed, 7 workflows exercised.`
+Expected result: `Claude Code smoke test passed: 71 skills installed, 7 workflows exercised.`
 
 To keep the generated test project for manual Claude Code prompts:
 

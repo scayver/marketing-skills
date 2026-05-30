@@ -308,7 +308,7 @@ The repo becomes a true OS when every major workflow has these pieces:
 
 | Component | Status |
 |-----------|--------|
-| Skills | Strong base with 59 skills including `marketing-os` and the operating workflow assets |
+| Skills | Strong base with 71 skills including `marketing-os` and the operating workflow assets |
 | Integration guides | Strong base with 347 standalone platform references |
 | CLI tools | Strong base with 62 JavaScript helpers |
 | Validation | Local validator and GitHub Actions workflow exist |

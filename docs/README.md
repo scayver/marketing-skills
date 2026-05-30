@@ -7,6 +7,7 @@ Use this page as the documentation entry point for Marketing Skills OS.
 | Doc | Use It For |
 |-----|------------|
 | [`GETTING_STARTED.md`](GETTING_STARTED.md) | Fastest path from install to first workflow |
+| [`EXAMPLE_WORKFLOWS.md`](EXAMPLE_WORKFLOWS.md) | End-to-end workflow examples for launch, outbound, local, ecommerce, SEO, and conversion |
 | [`MARKETING_OS.md`](MARKETING_OS.md) | Core operating model, workflows, playbook patterns, scorecards, and next actions |
 | [`DEMO.md`](DEMO.md) | Walkthrough for install, workspace setup, developer-intent outbound, conversion, and tracking |
 | [`FAQ.md`](FAQ.md) | Short answers for new users |

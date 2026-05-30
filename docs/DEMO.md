@@ -129,7 +129,7 @@ npm run validate
 Expected result:
 
 ```text
-Validation passed: 59 skills, 347 integration guides, 62 CLI tools.
+Validation passed: 71 skills, 347 integration guides, 62 CLI tools.
 ```
 
 ## Useful Demo Chains

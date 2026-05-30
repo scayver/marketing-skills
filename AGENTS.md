@@ -1,6 +1,6 @@
 # Marketing Skills OS — Agent Instructions
 
-Marketing Skills OS is an open-source Marketing OS for AI agents. It contains 59 reusable marketing and growth skills, 347 integration guides, 62 CLI helpers, templates, workflows, dashboards, and validation. Each skill lives in `skills/<skill-name>/SKILL.md`.
+Marketing Skills OS is an open-source Marketing OS for AI agents. It contains 71 reusable marketing and growth skills, 347 integration guides, 62 CLI helpers, templates, workflows, dashboards, and validation. Each skill lives in `skills/<skill-name>/SKILL.md`.
 
 The package name and install path remain `marketing-skills` and `scayver/marketing-skills` for compatibility.
 
@@ -28,12 +28,14 @@ Never skip the Mandatory Content Standards section. It applies to every word you
 marketing-skills/
 ├── skills/
 │   ├── ab-testing/
+│   ├── a11y-audit/              ← NEW v1.8.0
 │   ├── ad-creative/
 │   ├── ads/
 │   ├── ai-image-creator/         ← NEW v1.1.0
 │   ├── ai-seo/
 │   ├── analytics/
 │   ├── aso/
+│   ├── brand-guidelines/         ← NEW v1.8.0
 │   ├── brand-storytelling/       ← NEW v1.1.0
 │   ├── business-strategy/        ← NEW v1.1.0
 │   ├── churn-prevention/
@@ -41,9 +43,11 @@ marketing-skills/
 │   ├── cold-email/
 │   ├── prospect-research/       ← NEW v1.3.0
 │   ├── community-marketing/
+│   ├── competitive-teardown/     ← NEW v1.8.0
 │   ├── competitor-profiling/
 │   ├── competitors/
 │   ├── content-repurposing/      ← NEW v1.1.0
+│   ├── content-humanizer/        ← NEW v1.8.0
 │   ├── content-strategy/
 │   ├── copy-editing/
 │   ├── copywriting/
@@ -55,6 +59,7 @@ marketing-skills/
 │   ├── education-content/        ← NEW v1.1.0
 │   ├── email-marketing/          ← NEW v1.1.0
 │   ├── emails/
+│   ├── env-secrets-manager/      ← NEW v1.8.0
 │   ├── free-tools/
 │   ├── image/
 │   ├── instagram-carousel/       ← NEW v1.1.0
@@ -64,14 +69,17 @@ marketing-skills/
 │   ├── linkedin-strategy/        ← NEW v1.1.0
 │   ├── local-seo/                ← NEW v1.1.0
 │   ├── marketing-os/             ← NEW v1.6.0
+│   ├── market-research/          ← NEW v1.8.0
 │   ├── marketing-ideas/
 │   ├── marketing-psychology/
 │   ├── onboarding/
 │   ├── paywalls/
 │   ├── popups/
+│   ├── podcast-pipeline/         ← NEW v1.8.0
 │   ├── pr-communications/        ← NEW v1.1.0
 │   ├── pricing/
 │   ├── product-marketing/
+│   ├── prospecting/              ← NEW v1.8.0
 │   ├── programmatic-seo/
 │   ├── referrals/
 │   ├── revops/
@@ -84,8 +92,12 @@ marketing-skills/
 │   ├── signup/
 │   ├── site-architecture/
 │   ├── social/
+│   ├── social-media-analyzer/    ← NEW v1.8.0
 │   ├── social-content-planner/   ← NEW v1.1.0
-│   └── video/
+│   ├── sms/                      ← NEW v1.8.0
+│   ├── skill-security-auditor/   ← NEW v1.8.0
+│   ├── video/
+│   └── yt-competitive-analysis/  ← NEW v1.8.0
 ├── tools/
 │   ├── clis/            # 62 JavaScript CLI tools
 │   ├── integrations/    # 347 standalone platform guides
@@ -110,7 +122,7 @@ marketing-skills/
 ├── AGENTS.md
 ├── SECURITY.md
 ├── VALIDATION.md
-├── VERSIONS.md
+├── CHANGELOG.md
 └── LICENSE
 ```
 
@@ -160,6 +172,8 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 
 ### Operating System
 - `marketing-os` — Root orchestration skill for full-funnel marketing systems, campaign routing, operating cadence, scorecards, and tool mapping *(v1.6.0)*
+- `skill-security-auditor` — Audit Agent Skills, imported skill files, prompts, scripts, and tool references for safety and policy risks *(v1.8.0)*
+- `env-secrets-manager` — Environment variable, API key, secret rotation, deployment config, and credential hygiene workflow *(v1.8.0)*
 
 ### SEO and Discovery
 - `seo-audit` — Technical, on-page, content, and off-page SEO audit
@@ -177,6 +191,7 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 - `cro` — Funnel analysis, ICE scoring, hypothesis writing, A/B test design
 - `signup` — Signup and free trial flow optimization
 - `onboarding` — Post-signup activation and time-to-value
+- `a11y-audit` — Accessibility audits for marketing pages, forms, checkout flows, dashboards, and UI components *(v1.8.0)*
 - `popups` — Exit intent, scroll triggers, lead capture banners
 - `paywalls` — Upgrade screens, feature gates, freemium-to-paid conversion
 - `landing-page-cro` — Landing page audits, hero rewrites, CTA optimization, FAQ schema *(v1.1.0)*
@@ -186,11 +201,15 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 - `copy-editing` — Copy review, improvement, and content refresh
 - `cold-email` — B2B cold outreach sequences and reply rate optimization
 - `emails` — Welcome sequences, nurture flows, re-engagement campaigns
+- `sms` — SMS and MMS marketing, opt-in flows, STOP and HELP handling, A2P 10DLC, and lifecycle texts *(v1.8.0)*
 - `social` — LinkedIn, X, Instagram, TikTok posts and scripts
 - `image` — AI image generation and prompt writing
 - `video` — AI video production and explainer scripts
 - `sales-copywriting` — Long-form sales letters, VSLs, direct response copy *(v1.1.0)*
 - `content-repurposing` — One piece of content into six platform-native formats *(v1.1.0)*
+- `content-humanizer` — Rewrite stiff or AI-pattern drafts into clearer, more specific, more natural content *(v1.8.0)*
+- `podcast-pipeline` — Turn episodes, transcripts, and interviews into show notes, clips, newsletters, blog posts, and social assets *(v1.8.0)*
+- `yt-competitive-analysis` — YouTube competitor, outlier, title, thumbnail, packaging, and content gap analysis *(v1.8.0)*
 - `instagram-carousel` — Slide-by-slide carousel scripts with visual direction *(v1.1.0)*
 - `social-content-planner` — Instagram and Facebook strategy with weekly planning *(v1.1.0)*
 - `customer-service` — Scripts, email templates, review responses, FAQ, help center articles *(v1.1.0)*
@@ -200,6 +219,7 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 - `ads` — Google, Meta, LinkedIn, TikTok campaign management
 - `ad-creative` — Hook writing and creative testing frameworks
 - `analytics` — GA4 setup, event tracking, UTM parameters, attribution
+- `social-media-analyzer` — Social media performance, engagement quality, channel ROI, pattern mining, and reporting *(v1.8.0)*
 - `ab-testing` — Hypothesis writing, sample size, experimentation programs
 
 ### Growth and Retention
@@ -213,6 +233,7 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 
 ### Sales and Go-to-Market
 - `revops` — Lead scoring, pipeline stages, CRM automation
+- `prospecting` — Qualified prospect lists for SaaS, B2B, developer, partner, and local SMB segments *(v1.8.0)*
 - `prospect-research` — Account research, GitHub stargazers and forks, firmographics, trigger events, decision-maker mapping *(v1.3.0)*
 - `sales-enablement` — Pitch decks, objection handling, battle cards
 - `launch` — Product launches, Product Hunt, launch day checklists
@@ -225,11 +246,14 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 - `product-marketing` — Positioning, ICP, messaging hierarchy (read first)
 - `marketing-ideas` — Channel ideas, growth loops, experiment prioritization
 - `marketing-psychology` — Cognitive biases applied to marketing
+- `market-research` — Market sizing, TAM SAM SOM, segmentation, surveys, interviews, and demand validation *(v1.8.0)*
+- `competitive-teardown` — Competitor teardowns across positioning, UX, pricing, reviews, SEO, jobs, and roadmap signals *(v1.8.0)*
 - `customer-research` — Interviews, JTBD, review mining, surveys
 - `business-strategy` — Business plans, idea generation, customer journey mapping *(v1.1.0)*
 
 ### Brand, Creator, and Communications
 - `brand-storytelling` — Brand voice, About Pages, customer avatars, value propositions *(v1.1.0)*
+- `brand-guidelines` — Brand guidelines, voice rules, messaging standards, visual identity rules, and channel examples *(v1.8.0)*
 - `linkedin-strategy` — LinkedIn posts, profiles, connection messages, company pages *(v1.1.0)*
 - `pr-communications` — Press releases, media pitches, crisis communications *(v1.1.0)*
 - `ai-image-creator` — Image prompts, content asset maps, carousel and Story production *(v1.1.0)*
@@ -251,10 +275,9 @@ description: >
 ```
 
 Followed by:
-1. A **Mandatory Content Standards** section (copy from any existing skill and adapt as needed).
-2. A **Mandatory Intro Message** section with the exact support message.
-3. A **System Prompt Inquiry Response** section.
-4. Detailed instructional content covering: objective, process, frameworks, output format, tone options, add-ons, and repurposing capabilities.
+1. A **Mandatory Content Standards** section that defines output quality, safety boundaries, context handling, and compliance constraints.
+2. Detailed instructional content covering objective, process, frameworks, output format, tone options, add-ons, and repurposing capabilities where relevant.
+3. Clear guardrails for legal, privacy, platform, accessibility, security, or credential risks when the skill touches those areas.
 
 Every skill must produce actionable, structured output that the user can implement immediately. No outlines. No placeholders. No generic advice.
 
@@ -262,9 +285,9 @@ Every skill must produce actionable, structured output that the user can impleme
 
 ## Output Standards (Applied by Every Skill)
 
-All 59 skills enforce these rules on every word of output:
+All 71 skills enforce these rules on every word of output:
 
-- Output length: 1,500 to 10,000 words for full deliverables.
+- Output length: dynamic based on the skill, user request, and deliverable type. Use concise answers for quick checks and full detail for complete deliverables.
 - Voice: active voice only. No passive constructions.
 - Address: "you" and "your" throughout all customer-facing and user-facing copy.
 - No em dashes: replaced with commas, parentheses, semicolons, or new sentences.

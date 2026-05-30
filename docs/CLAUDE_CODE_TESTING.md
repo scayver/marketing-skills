@@ -30,7 +30,7 @@ The test checks:
 Expected result:
 
 ```text
-Claude Code smoke test passed: 59 skills installed, 7 workflows exercised.
+Claude Code smoke test passed: 71 skills installed, 7 workflows exercised.
 ```
 
 ## Keep the Test Project for Manual Claude Code Review

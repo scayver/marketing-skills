@@ -1,4 +1,8 @@
-# Version History
+# Changelog
+
+All notable changes to Marketing Skills OS are documented here.
+
+This file is the canonical public changelog and full release history for the repo.
 
 ---
 
@@ -7,6 +11,48 @@
 **Marketing Skills OS rebrand.**
 
 This update makes **Marketing Skills OS** the canonical public brand while preserving the `scayver/marketing-skills` repo, package name, install path, `marketing-os` skill slug, `.marketing-os` workspace folder, and `os:*` commands for compatibility.
+
+**New Skills**
+
+| Skill | Category | Description |
+|-------|----------|-------------|
+| [`prospecting`](skills/prospecting/SKILL.md) | Sales and Go-to-Market | Lead list building, account qualification, SaaS and developer intent, B2B trigger events, decision-maker mapping, local SMB tiers, and outreach compliance. |
+| [`sms`](skills/sms/SKILL.md) | Growth and Retention | SMS and MMS strategy, opt-in language, STOP and HELP workflows, A2P 10DLC planning, lifecycle texts, and compliance checkpoints. |
+| [`market-research`](skills/market-research/SKILL.md) | Strategy and Research | Market sizing, TAM SAM SOM, segmentation, survey and interview planning, category signals, and demand validation. |
+| [`competitive-teardown`](skills/competitive-teardown/SKILL.md) | Strategy and Research | Competitor teardown workflow for positioning, UX, pricing, reviews, SEO, content, hiring, social proof, and roadmap signals. |
+| [`podcast-pipeline`](skills/podcast-pipeline/SKILL.md) | Content and Copy | Podcast and transcript repurposing into show notes, clips, newsletters, blog posts, social posts, carousels, and publishing schedules. |
+| [`yt-competitive-analysis`](skills/yt-competitive-analysis/SKILL.md) | Content and Copy | YouTube competitor analysis, outlier research, title and thumbnail packaging, content gaps, and video idea prioritization. |
+| [`brand-guidelines`](skills/brand-guidelines/SKILL.md) | Brand and Communications | Brand guidelines, voice rules, messaging standards, visual identity rules, channel examples, accessibility notes, and governance. |
+| [`content-humanizer`](skills/content-humanizer/SKILL.md) | Content and Copy | AI-pattern audit and rewrite workflow for clearer, more specific, more natural, brand-aligned content. |
+| [`social-media-analyzer`](skills/social-media-analyzer/SKILL.md) | Paid Advertising and Measurement | Social performance analysis, engagement quality, content pattern mining, channel ROI, and reporting recommendations. |
+| [`skill-security-auditor`](skills/skill-security-auditor/SKILL.md) | Operating System | Safety audit workflow for imported skills, prompts, scripts, tools, permissions, dependencies, and repo policy fit. |
+| [`a11y-audit`](skills/a11y-audit/SKILL.md) | Conversion Rate Optimization | Accessibility audit workflow for websites, landing pages, forms, checkouts, dashboards, and UI components. |
+| [`env-secrets-manager`](skills/env-secrets-manager/SKILL.md) | Operating System | Environment variable inventory, `.env.example` planning, secret rotation, credential hygiene, and deployment config safety. |
+
+**Counts**
+
+- 71 skills.
+- 347 standalone integration guides.
+- 62 JavaScript CLI tools.
+
+**Dashboard and Docs**
+
+- Added OS Layer Skill Coverage to the generated Markdown and HTML dashboards.
+- Added a workflow decision tree and first prompt chooser to `docs/GETTING_STARTED.md`.
+- Added `docs/EXAMPLE_WORKFLOWS.md` with six end-to-end workflow examples.
+- Added asset-specific contribution checklists to `CONTRIBUTING.md`.
+- Replaced the fixed 1,500 to 10,000 word output rule with dynamic length guidance across global docs and skill standards.
+- Updated the Marketing OS manifest, dashboard, outcome index, roadmap, launch kit, validation docs, demo docs, package metadata, README, and AGENTS instructions.
+- Expanded the roadmap with recently shipped work, a next priority stack, stronger validation plans, and additional real-world examples.
+- Added social post coverage for all 12 new skills.
+- Expanded validation with manifest coverage checks, stale workflow reference checks, integration guide section checks, and social CSV quality checks.
+
+**Verified**
+
+- `npm run os:dashboard:check`
+- `npm run os:index:check`
+- `npm run validate`
+- `npm run test:claude-code -- --target /private/tmp/marketing-skills-claude-code --keep`
 
 ---
 
@@ -214,7 +260,7 @@ This release expands the library from 40 to 57 skills, adding coverage across br
 
 - `README.md` — Updated to reflect 57 skills, expanded skill map, updated install commands, and full credits with donation links.
 - `AGENTS.md` — Updated skill index with all 57 skills, directory structure with v1.1.0 markers, and expanded output standards.
-- `VERSIONS.md` — This file.
+- `CHANGELOG.md` — This file.
 
 **Author**
 
@@ -281,7 +327,7 @@ Initial release.
 
 **Content Standards**
 
-All 40 skills enforce the same output rules: active voice, 1,500 to 10,000 word outputs, no AI buzzwords, no em dashes, direct reader address, and actionable output with a clear next step per section.
+All 40 launch skills enforced the same core output rules: active voice, no AI buzzwords, no em dashes, direct reader address, dynamic depth for the task, and actionable output with a clear next step per section.
 
 **Agent Compatibility**
 

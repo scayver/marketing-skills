@@ -189,6 +189,100 @@ function validateSocialPosts(skillCount, integrationCount, cliCount) {
   const rowCount = Math.max(0, lines.length - 1)
   const expected = skillCount + integrationCount + cliCount
   if (rowCount !== expected) fail(`examples/social-post-library.csv has ${rowCount} rows, expected ${expected}`)
+
+  const expectedHeader = 'asset_type,category,name,platform,hook,post,cta,install_command,repo_url'
+  if (lines[0] !== expectedHeader) fail('examples/social-post-library.csv has an unexpected header')
+
+  const validTypes = new Set(['skill', 'integration', 'cli'])
+  for (const [index, line] of lines.slice(1).entries()) {
+    const row = parseCsvLine(line)
+    const lineNumber = index + 2
+    if (row.length !== 9) {
+      fail(`examples/social-post-library.csv line ${lineNumber} has ${row.length} columns, expected 9`)
+      continue
+    }
+    const [type, category, name, platform, hook, post, cta, installCommand, repoUrl] = row
+    if (!validTypes.has(type)) fail(`examples/social-post-library.csv line ${lineNumber} has invalid asset_type: ${type}`)
+    if (!category || !name || !platform || !hook || !post || !cta) fail(`examples/social-post-library.csv line ${lineNumber} has an empty required field`)
+    if (!installCommand.includes('npx skills add scayver/marketing-skills')) fail(`examples/social-post-library.csv line ${lineNumber} has invalid install_command`)
+    if (repoUrl !== 'https://github.com/scayver/marketing-skills') fail(`examples/social-post-library.csv line ${lineNumber} has invalid repo_url`)
+  }
+}
+
+function parseCsvLine(line) {
+  const values = []
+  let current = ''
+  let inQuotes = false
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i]
+    const next = line[i + 1]
+    if (char === '"' && inQuotes && next === '"') {
+      current += '"'
+      i++
+    } else if (char === '"') {
+      inQuotes = !inQuotes
+    } else if (char === ',' && !inQuotes) {
+      values.push(current)
+      current = ''
+    } else {
+      current += char
+    }
+  }
+  values.push(current)
+  return values
+}
+
+function validateIntegrationGuideSections(integrationFiles) {
+  const requiredSections = [
+    '## Capabilities',
+    '## Authentication',
+    '## Common Agent Operations',
+    '## When to Use',
+    '## Rate Limits',
+    '## Relevant Skills',
+  ]
+
+  for (const file of integrationFiles) {
+    const text = read(path.join('tools/integrations', file))
+    for (const section of requiredSections) {
+      if (!text.includes(section)) fail(`tools/integrations/${file} is missing ${section}`)
+    }
+  }
+}
+
+function validateMarketingOsManifestCoverage(skillDirs, integrationFiles, cliFiles) {
+  const manifest = JSON.parse(read('docs/MARKETING_OS_MANIFEST.json'))
+  const skillSet = new Set(skillDirs)
+  const integrationSet = new Set(integrationFiles.map(file => file.replace(/\.md$/, '')))
+  const cliSet = new Set(cliFiles.map(file => file.replace(/\.js$/, '')))
+  const coveredSkills = new Set()
+
+  for (const layer of manifest.layers || []) {
+    if (!layer.id || !layer.purpose) fail('docs/MARKETING_OS_MANIFEST.json has a layer missing id or purpose')
+    for (const skill of layer.skills || []) {
+      coveredSkills.add(skill)
+      if (!skillSet.has(skill)) fail(`docs/MARKETING_OS_MANIFEST.json references missing layer skill: ${skill}`)
+    }
+  }
+
+  for (const workflow of manifest.workflows || []) {
+    if (!workflow.id || !workflow.name || !workflow.stage || !workflow.primary_skill) fail('docs/MARKETING_OS_MANIFEST.json has a workflow missing required fields')
+    if (!skillSet.has(workflow.primary_skill)) fail(`docs/MARKETING_OS_MANIFEST.json references missing primary skill: ${workflow.primary_skill}`)
+    for (const skill of workflow.skills || []) {
+      coveredSkills.add(skill)
+      if (!skillSet.has(skill)) fail(`docs/MARKETING_OS_MANIFEST.json references missing workflow skill: ${skill}`)
+    }
+    for (const integration of workflow.integrations || []) {
+      if (!integrationSet.has(integration)) fail(`docs/MARKETING_OS_MANIFEST.json references missing integration guide: ${integration}`)
+    }
+    for (const cli of workflow.clis || []) {
+      if (!cliSet.has(cli)) fail(`docs/MARKETING_OS_MANIFEST.json references missing CLI helper: ${cli}`)
+    }
+  }
+
+  for (const skill of skillDirs) {
+    if (!coveredSkills.has(skill)) fail(`docs/MARKETING_OS_MANIFEST.json does not cover skill: ${skill}`)
+  }
 }
 
 function validateRequiredFiles() {
@@ -201,15 +295,16 @@ function validateRequiredFiles() {
     '.github/pull_request_template.md',
     '.gitignore',
     'CODE_OF_CONDUCT.md',
+    'CHANGELOG.md',
     'CONTRIBUTING.md',
     'LICENSE',
     'README.md',
     'SECURITY.md',
     'VALIDATION.md',
-    'VERSIONS.md',
     'docs/COMPLIANCE.md',
     'docs/CLAUDE_CODE_TESTING.md',
     'docs/DEMO.md',
+    'docs/EXAMPLE_WORKFLOWS.md',
     'docs/FAQ.md',
     'docs/GETTING_STARTED.md',
     'docs/LAUNCH_KIT.md',
@@ -374,8 +469,8 @@ function validateMarketingOsInitializer() {
 }
 function validateLocalLinks() {
   const files = [
-    'README.md', 'AGENTS.md', 'CONTRIBUTING.md', 'SECURITY.md', 'VALIDATION.md', 'VERSIONS.md',
-    'docs/COMPLIANCE.md', 'docs/DEMO.md', 'docs/FAQ.md', 'docs/LAUNCH_KIT.md',
+    'README.md', 'AGENTS.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'VALIDATION.md',
+    'docs/COMPLIANCE.md', 'docs/DEMO.md', 'docs/EXAMPLE_WORKFLOWS.md', 'docs/FAQ.md', 'docs/LAUNCH_KIT.md',
     'docs/CLAUDE_CODE_TESTING.md',
     'docs/GETTING_STARTED.md',
     'docs/MARKETING_OS.md',
@@ -425,6 +520,7 @@ function validateLocalLinks() {
 }
 
 function main() {
+  const skillDirs = listDirs('skills')
   const skillCount = validateSkills()
   const integrationFiles = listFiles('tools/integrations', name => name.endsWith('.md') && name !== 'bit-integrations-registry.md')
   const cliFiles = listFiles('tools/clis', name => name.endsWith('.js'))
@@ -432,6 +528,7 @@ function main() {
   const cliCount = cliFiles.length
 
   validateToolRegistry(integrationCount, cliCount)
+  validateIntegrationGuideSections(integrationFiles)
   validateCliReadme(cliFiles)
   validateCliSyntax(cliFiles)
   validateNodeSyntax(['scripts/generate-marketing-os-dashboard.js', 'scripts/generate-marketing-os-index.js', 'scripts/init-marketing-os.js', 'scripts/print-marketing-os-summary.js', 'scripts/review-marketing-os-week.js', 'scripts/run-marketing-os-workflow.js', 'scripts/snapshot-marketing-os.js', 'scripts/status-marketing-os.js', 'scripts/test-claude-code-package.js'])
@@ -439,6 +536,7 @@ function main() {
   validateBranding()
   validateRequiredFiles()
   validateSocialPosts(skillCount, integrationCount, cliCount)
+  validateMarketingOsManifestCoverage(skillDirs, integrationFiles, cliFiles)
   validateMarketingOsInitializer()
   validateMarketingOsDashboard()
   validateMarketingOsOutcomeIndex()

@@ -124,6 +124,10 @@ function startPrompt(workflow) {
   return `Use the marketing-os skill. Our outcome is ${workflow.name}. Start with the \`${workflow.primary_skill}\` workflow, review the listed skills, read the related integration guides before recommending tools, and produce the first concrete deliverable with a metric.`
 }
 
+function skillLinks(skills) {
+  return (skills || []).map(skill => linkIfExists('skills', skill, '/SKILL.md')).join(', ')
+}
+
 function generateMarkdown(context) {
   const lines = []
   lines.push('# Marketing Skills OS Dashboard')
@@ -156,6 +160,20 @@ function generateMarkdown(context) {
   lines.push('| `npm run os:review -- --target ../my-project --date 2026-05-28 --force` | Create a weekly review. |')
   lines.push('| `npm run os:status -- --target ../my-project` | Inspect workspace readiness. |')
   lines.push('| `npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force` | Persist current state for future agent sessions. |')
+  lines.push('')
+  lines.push('## OS Layer Skill Coverage')
+  lines.push('')
+  lines.push('These layers show the skills that support the operating system beyond the seven workflow cards.')
+  lines.push('')
+  lines.push('| Layer | Purpose | Skills |')
+  lines.push('|-------|---------|--------|')
+  for (const layer of context.manifest.layers || []) {
+    lines.push('| ' + [
+      `\`${layer.id}\``,
+      escapeTable(layer.purpose),
+      escapeTable(skillLinks(layer.skills)),
+    ].join(' | ') + ' |')
+  }
   lines.push('')
   lines.push('## Outcome Routing By Stage')
   lines.push('')
@@ -269,6 +287,13 @@ function generateHtml(context) {
           <td>${workflows.map(workflow => `<code>${escapeHtml(workflow.primary_skill)}</code>`).join('<br>')}</td>
         </tr>`).join('\n')
 
+  const layerRows = (context.manifest.layers || []).map(layer => `
+        <tr>
+          <td><code>${escapeHtml(layer.id)}</code></td>
+          <td>${escapeHtml(layer.purpose)}</td>
+          <td><div class="chips">${chipList(layer.skills, 'chip')}</div></td>
+        </tr>`).join('\n')
+
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -339,6 +364,14 @@ function generateHtml(context) {
     <table>
       <thead><tr><th>Stage</th><th>Outcomes</th><th>Primary Skills</th></tr></thead>
       <tbody>${stageRows}
+      </tbody>
+    </table>
+
+    <h2 style="margin-top:32px">OS Layer Skill Coverage</h2>
+    <p>These layers show the skills that support the operating system beyond the seven workflow cards.</p>
+    <table>
+      <thead><tr><th>Layer</th><th>Purpose</th><th>Skills</th></tr></thead>
+      <tbody>${layerRows}
       </tbody>
     </table>
 

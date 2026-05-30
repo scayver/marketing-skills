@@ -10,7 +10,7 @@ description: >
 
 Every output from this skill follows these standards without exception.
 
-- Write between 1,500 and 10,000 words per skill output.
+- Match output length to the skill, request, and deliverable type. Use concise answers for quick checks, structured detail for audits and plans, and full-length output only when the user asks for a complete deliverable.
 - Write in a way that sounds like a knowledgeable human wrote it. No robotic or templated phrasing.
 - Use short sentences. One idea per sentence. One focus per paragraph.
 - Use active voice. Never passive constructions.

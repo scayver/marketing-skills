@@ -1,7 +1,7 @@
 {
   "name": "marketing-skills",
   "version": "1.7.0",
-  "description": "Marketing Skills OS is an open-source Marketing OS for AI agents, with 59 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, validation, and a local execution loop.",
+  "description": "Marketing Skills OS is an open-source Marketing OS for AI agents, with 71 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, validation, and a local execution loop.",
   "keywords": [
     "ads",
     "agent-skills",

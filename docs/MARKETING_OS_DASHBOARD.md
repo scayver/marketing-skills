@@ -12,11 +12,11 @@ npx skills add scayver/marketing-skills
 
 | Asset | Count |
 |-------|------:|
-| Skills | 59 |
+| Skills | 71 |
 | Integration guides | 347 |
 | CLI tools | 62 |
 | Workflows | 7 |
-| Social posts | 468 |
+| Social posts | 480 |
 
 ## OS Commands
 
@@ -28,6 +28,21 @@ npx skills add scayver/marketing-skills
 | `npm run os:review -- --target ../my-project --date 2026-05-28 --force` | Create a weekly review. |
 | `npm run os:status -- --target ../my-project` | Inspect workspace readiness. |
 | `npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force` | Persist current state for future agent sessions. |
+
+## OS Layer Skill Coverage
+
+These layers show the skills that support the operating system beyond the seven workflow cards.
+
+| Layer | Purpose | Skills |
+|-------|---------|--------|
+| `context` | Define ICP, positioning, offer, category, and product story. | [product-marketing](../skills/product-marketing/SKILL.md), [customer-research](../skills/customer-research/SKILL.md), [market-research](../skills/market-research/SKILL.md), [business-strategy](../skills/business-strategy/SKILL.md), [brand-storytelling](../skills/brand-storytelling/SKILL.md), [brand-guidelines](../skills/brand-guidelines/SKILL.md) |
+| `strategy` | Choose the growth motion and roadmap. | [marketing-os](../skills/marketing-os/SKILL.md), [marketing-ideas](../skills/marketing-ideas/SKILL.md), [marketing-psychology](../skills/marketing-psychology/SKILL.md), [skill-security-auditor](../skills/skill-security-auditor/SKILL.md), [env-secrets-manager](../skills/env-secrets-manager/SKILL.md), [competitor-profiling](../skills/competitor-profiling/SKILL.md), [competitors](../skills/competitors/SKILL.md), [pricing](../skills/pricing/SKILL.md) |
+| `demand` | Create awareness and qualified demand. | [seo-content-strategy](../skills/seo-content-strategy/SKILL.md), [seo-blog-writer](../skills/seo-blog-writer/SKILL.md), [ai-seo](../skills/ai-seo/SKILL.md), [content-strategy](../skills/content-strategy/SKILL.md), [site-architecture](../skills/site-architecture/SKILL.md), [programmatic-seo](../skills/programmatic-seo/SKILL.md), [aso](../skills/aso/SKILL.md), [social](../skills/social/SKILL.md), [linkedin-strategy](../skills/linkedin-strategy/SKILL.md), [pr-communications](../skills/pr-communications/SKILL.md), [yt-competitive-analysis](../skills/yt-competitive-analysis/SKILL.md), [ads](../skills/ads/SKILL.md), [directory-submissions](../skills/directory-submissions/SKILL.md), [free-tools](../skills/free-tools/SKILL.md), [lead-magnets](../skills/lead-magnets/SKILL.md), [co-marketing](../skills/co-marketing/SKILL.md) |
+| `conversion` | Convert attention into leads, trials, demos, customers, or upgrades. | [landing-page-cro](../skills/landing-page-cro/SKILL.md), [copywriting](../skills/copywriting/SKILL.md), [sales-copywriting](../skills/sales-copywriting/SKILL.md), [popups](../skills/popups/SKILL.md), [cro](../skills/cro/SKILL.md), [a11y-audit](../skills/a11y-audit/SKILL.md), [signup](../skills/signup/SKILL.md), [paywalls](../skills/paywalls/SKILL.md), [ab-testing](../skills/ab-testing/SKILL.md) |
+| `pipeline` | Create and manage sales opportunities. | [prospect-research](../skills/prospect-research/SKILL.md), [prospecting](../skills/prospecting/SKILL.md), [cold-email](../skills/cold-email/SKILL.md), [sales-enablement](../skills/sales-enablement/SKILL.md), [revops](../skills/revops/SKILL.md), [email-marketing](../skills/email-marketing/SKILL.md) |
+| `retention` | Increase activation, retention, advocacy, and expansion. | [onboarding](../skills/onboarding/SKILL.md), [churn-prevention](../skills/churn-prevention/SKILL.md), [customer-service](../skills/customer-service/SKILL.md), [emails](../skills/emails/SKILL.md), [referrals](../skills/referrals/SKILL.md), [community-marketing](../skills/community-marketing/SKILL.md), [education-content](../skills/education-content/SKILL.md) |
+| `measurement` | Track performance and decide what to improve. | [analytics](../skills/analytics/SKILL.md), [social-media-analyzer](../skills/social-media-analyzer/SKILL.md), [seo-audit](../skills/seo-audit/SKILL.md), [ab-testing](../skills/ab-testing/SKILL.md), [revops](../skills/revops/SKILL.md) |
+| `assets` | Create reusable content, visuals, and campaigns. | [content-repurposing](../skills/content-repurposing/SKILL.md), [content-humanizer](../skills/content-humanizer/SKILL.md), [podcast-pipeline](../skills/podcast-pipeline/SKILL.md), [copy-editing](../skills/copy-editing/SKILL.md), [ai-image-creator](../skills/ai-image-creator/SKILL.md), [instagram-carousel](../skills/instagram-carousel/SKILL.md), [video](../skills/video/SKILL.md), [image](../skills/image/SKILL.md), [social-content-planner](../skills/social-content-planner/SKILL.md) |
 
 ## Outcome Routing By Stage
 
@@ -83,6 +98,8 @@ npx skills add scayver/marketing-skills
 
 - `product-marketing` - Create and maintain a product marketing context document covering positioning, ICP definition, messaging hierarchy, competitive differentiation, and value proposition. This skill...
 - `business-strategy` - You are a professional business strategist and customer journey specialist. Use this skill when the user wants to develop a business idea, build a business plan, map a customer...
+- `market-research` - Use this skill when the user wants market research, TAM SAM SOM sizing, customer segmentation, category research, survey planning, interview synthesis, market opportunity analysis...
+- `competitive-teardown` - Use this skill when the user wants a deep teardown of competitors, product positioning, website UX, pricing, reviews, SEO, content, jobs, social proof, onboarding, roadmap signals...
 - `launch` - Use this skill when planning a product launch, feature announcement, or release strategy.
 - `landing-page-cro` - You are a Conversion Rate Optimization Strategist and Persuasive Content Specialist. Use this skill when the user wants to audit or improve a landing page, write conversion-focused...
 - `email-marketing` - You are a professional Email Marketing Specialist and Conversion Copywriter. Use this skill when the user wants to write, optimize, or repurpose email marketing campaigns...
@@ -142,6 +159,7 @@ Use the marketing-os skill. Our outcome is SaaS Launch. Start with the `marketin
 **Skill stack:**
 
 - `product-marketing` - Create and maintain a product marketing context document covering positioning, ICP definition, messaging hierarchy, competitive differentiation, and value proposition. This skill...
+- `prospecting` - Use this skill when the user wants to build qualified lead lists, research prospects, score accounts, find buying signals, prepare outreach handoffs, or qualify SaaS, B2B...
 - `prospect-research` - Use this skill when the user wants to build prospect lists, research accounts, identify buying signals, map decision-makers, qualify outbound leads, find SaaS developer intent...
 - `cold-email` - Use this skill when writing B2B cold emails or follow-up sequences.
 - `linkedin-strategy` - You are a LinkedIn strategist, brand positioning expert, and professional content copywriter. Use this skill when the user wants to build a personal brand on LinkedIn, write...
@@ -203,6 +221,7 @@ Use the marketing-os skill. Our outcome is Developer-Intent Outbound. Start with
 - `product-marketing` - Create and maintain a product marketing context document covering positioning, ICP definition, messaging hierarchy, competitive differentiation, and value proposition. This skill...
 - `customer-research` - Use this skill when conducting, analyzing, or synthesizing customer research.
 - `seo-content-strategy` - You are an SEO expert and content strategist. Use this skill when the user wants to improve organic search rankings, plan SEO content, analyze competitors, generate keyword...
+- `market-research` - Use this skill when the user wants market research, TAM SAM SOM sizing, customer segmentation, category research, survey planning, interview synthesis, market opportunity analysis...
 - `seo-blog-writer` - You are an expert SEO strategist and skilled content creator. Use this skill when the user wants to write, plan, or optimize long-form blog content that ranks on Google, attracts...
 - `schema` - Use this skill for structured data and schema markup questions. Triggers on: JSON-LD, schema.org, structured data, rich snippets, rich results, FAQ schema, Product schema, Article...
 - `ai-seo` - Use this skill when optimizing content to appear in AI-generated answers, be cited by LLMs, or rank in AI search engines.
@@ -262,6 +281,7 @@ Use the marketing-os skill. Our outcome is SEO Growth Engine. Start with the `se
 - `analytics` - Use this skill for setting up, auditing, or improving marketing analytics tracking.
 - `cro` - Use this skill for conversion rate optimization on marketing pages and forms.
 - `landing-page-cro` - You are a Conversion Rate Optimization Strategist and Persuasive Content Specialist. Use this skill when the user wants to audit or improve a landing page, write conversion-focused...
+- `a11y-audit` - Use this skill when the user wants an accessibility audit for a website, landing page, app UI, form, checkout, dashboard, marketing page, or design system. Trigger phrases include...
 - `copywriting` - Use this skill when writing new marketing copy for any page.
 - `sales-copywriting` - You are a professional Sales Copywriter and Conversion Strategist. Use this skill when the user wants to write or improve sales copy for any format or channel. Activate when the...
 - `ab-testing` - Use this skill when planning, designing, or analyzing A/B tests and growth experiments.
@@ -322,6 +342,7 @@ Use the marketing-os skill. Our outcome is Conversion Lab. Start with the `cro` 
 **Skill stack:**
 
 - `local-seo` - You are a highly skilled Local SEO strategist and content copywriter. Use this skill when the user wants to improve local search visibility, write location-based landing pages...
+- `prospecting` - Use this skill when the user wants to build qualified lead lists, research prospects, score accounts, find buying signals, prepare outreach handoffs, or qualify SaaS, B2B...
 - `prospect-research` - Use this skill when the user wants to build prospect lists, research accounts, identify buying signals, map decision-makers, qualify outbound leads, find SaaS developer intent...
 - `customer-service` - You are a professional Customer Service Specialist and Communication Strategist. Use this skill when the user wants to write customer service scripts, support email templates...
 - `landing-page-cro` - You are a Conversion Rate Optimization Strategist and Persuasive Content Specialist. Use this skill when the user wants to audit or improve a landing page, write conversion-focused...
@@ -339,7 +360,6 @@ Use the marketing-os skill. Our outcome is Conversion Lab. Start with the `cro` 
 
 **CLI helpers:**
 
-- `google-sheets`
 - [ga4](../tools/clis/ga4.js)
 
 **Next deliverables:**
@@ -378,6 +398,7 @@ Use the marketing-os skill. Our outcome is Local SMB Growth. Start with the `loc
 
 - `ecommerce-content` - You are a professional E-commerce Content Strategist and Conversion Copywriter. Use this skill when the user wants to write or improve product descriptions, category page copy...
 - `email-marketing` - You are a professional Email Marketing Specialist and Conversion Copywriter. Use this skill when the user wants to write, optimize, or repurpose email marketing campaigns...
+- `sms` - Use this skill when the user wants SMS or MMS marketing strategy, opt-in flows, text message campaigns, abandoned cart texts, event reminders, win-back texts, STOP and HELP...
 - `ads` - Use this skill for paid advertising campaign strategy, setup, optimization, and reporting.
 - `ad-creative` - Use this skill when generating, iterating, or scaling ad creative for any paid platform.
 - `pricing` - Pricing strategy, packaging, and monetization decisions for SaaS and software products.
@@ -438,6 +459,7 @@ Use the marketing-os skill. Our outcome is Ecommerce Revenue. Start with the `ec
 
 - `onboarding` - Optimize post-signup onboarding, user activation, and time-to-value for SaaS products.
 - `churn-prevention` - Use this skill for reducing churn in SaaS and subscription businesses.
+- `sms` - Use this skill when the user wants SMS or MMS marketing strategy, opt-in flows, text message campaigns, abandoned cart texts, event reminders, win-back texts, STOP and HELP...
 - `customer-service` - You are a professional Customer Service Specialist and Communication Strategist. Use this skill when the user wants to write customer service scripts, support email templates...
 - `emails` - Use this skill when creating, planning, or optimizing email sequences, drip campaigns, and lifecycle email programs.
 - `email-marketing` - You are a professional Email Marketing Specialist and Conversion Copywriter. Use this skill when the user wants to write, optimize, or repurpose email marketing campaigns...

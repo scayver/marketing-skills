@@ -79,6 +79,29 @@ Use the marketing-os skill. Read .marketing-os/product-context.md, .marketing-os
 
 ## Choose Your Workflow
 
+Use this quick decision tree when you do not know where to start.
+
+```text
+Do you have product context filled?
+├── No
+│   └── Run product-marketing first, then fill .marketing-os/product-context.md.
+└── Yes
+    ├── Are you launching something new?
+    │   └── Use saas-launch.
+    ├── Do you need more qualified prospects or outbound pipeline?
+    │   └── Use developer-intent-outbound.
+    ├── Do you need more organic traffic?
+    │   └── Use seo-growth-engine.
+    ├── Do visitors arrive but fail to convert?
+    │   └── Use conversion-lab.
+    ├── Do you serve a local market?
+    │   └── Use local-smb-growth.
+    ├── Do you sell products, downloads, subscriptions, or bundles?
+    │   └── Use ecommerce-revenue.
+    └── Do you need activation, retention, support, education, or referrals?
+        └── Use retention-and-advocacy.
+```
+
 | Goal | Workflow | Start With | Best First Deliverable |
 |------|----------|------------|------------------------|
 | Launch a product, feature, repo, or AI tool | `saas-launch` | `product-marketing`, `launch` | Positioning summary and launch scoreboard |
@@ -88,6 +111,22 @@ Use the marketing-os skill. Read .marketing-os/product-context.md, .marketing-os
 | Grow local leads | `local-smb-growth` | `local-seo` | Location page plan and website status review |
 | Increase ecommerce revenue | `ecommerce-revenue` | `ecommerce-content` | Product page and email improvement plan |
 | Reduce churn and increase advocacy | `retention-and-advocacy` | `churn-prevention` | Churn reason map and lifecycle action plan |
+
+## First Prompt Chooser
+
+Use one of these prompts after you activate a workflow.
+
+| Situation | Copy-Paste Prompt |
+|-----------|-------------------|
+| You have not filled product context | `Use product-marketing. Interview me for the missing product context fields, then produce a concise positioning context I can paste into .marketing-os/product-context.md.` |
+| You know the workflow but not the first task | `Use marketing-os. Read .marketing-os/active-workflow.md and .marketing-os/product-context.md. Choose the first concrete deliverable, explain why it comes first, and produce it.` |
+| You need a launch plan | `Use marketing-os with saas-launch. Produce the launch positioning summary, 7-day launch plan, and first metric scoreboard.` |
+| You need prospects | `Use prospecting and prospect-research. Build the ICP filters, allowed sources, scoring model, compliance guardrails, and first 25-account research plan.` |
+| You need traffic | `Use seo-content-strategy. Produce the first topic cluster, content brief, internal link plan, and measurement plan.` |
+| You need better conversion | `Use conversion-lab with cro and landing-page-cro. Diagnose the main bottleneck, score the page sections, and produce the first test backlog.` |
+| You need local leads | `Use local-smb-growth with local-seo. Classify the site, choose the first city or service page, and produce the local lead plan.` |
+| You need revenue from products | `Use ecommerce-revenue. Choose the highest-impact product page, rewrite the benefit stack, and create the first revenue email.` |
+| You need retention | `Use retention-and-advocacy. Map churn reasons, onboarding gaps, lifecycle emails, support assets, and the first advocacy action.` |
 
 ## Quickstart Prompts
 

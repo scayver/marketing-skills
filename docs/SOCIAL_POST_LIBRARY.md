@@ -86,7 +86,7 @@ Install: npx skills add scayver/marketing-skills. Repo: https://github.com/scayv
 
 Build a Local SMB growth stack inside your AI agent.
 
-Use Marketing Skills OS as the operating system: skills like `local-seo`, `prospect-research`, `customer-service`, `social-content-planner` give your agent the strategy and output frameworks. Integration guides like `google-sheets`, `google-calendar`, `wpforms`, `google-drive` give it platform context. CLI helpers like `google-sheets` help move from plan to action. One repo, one install, a lot less prompt duct tape.
+Use Marketing Skills OS as the operating system: skills like `local-seo`, `prospect-research`, `customer-service`, `social-content-planner` give your agent the strategy and output frameworks. Integration guides like `google-sheets`, `google-calendar`, `wpforms`, `google-drive` give it platform context. CLI helpers like `ga4` help connect local work to measurement. One repo, one install, a lot less prompt duct tape.
 
 Install: npx skills add scayver/marketing-skills. Repo: https://github.com/scayver/marketing-skills.
 

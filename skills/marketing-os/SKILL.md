@@ -8,7 +8,7 @@ description: >
 
 ## Mandatory Content Standards
 
-- Write between 1,500 and 10,000 words per full deliverable unless the user asks for a shorter artifact.
+- Match output length to the workflow and request. Use concise status updates for quick routing, structured detail for OS plans, and full-length output only when the user asks for a complete deliverable.
 - Write in a way that sounds like a knowledgeable human wrote it. No robotic or templated phrasing.
 - Use short sentences. One idea per sentence. One focus per paragraph.
 - Use active voice. Never passive constructions.

@@ -1061,3 +1061,219 @@ Install it: npx skills add scayver/marketing-skills --skill video. Star the repo
 
 **Install**
 `npx skills add scayver/marketing-skills --skill video`
+
+## 60. prospecting
+
+**Type:** skill
+**Category:** Sales and go-to-market
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now build qualified prospect lists without guessing.
+
+**Post**
+The `prospecting` skill gives Marketing Skills OS a structured workflow for SaaS, B2B, developer, partner, and local SMB lead list building. It helps agents define fit, collect public evidence, score buying signals, document source URLs, and prepare compliant outreach handoffs.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill prospecting. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill prospecting`
+
+## 61. sms
+
+**Type:** skill
+**Category:** Growth and retention
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now plan SMS campaigns with consent built in.
+
+**Post**
+The `sms` skill helps agents create SMS and MMS campaigns with opt-in language, STOP and HELP handling, A2P 10DLC planning, quiet-hour checks, and lifecycle messaging for reminders, cart recovery, events, reviews, and win-back campaigns.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill sms. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill sms`
+
+## 62. market-research
+
+**Type:** skill
+**Category:** Strategy and research
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now validate markets before you build campaigns.
+
+**Post**
+The `market-research` skill gives agents a rigorous workflow for TAM SAM SOM, segmentation, surveys, interviews, category signals, and opportunity analysis. Use it before positioning, launch planning, content strategy, or product decisions.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill market-research. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill market-research`
+
+## 63. competitive-teardown
+
+**Type:** skill
+**Category:** Strategy and research
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now turn competitor research into action.
+
+**Post**
+The `competitive-teardown` skill reviews positioning, UX, pricing, reviews, SEO, content, hiring, social proof, and product signals, then turns the evidence into roadmap, messaging, pricing, and conversion actions.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill competitive-teardown. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill competitive-teardown`
+
+## 64. podcast-pipeline
+
+**Type:** skill
+**Category:** Content and copy
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now turn one podcast into a full content engine.
+
+**Post**
+The `podcast-pipeline` skill transforms episodes, interviews, webinars, and transcripts into show notes, clips, newsletters, blog posts, LinkedIn posts, carousels, quote cards, and 7-day publishing schedules while preserving source meaning.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill podcast-pipeline. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill podcast-pipeline`
+
+## 65. yt-competitive-analysis
+
+**Type:** skill
+**Category:** Content and copy
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now study YouTube competitors like a strategist.
+
+**Post**
+The `yt-competitive-analysis` skill helps agents analyze channel baselines, outlier videos, title and thumbnail packaging, content gaps, viewer promises, and video ideas so YouTube strategy does not rely on random inspiration.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill yt-competitive-analysis. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill yt-competitive-analysis`
+
+## 66. brand-guidelines
+
+**Type:** skill
+**Category:** Brand, creator, and communications
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now document brand rules your team can actually use.
+
+**Post**
+The `brand-guidelines` skill creates or audits brand foundations, voice rules, messaging standards, visual identity guidance, content style rules, channel examples, accessibility notes, and governance so agents and teams stay consistent.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill brand-guidelines. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill brand-guidelines`
+
+## 67. content-humanizer
+
+**Type:** skill
+**Category:** Content and copy
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now fix copy that sounds painfully AI.
+
+**Post**
+The `content-humanizer` skill audits generic promises, robotic cadence, empty transitions, overclaiming, and vague buzzwords, then rewrites drafts into clearer, more specific, more natural content without inventing facts.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill content-humanizer. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill content-humanizer`
+
+## 68. social-media-analyzer
+
+**Type:** skill
+**Category:** Paid advertising and measurement
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now turn social metrics into next actions.
+
+**Post**
+The `social-media-analyzer` skill helps agents review post data, engagement quality, reach, saves, shares, clicks, conversions, content patterns, and channel ROI so you know what to repeat, stop, and test next.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill social-media-analyzer. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill social-media-analyzer`
+
+## 69. skill-security-auditor
+
+**Type:** skill
+**Category:** Operating system
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now audit imported skills before they become trusted instructions.
+
+**Post**
+The `skill-security-auditor` skill reviews Agent Skills, SKILL.md files, scripts, prompts, and tool references for unsafe instructions, secret exposure, broad permissions, unclear activation, dependency risk, and repo policy fit.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill skill-security-auditor. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill skill-security-auditor`
+
+## 70. a11y-audit
+
+**Type:** skill
+**Category:** Conversion rate optimization
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now catch accessibility issues that quietly hurt conversion.
+
+**Post**
+The `a11y-audit` skill helps agents review keyboard access, screen reader labels, color contrast, forms, alt text, motion, layout, and conversion elements, then produce prioritized fixes with acceptance checks.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill a11y-audit. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill a11y-audit`
+
+## 71. env-secrets-manager
+
+**Type:** skill
+**Category:** Operating system
+**Platform:** LinkedIn / X
+
+**Hook**
+Your AI agent can now manage marketing stack secrets without exposing them.
+
+**Post**
+The `env-secrets-manager` skill helps agents inventory environment variables, separate public config from secrets, maintain `.env.example`, plan rotation, map keys to tools, and reduce credential risk across local, CI, and production environments.
+
+**CTA**
+Install it: npx skills add scayver/marketing-skills --skill env-secrets-manager. Star the repo: https://github.com/scayver/marketing-skills.
+
+**Install**
+`npx skills add scayver/marketing-skills --skill env-secrets-manager`
