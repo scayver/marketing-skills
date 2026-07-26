@@ -12,11 +12,11 @@ npx skills add scayver/marketing-skills
 
 | Asset | Count |
 |-------|------:|
-| Skills | 71 |
+| Skills | 72 |
 | Integration guides | 347 |
 | CLI tools | 62 |
 | Workflows | 7 |
-| Social posts | 480 |
+| Social posts | 481 |
 
 ## OS Commands
 
@@ -36,7 +36,7 @@ These layers show the skills that support the operating system beyond the seven 
 | Layer | Purpose | Skills |
 |-------|---------|--------|
 | `context` | Define ICP, positioning, offer, category, and product story. | [product-marketing](../skills/product-marketing/SKILL.md), [customer-research](../skills/customer-research/SKILL.md), [market-research](../skills/market-research/SKILL.md), [business-strategy](../skills/business-strategy/SKILL.md), [brand-storytelling](../skills/brand-storytelling/SKILL.md), [brand-guidelines](../skills/brand-guidelines/SKILL.md) |
-| `strategy` | Choose the growth motion and roadmap. | [marketing-os](../skills/marketing-os/SKILL.md), [marketing-ideas](../skills/marketing-ideas/SKILL.md), [marketing-psychology](../skills/marketing-psychology/SKILL.md), [skill-security-auditor](../skills/skill-security-auditor/SKILL.md), [env-secrets-manager](../skills/env-secrets-manager/SKILL.md), [competitor-profiling](../skills/competitor-profiling/SKILL.md), [competitors](../skills/competitors/SKILL.md), [pricing](../skills/pricing/SKILL.md) |
+| `strategy` | Choose the growth motion and roadmap. | [marketing-os](../skills/marketing-os/SKILL.md), [marketing-ideas](../skills/marketing-ideas/SKILL.md), [marketing-psychology](../skills/marketing-psychology/SKILL.md), [skill-security-auditor](../skills/skill-security-auditor/SKILL.md), [env-secrets-manager](../skills/env-secrets-manager/SKILL.md), [competitor-profiling](../skills/competitor-profiling/SKILL.md), [competitors](../skills/competitors/SKILL.md), [ecommerce-product-opportunity-researcher](../skills/ecommerce-product-opportunity-researcher/SKILL.md), [pricing](../skills/pricing/SKILL.md) |
 | `demand` | Create awareness and qualified demand. | [seo-content-strategy](../skills/seo-content-strategy/SKILL.md), [seo-blog-writer](../skills/seo-blog-writer/SKILL.md), [ai-seo](../skills/ai-seo/SKILL.md), [content-strategy](../skills/content-strategy/SKILL.md), [site-architecture](../skills/site-architecture/SKILL.md), [programmatic-seo](../skills/programmatic-seo/SKILL.md), [aso](../skills/aso/SKILL.md), [social](../skills/social/SKILL.md), [linkedin-strategy](../skills/linkedin-strategy/SKILL.md), [pr-communications](../skills/pr-communications/SKILL.md), [yt-competitive-analysis](../skills/yt-competitive-analysis/SKILL.md), [ads](../skills/ads/SKILL.md), [directory-submissions](../skills/directory-submissions/SKILL.md), [free-tools](../skills/free-tools/SKILL.md), [lead-magnets](../skills/lead-magnets/SKILL.md), [co-marketing](../skills/co-marketing/SKILL.md) |
 | `conversion` | Convert attention into leads, trials, demos, customers, or upgrades. | [landing-page-cro](../skills/landing-page-cro/SKILL.md), [copywriting](../skills/copywriting/SKILL.md), [sales-copywriting](../skills/sales-copywriting/SKILL.md), [popups](../skills/popups/SKILL.md), [cro](../skills/cro/SKILL.md), [a11y-audit](../skills/a11y-audit/SKILL.md), [signup](../skills/signup/SKILL.md), [paywalls](../skills/paywalls/SKILL.md), [ab-testing](../skills/ab-testing/SKILL.md) |
 | `pipeline` | Create and manage sales opportunities. | [prospect-research](../skills/prospect-research/SKILL.md), [prospecting](../skills/prospecting/SKILL.md), [cold-email](../skills/cold-email/SKILL.md), [sales-enablement](../skills/sales-enablement/SKILL.md), [revops](../skills/revops/SKILL.md), [email-marketing](../skills/email-marketing/SKILL.md) |
@@ -225,7 +225,7 @@ Use the marketing-os skill. Our outcome is Developer-Intent Outbound. Start with
 - `seo-blog-writer` - You are an expert SEO strategist and skilled content creator. Use this skill when the user wants to write, plan, or optimize long-form blog content that ranks on Google, attracts...
 - `schema` - Use this skill for structured data and schema markup questions. Triggers on: JSON-LD, schema.org, structured data, rich snippets, rich results, FAQ schema, Product schema, Article...
 - `ai-seo` - Use this skill when optimizing content to appear in AI-generated answers, be cited by LLMs, or rank in AI search engines.
-- `content-repurposing` - You are a highly skilled content strategist and repurposing specialist. Use this skill when the user wants to repurpose existing content into new formats, find the best format for...
+- `content-repurposing` - Repurpose blogs, videos, podcasts, newsletters, emails, webinars, and social posts into platform-ready content while preserving the source message and brand voice. Use when asked...
 - `analytics` - Use this skill for setting up, auditing, or improving marketing analytics tracking.
 
 **Related integration guides:**
@@ -396,6 +396,7 @@ Use the marketing-os skill. Our outcome is Local SMB Growth. Start with the `loc
 
 **Skill stack:**
 
+- `ecommerce-product-opportunity-researcher` - Generate, research, compare, score, and prioritize physical or digital product opportunities for ecommerce, Amazon FBA, Etsy, dropshipping, direct-to-consumer stores, marketplaces...
 - `ecommerce-content` - You are a professional E-commerce Content Strategist and Conversion Copywriter. Use this skill when the user wants to write or improve product descriptions, category page copy...
 - `email-marketing` - You are a professional Email Marketing Specialist and Conversion Copywriter. Use this skill when the user wants to write, optimize, or repurpose email marketing campaigns...
 - `sms` - Use this skill when the user wants SMS or MMS marketing strategy, opt-in flows, text message campaigns, abandoned cart texts, event reminders, win-back texts, STOP and HELP...

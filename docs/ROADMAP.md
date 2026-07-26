@@ -30,7 +30,7 @@ The project keeps the `scayver/marketing-skills` install path for compatibility.
 
 ## Recently Shipped
 
-The latest local work expanded the OS from 59 to 71 skills and improved dashboard visibility.
+The latest local work expanded the OS from 59 to 72 skills and improved dashboard visibility.
 
 | Area | Shipped Update | Why It Matters |
 |------|----------------|----------------|

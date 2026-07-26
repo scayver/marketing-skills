@@ -4,7 +4,7 @@ Marketing Skills OS is an open-source Marketing OS for AI agents.
 
 It gives Claude Code, OpenAI Codex, Cursor, Windsurf, and other Agent Skills-compatible tools a complete operating layer for marketing strategy, workflows, tool references, CLI helpers, scorecards, reviews, launch assets, and execution loops.
 
-The repo includes 71 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, and validation. You keep the open-source install path, then run marketing work through a structured local OS instead of scattered prompts.
+The repo includes 72 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, and validation. You keep the open-source install path, then run marketing work through a structured local OS instead of scattered prompts.
 
 ---
 
@@ -25,7 +25,7 @@ Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)*
 [![Version](https://img.shields.io/badge/version-1.7.0-blue)](CHANGELOG.md)
 [![Changelog](https://img.shields.io/badge/changelog-available-blue)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-71-orange)](skills/)
+[![Skills](https://img.shields.io/badge/skills-72-orange)](skills/)
 [![Tools](https://img.shields.io/badge/integration%20guides-347-purple)](tools/REGISTRY.md)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
 [![GitHub stars](https://img.shields.io/github/stars/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/stargazers)
@@ -152,6 +152,7 @@ product-marketing
 │   ├── content-repurposing
 │   ├── content-humanizer
 │   ├── ecommerce-content
+│   ├── ecommerce-product-opportunity-researcher
 │   ├── customer-service
 │   ├── video
 │   └── image
@@ -227,7 +228,7 @@ Skills install to `.agents/skills/` by default. Claude Code also reads from `.cl
 
 ## Install
 
-**Install Marketing Skills OS with all 71 skills:**
+**Install Marketing Skills OS with all 72 skills:**
 
 ```bash
 npx skills add scayver/marketing-skills
@@ -309,7 +310,7 @@ More examples live in [`examples/README.md`](examples/README.md).
 
 ---
 
-## All 71 skills
+## All 72 skills
 
 ### Operating system
 
@@ -413,6 +414,7 @@ More examples live in [`examples/README.md`](examples/README.md).
 | [`marketing-psychology`](skills/marketing-psychology/SKILL.md) | Anchoring, social proof, loss aversion, scarcity, and other biases applied to marketing |
 | [`market-research`](skills/market-research/SKILL.md) | Market sizing, TAM SAM SOM, segmentation, category research, surveys, interviews, and demand validation |
 | [`competitive-teardown`](skills/competitive-teardown/SKILL.md) | Deep competitor teardowns across positioning, UX, pricing, reviews, SEO, content, hiring, and roadmap signals |
+| [`ecommerce-product-opportunity-researcher`](skills/ecommerce-product-opportunity-researcher/SKILL.md) | Product opportunity research, demand and competition analysis, pricing, sourcing, margin screening, scoring, and validation planning |
 | [`customer-research`](skills/customer-research/SKILL.md) | Customer interviews, JTBD, review mining, surveys, and research-to-messaging translation |
 | [`business-strategy`](skills/business-strategy/SKILL.md) | Business idea generation, full business plan development, and customer journey mapping across 7 stages |
 
@@ -569,7 +571,7 @@ Every section ends with a specific, actionable next step. No section closes with
 
 ## Changelog
 
-**Unreleased** — Added 12 new skills: prospecting, SMS, market research, competitive teardown, podcast pipeline, YouTube competitive analysis, brand guidelines, content humanizer, social media analyzer, skill security auditor, accessibility audit, and environment secrets manager. Updated counts to 71 skills and expanded dashboard coverage, roadmap, validation docs, and social post assets.
+**Unreleased** — Added 13 new skills: prospecting, SMS, market research, competitive teardown, podcast pipeline, YouTube competitive analysis, brand guidelines, content humanizer, social media analyzer, skill security auditor, accessibility audit, environment secrets manager, and ecommerce product opportunity researcher. Updated counts to 72 skills and expanded dashboard coverage, roadmap, validation docs, and social post assets.
 
 **v1.7.0 (2026-05-28)** — Added Marketing OS workflow index, command-center template, machine-readable OS manifest, and `npm run os:summary`.
 

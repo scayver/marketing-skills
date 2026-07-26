@@ -1,6 +1,6 @@
 # Marketing Skills OS — Agent Instructions
 
-Marketing Skills OS is an open-source Marketing OS for AI agents. It contains 71 reusable marketing and growth skills, 347 integration guides, 62 CLI helpers, templates, workflows, dashboards, and validation. Each skill lives in `skills/<skill-name>/SKILL.md`.
+Marketing Skills OS is an open-source Marketing OS for AI agents. It contains 72 reusable marketing and growth skills, 347 integration guides, 62 CLI helpers, templates, workflows, dashboards, and validation. Each skill lives in `skills/<skill-name>/SKILL.md`.
 
 The package name and install path remain `marketing-skills` and `scayver/marketing-skills` for compatibility.
 
@@ -56,6 +56,7 @@ marketing-skills/
 │   ├── customer-service/         ← NEW v1.1.0
 │   ├── directory-submissions/
 │   ├── ecommerce-content/        ← NEW v1.1.0
+│   ├── ecommerce-product-opportunity-researcher/
 │   ├── education-content/        ← NEW v1.1.0
 │   ├── email-marketing/          ← NEW v1.1.0
 │   ├── emails/
@@ -248,6 +249,7 @@ Start with the `product-marketing` skill when beginning work on a new project. I
 - `marketing-psychology` — Cognitive biases applied to marketing
 - `market-research` — Market sizing, TAM SAM SOM, segmentation, surveys, interviews, and demand validation *(v1.8.0)*
 - `competitive-teardown` — Competitor teardowns across positioning, UX, pricing, reviews, SEO, jobs, and roadmap signals *(v1.8.0)*
+- `ecommerce-product-opportunity-researcher` — Product opportunity research, demand and competition analysis, sourcing and margin screening, scoring, and validation
 - `customer-research` — Interviews, JTBD, review mining, surveys
 - `business-strategy` — Business plans, idea generation, customer journey mapping *(v1.1.0)*
 
@@ -285,7 +287,7 @@ Every skill must produce actionable, structured output that the user can impleme
 
 ## Output Standards (Applied by Every Skill)
 
-All 71 skills enforce these rules on every word of output:
+All 72 skills enforce these rules on every word of output:
 
 - Output length: dynamic based on the skill, user request, and deliverable type. Use concise answers for quick checks and full detail for complete deliverables.
 - Voice: active voice only. No passive constructions.
