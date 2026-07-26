@@ -8,7 +8,7 @@ I launched Marketing Skills OS, an open-source Marketing OS that gives AI agents
 
 It includes:
 
-- 71 marketing and growth skills.
+- 72 marketing and growth skills.
 - 347 standalone integration guides.
 - 62 CLI tools.
 - Support for Claude Code, OpenAI Codex, Cursor, Windsurf, and Agent Skills-compatible agents.
@@ -37,7 +37,7 @@ It works as a Marketing OS: initialize a local `.marketing-os/` workspace, keep 
 
 Inside:
 
-- 71 marketing and growth skills.
+- 72 marketing and growth skills.
 - 347 standalone integration guides.
 - 62 JavaScript CLI tools.
 - Frameworks for SEO, CRO, email, social, PR, local SEO, ecommerce, analytics, RevOps, and more.

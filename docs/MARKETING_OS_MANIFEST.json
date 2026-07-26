@@ -4,7 +4,7 @@
   "repo": "https://github.com/scayver/marketing-skills",
   "install": "npx skills add scayver/marketing-skills",
   "counts": {
-    "skills": 71,
+    "skills": 72,
     "integration_guides": 347,
     "cli_tools": 62
   },
@@ -32,6 +32,7 @@
         "env-secrets-manager",
         "competitor-profiling",
         "competitors",
+        "ecommerce-product-opportunity-researcher",
         "pricing"
       ]
     },
@@ -367,6 +368,7 @@
       "stage": "Revenue",
       "primary_skill": "ecommerce-content",
       "skills": [
+        "ecommerce-product-opportunity-researcher",
         "ecommerce-content",
         "email-marketing",
         "sms",

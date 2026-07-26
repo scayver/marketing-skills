@@ -8,7 +8,7 @@ Use this Marketing Skills OS file when you know the business outcome but do not 
 
 | Asset | Count |
 |-------|------:|
-| Skills | 71 |
+| Skills | 72 |
 | Integration guides | 347 |
 | CLI tools | 62 |
 | OS workflows | 7 |
@@ -167,7 +167,7 @@ Use the marketing-os skill. Our goal is: Build a prospect list from GitHub activ
 - `seo-blog-writer` - You are an expert SEO strategist and skilled content creator.
 - `schema` - Use this skill for structured data and schema markup questions.
 - `ai-seo` - Use this skill when optimizing content to appear in AI-generated answers, be cited by LLMs, or rank in AI search engines.
-- `content-repurposing` - You are a highly skilled content strategist and repurposing specialist.
+- `content-repurposing` - Repurpose blogs, videos, podcasts, newsletters, emails, webinars, and social posts into platform-ready content while preserving the source message and brand voice.
 - `analytics` - Use this skill for setting up, auditing, or improving marketing analytics tracking.
 
 #### Platform Context
@@ -338,6 +338,7 @@ Use the marketing-os skill. Our goal is: Generate more local leads through Googl
 
 #### Skill Stack
 
+- `ecommerce-product-opportunity-researcher` - Generate, research, compare, score, and prioritize physical or digital product opportunities for ecommerce, Amazon FBA, Etsy, dropshipping, direct-to-consumer stores, marketplaces...
 - `ecommerce-content` - You are a professional E-commerce Content Strategist and Conversion Copywriter.
 - `email-marketing` - You are a professional Email Marketing Specialist and Conversion Copywriter.
 - `sms` - Use this skill when the user wants SMS or MMS marketing strategy, opt-in flows, text message campaigns, abandoned cart texts, event reminders, win-back texts, STOP and HELP...
@@ -453,7 +454,7 @@ Use the marketing-os skill. Our goal is: Reduce churn, improve onboarding, creat
 | Layer | Purpose | Skills |
 |-------|---------|--------|
 | `context` | Define ICP, positioning, offer, category, and product story. | `product-marketing`, `customer-research`, `market-research`, `business-strategy`, `brand-storytelling`, `brand-guidelines` |
-| `strategy` | Choose the growth motion and roadmap. | `marketing-os`, `marketing-ideas`, `marketing-psychology`, `skill-security-auditor`, `env-secrets-manager`, `competitor-profiling`, `competitors`, `pricing` |
+| `strategy` | Choose the growth motion and roadmap. | `marketing-os`, `marketing-ideas`, `marketing-psychology`, `skill-security-auditor`, `env-secrets-manager`, `competitor-profiling`, `competitors`, `ecommerce-product-opportunity-researcher`, `pricing` |
 | `demand` | Create awareness and qualified demand. | `seo-content-strategy`, `seo-blog-writer`, `ai-seo`, `content-strategy`, `site-architecture`, `programmatic-seo`, `aso`, `social`, `linkedin-strategy`, `pr-communications`, `yt-competitive-analysis`, `ads`, `directory-submissions`, `free-tools`, `lead-magnets`, `co-marketing` |
 | `conversion` | Convert attention into leads, trials, demos, customers, or upgrades. | `landing-page-cro`, `copywriting`, `sales-copywriting`, `popups`, `cro`, `a11y-audit`, `signup`, `paywalls`, `ab-testing` |
 | `pipeline` | Create and manage sales opportunities. | `prospect-research`, `prospecting`, `cold-email`, `sales-enablement`, `revops`, `email-marketing` |

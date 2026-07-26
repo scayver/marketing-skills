@@ -28,10 +28,11 @@ This update makes **Marketing Skills OS** the canonical public brand while prese
 | [`skill-security-auditor`](skills/skill-security-auditor/SKILL.md) | Operating System | Safety audit workflow for imported skills, prompts, scripts, tools, permissions, dependencies, and repo policy fit. |
 | [`a11y-audit`](skills/a11y-audit/SKILL.md) | Conversion Rate Optimization | Accessibility audit workflow for websites, landing pages, forms, checkouts, dashboards, and UI components. |
 | [`env-secrets-manager`](skills/env-secrets-manager/SKILL.md) | Operating System | Environment variable inventory, `.env.example` planning, secret rotation, credential hygiene, and deployment config safety. |
+| [`ecommerce-product-opportunity-researcher`](skills/ecommerce-product-opportunity-researcher/SKILL.md) | Strategy and Research | Ecommerce product discovery, demand and competition analysis, pricing, sourcing, unit economics, risk screening, scoring, and validation planning. |
 
 **Counts**
 
-- 71 skills.
+- 72 skills.
 - 347 standalone integration guides.
 - 62 JavaScript CLI tools.
 
@@ -45,6 +46,8 @@ This update makes **Marketing Skills OS** the canonical public brand while prese
 - Updated the Marketing OS manifest, dashboard, outcome index, roadmap, launch kit, validation docs, demo docs, package metadata, README, and AGENTS instructions.
 - Expanded the roadmap with recently shipped work, a next priority stack, stronger validation plans, and additional real-world examples.
 - Added social post coverage for all 12 new skills.
+- Upgraded `content-repurposing` with a platform-neutral workflow and compatibility fallbacks.
+- Added `ecommerce-product-opportunity-researcher` to the Ecommerce Revenue workflow.
 - Expanded validation with manifest coverage checks, stale workflow reference checks, integration guide section checks, and social CSV quality checks.
 
 **Verified**
