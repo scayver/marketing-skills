@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/skill.schema.json",
+  "title": "Marketing OS Skill",
+  "type": "object",
+  "required": ["schema_version", "id", "name", "version", "description", "status", "category", "supported_agents", "inputs", "outputs"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string" },
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "status": { "enum": ["experimental", "stable", "deprecated", "blocked"] },
+    "category": { "type": "string" },
+    "supported_agents": { "type": "array", "items": { "type": "string" } },
+    "activation_triggers": { "type": "array", "items": { "type": "string" } },
+    "required_context": { "type": "array", "items": { "type": "string" } },
+    "optional_context": { "type": "array", "items": { "type": "string" } },
+    "inputs": { "type": "array", "items": { "type": "string" } },
+    "outputs": { "type": "array", "items": { "type": "string" } },
+    "dependencies": { "type": "array", "items": { "type": "string" } },
+    "conflicts": { "type": "array", "items": { "type": "string" } },
+    "required_tools": { "type": "array", "items": { "type": "string" } },
+    "approval_level": { "type": "string" },
+    "evaluation_status": { "type": "string" },
+    "security_status": { "type": "string" },
+    "maintainer": { "type": "string" },
+    "last_reviewed": { "type": "string", "format": "date" }
+  },
+  "additionalProperties": true
+}

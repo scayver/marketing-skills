@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/metric.schema.json",
+  "title": "Marketing OS Metric",
+  "type": "object",
+  "required": ["schema_version", "metric_id", "name", "definition", "source", "confidence", "updated_at"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "metric_id": { "type": "string" },
+    "name": { "type": "string" },
+    "definition": { "type": "string" },
+    "formula": { "type": "string" },
+    "source": { "type": "string" },
+    "owner": { "type": "string" },
+    "frequency": { "type": "string" },
+    "target": {},
+    "current_value": {},
+    "confidence": { "enum": ["verified", "high", "medium", "low", "estimated", "unavailable"] },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "workflow_id": { "type": "string" },
+    "campaign_id": { "type": "string" },
+    "direction": { "enum": ["increase", "decrease", "maintain"] },
+    "data_quality": { "type": "string" }
+  },
+  "additionalProperties": true
+}

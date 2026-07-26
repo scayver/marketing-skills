@@ -10,7 +10,7 @@ description: >
 
 Every output from this skill follows these standards without exception.
 
-- Match output length to the skill, request, and deliverable type. Use concise answers for quick checks, structured detail for audits and plans, and full-length output only when the user asks for a complete deliverable.
+- Match the output length to the task. For full audits, strategies, plans, or multi-part deliverables, write 1,500 to 10,000 words. For quick tasks, single assets, snippets, or narrow revisions, keep the output concise and provide only the useful variations, rationale, and next steps.
 - Write in a way that sounds like a knowledgeable human wrote it. No robotic or templated phrasing.
 - Use short sentences. One idea per sentence. One focus per paragraph.
 - Use active voice. Never passive constructions.

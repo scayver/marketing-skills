@@ -27,7 +27,7 @@ resend send --from you@example.com --to them@example.com --subject "Hello" --htm
 ### Option 3: Add the whole directory to PATH
 
 ```bash
-export PATH="$PATH:/path/to/marketingskills/tools/clis"
+export PATH="$PATH:/path/to/Marketing Skills/tools/clis"
 ```
 
 ## Authentication

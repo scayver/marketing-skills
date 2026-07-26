@@ -20,6 +20,9 @@ Use this page as the documentation entry point for Marketing Skills OS.
 | [`marketing-os-dashboard.html`](marketing-os-dashboard.html) | Static dashboard that opens directly in a browser |
 | [`MARKETING_OS_OUTCOME_INDEX.md`](MARKETING_OS_OUTCOME_INDEX.md) | Outcome routing by workflow, skills, tools, deliverables, metrics, and prompts |
 | [`MARKETING_OS_MANIFEST.json`](MARKETING_OS_MANIFEST.json) | Machine-readable source for workflows and generated assets |
+| [`MARKETING_OS_CONTRACTS.md`](MARKETING_OS_CONTRACTS.md) | Portable schemas for skills, workflows, runs, approvals, metrics, artifacts, and lineage |
+| [`MARKETING_OS_EXECUTION_BLUEPRINT.md`](MARKETING_OS_EXECUTION_BLUEPRINT.md) | Implementation roadmap for the dependable execution layer |
+| [`GEN_SYSTEM_BRIDGE.md`](GEN_SYSTEM_BRIDGE.md) | Export and synchronization contract between local Marketing OS and Gen System |
 
 ## Operating References
 

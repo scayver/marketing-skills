@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/module.schema.json",
+  "title": "Marketing OS Module",
+  "type": "object",
+  "required": ["schema_version", "id", "name", "version", "description", "author", "license", "status", "skills", "workflows", "security_status"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string" },
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "author": { "type": "string" },
+    "license": { "type": "string" },
+    "status": { "enum": ["experimental", "community", "verified", "trusted", "core", "deprecated", "blocked"] },
+    "supported_agents": { "type": "array", "items": { "type": "string" } },
+    "dependencies": { "type": "array", "items": { "type": "string" } },
+    "skills": { "type": "array", "items": { "type": "string" } },
+    "workflows": { "type": "array", "items": { "type": "string" } },
+    "integrations": { "type": "array", "items": { "type": "string" } },
+    "security_status": { "type": "string" },
+    "evaluation_status": { "type": "string" },
+    "data_access": { "type": "array", "items": { "type": "string" } },
+    "approval_requirements": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

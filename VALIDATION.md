@@ -10,7 +10,7 @@ Marketing Skills OS keeps the `scayver/marketing-skills` install path for compat
 find skills -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l
 ```
 
-Expected current count: `71`.
+Expected current count: `76`.
 
 ## Integration Guide Count
 
@@ -172,7 +172,7 @@ Expected result: `Marketing OS dashboard is current.`
 npm run test:claude-code
 ```
 
-Expected result: `Claude Code smoke test passed: 71 skills installed, 7 workflows exercised.`
+Expected result: `Claude Code smoke test passed: 76 skills installed, 7 workflows exercised.`
 
 To keep the generated test project for manual Claude Code prompts:
 
@@ -196,4 +196,10 @@ Run the repository validator before every pull request.
 npm run validate
 ```
 
-The command checks skill frontmatter, required skill sections, integration registry coverage, CLI syntax, local documentation links, package counts, and required community files. GitHub Actions runs the same check on push and pull request events.
+The command checks skill frontmatter, required skill sections, integration registry coverage, CLI syntax, local documentation links, package counts, required community files, versioned Marketing OS contracts, and the local run lifecycle. GitHub Actions runs the same check on push and pull request events.
+
+Run the contract check directly when changing execution metadata:
+
+```bash
+npm run os:contracts:check
+```

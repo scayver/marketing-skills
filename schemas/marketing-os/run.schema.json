@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/run.schema.json",
+  "title": "Marketing OS Run",
+  "type": "object",
+  "required": ["schema_version", "run_id", "status", "created_at", "updated_at", "request", "input_context", "selected_workflow", "skills_activated", "tools_consulted", "decisions", "approvals", "artifacts", "metrics", "warnings", "errors", "next_actions", "environment"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "run_id": { "type": "string" },
+    "parent_run_id": { "type": ["string", "null"] },
+    "session_id": { "type": ["string", "null"] },
+    "status": { "enum": ["created", "validating", "awaiting-context", "routing", "running", "awaiting-approval", "paused", "failed", "completed", "cancelled", "archived"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "request": { "type": "string" },
+    "input_context": { "type": "object" },
+    "selected_workflow": { "type": "object" },
+    "skills_activated": { "type": "array", "items": { "type": "string" } },
+    "tools_consulted": { "type": "object" },
+    "decisions": { "type": "array" },
+    "approvals": { "type": "array" },
+    "artifacts": { "type": "array" },
+    "metrics": { "type": "array" },
+    "scorecards": { "type": "array" },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "errors": { "type": "array" },
+    "next_actions": { "type": "array", "items": { "type": "string" } },
+    "environment": { "type": "object" }
+  },
+  "additionalProperties": true
+}

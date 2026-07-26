@@ -184,6 +184,24 @@ npm run os:review -- --target ../my-project --date 2026-05-30 --force
 npm run os:dashboard
 ```
 
+## Execution Preview
+
+Create a local run record before producing an asset. The dry-run form shows the intended workflow, skills, tools, warnings, and metrics without writing files.
+
+~~~
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan" --dry-run
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan"
+~~~
+
+Use the run ID to inspect, resume, export, or trace the execution.
+
+~~~
+npm run os:run-status -- --target ../my-project --run-id <run-id>
+npm run os:resume -- --target ../my-project --run-id <run-id>
+npm run os:export -- --target ../my-project --run-id <run-id> --format markdown
+npm run os:lineage -- --target ../my-project --run-id <run-id>
+~~~
+
 ## Dashboard Preview
 
 Use these generated files to browse the OS before choosing a workflow:

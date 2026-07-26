@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/workflow.schema.json",
+  "title": "Marketing OS Workflow",
+  "type": "object",
+  "required": ["schema_version", "id", "name", "version", "purpose", "stage", "primary_skill", "skills", "integrations", "clis", "deliverables", "metrics"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string" },
+    "version": { "type": "string" },
+    "purpose": { "type": "string" },
+    "goal": { "type": "string" },
+    "stage": { "type": "string" },
+    "primary_skill": { "type": "string" },
+    "skills": { "type": "array", "items": { "type": "string" } },
+    "integrations": { "type": "array", "items": { "type": "string" } },
+    "clis": { "type": "array", "items": { "type": "string" } },
+    "entry_conditions": { "type": "array", "items": { "type": "string" } },
+    "required_context": { "type": "array", "items": { "type": "string" } },
+    "steps": { "type": "array" },
+    "decision_gates": { "type": "array" },
+    "approval_gates": { "type": "array" },
+    "deliverables": { "type": "array", "items": { "type": "string" } },
+    "metrics": { "type": "array", "items": { "type": "string" } },
+    "failure_conditions": { "type": "array", "items": { "type": "string" } },
+    "resume_behavior": { "type": "string" },
+    "completion_conditions": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

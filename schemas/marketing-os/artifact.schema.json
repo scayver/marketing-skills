@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/artifact.schema.json",
+  "title": "Marketing OS Artifact",
+  "type": "object",
+  "required": ["schema_version", "artifact_id", "name", "type", "status", "created_at", "run_id"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "artifact_id": { "type": "string" },
+    "name": { "type": "string" },
+    "type": { "type": "string" },
+    "status": { "enum": ["draft", "review", "approved", "published", "archived"] },
+    "path": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string" },
+    "run_id": { "type": "string" },
+    "version": { "type": "string" },
+    "source_refs": { "type": "array" },
+    "approval_refs": { "type": "array" },
+    "metric_refs": { "type": "array" }
+  },
+  "additionalProperties": true
+}

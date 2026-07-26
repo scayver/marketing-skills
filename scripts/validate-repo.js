@@ -103,7 +103,7 @@ function validateCliSyntax(cliFiles) {
   validateNodeSyntax(cliFiles.map(file => path.join('tools/clis', file)))
 }
 function validateDocs(skillCount, integrationCount, cliCount) {
-  expectContains('package.json', `"version": "1.7.0"`)
+  expectContains('package.json', `"version": "1.8.0"`)
   expectContains('package.json', `"test:claude-code": "node scripts/test-claude-code-package.js"`)
   expectContains('package.json', `Marketing Skills OS is an open-source Marketing OS for AI agents`)
   expectContains('README.md', `# Marketing Skills OS`)
@@ -135,6 +135,9 @@ function validateBranding() {
     'docs/GETTING_STARTED.md',
     'docs/LAUNCH_KIT.md',
     'docs/MARKETING_OS.md',
+    'docs/MARKETING_OS_CONTRACTS.md',
+    'docs/MARKETING_OS_EXECUTION_BLUEPRINT.md',
+    'docs/GEN_SYSTEM_BRIDGE.md',
     'docs/README.md',
     'docs/MARKETING_OS_DASHBOARD.md',
     'docs/MARKETING_OS_OUTCOME_INDEX.md',
@@ -326,6 +329,8 @@ function validateRequiredFiles() {
     'scripts/run-marketing-os-workflow.js',
     'scripts/snapshot-marketing-os.js',
     'scripts/status-marketing-os.js',
+    'scripts/manage-marketing-os-run.js',
+    'scripts/validate-marketing-os-contracts.js',
     'scripts/test-claude-code-package.js',
     'templates/marketing-os/README.md',
     'templates/marketing-os/asset-inventory.md',
@@ -339,6 +344,19 @@ function validateRequiredFiles() {
     'templates/marketing-os/scoreboard.md',
     'templates/marketing-os/weekly-review.md',
     'templates/marketing-os/workflow-plan.md',
+    'schemas/marketing-os/README.md',
+    'schemas/marketing-os/skill.schema.json',
+    'schemas/marketing-os/workflow.schema.json',
+    'schemas/marketing-os/integration.schema.json',
+    'schemas/marketing-os/cli-tool.schema.json',
+    'schemas/marketing-os/run.schema.json',
+    'schemas/marketing-os/decision.schema.json',
+    'schemas/marketing-os/approval.schema.json',
+    'schemas/marketing-os/scorecard.schema.json',
+    'schemas/marketing-os/metric.schema.json',
+    'schemas/marketing-os/artifact.schema.json',
+    'schemas/marketing-os/lineage.schema.json',
+    'schemas/marketing-os/module.schema.json',
     'examples/social-post-library.csv',
     'examples/social-posts/README.md',
     'examples/social-posts/30-day-posting-calendar.csv',
@@ -374,6 +392,16 @@ function validateMarketingOsDashboard() {
     ], { stdio: 'pipe' })
   } catch (error) {
     fail(`Marketing Skills OS dashboard is out of date or invalid: ${error.message}`)
+  }
+}
+
+function validateMarketingOsContracts() {
+  try {
+    childProcess.execFileSync(process.execPath, [
+      path.join(root, 'scripts/validate-marketing-os-contracts.js'),
+    ], { stdio: 'pipe' })
+  } catch (error) {
+    fail('Marketing OS contract validation failed: ' + error.message)
   }
 }
 
@@ -461,6 +489,46 @@ function validateMarketingOsInitializer() {
     if (!fs.existsSync(path.join(outputRoot, 'state', 'current-state.json'))) fail('snapshot-marketing-os did not create state/current-state.json')
     if (!fs.existsSync(path.join(outputRoot, 'state', 'current-state.md'))) fail('snapshot-marketing-os did not create state/current-state.md')
     if (!fs.existsSync(path.join(outputRoot, 'state', 'snapshots', '2026-05-28.json'))) fail('snapshot-marketing-os did not create dated state snapshot')
+
+    const runOutput = childProcess.execFileSync(process.execPath, [
+      path.join(root, 'scripts/manage-marketing-os-run.js'),
+      'create',
+      '--target',
+      tempRoot,
+      '--workflow',
+      'saas-launch',
+      '--request',
+      'Validate the local run lifecycle.',
+      '--json',
+    ], { encoding: 'utf8' })
+    const runResult = JSON.parse(runOutput)
+    if (!runResult.run_id) fail('manage-marketing-os-run did not return a run id')
+    const runRoot = path.join(outputRoot, 'runs', runResult.run_id)
+    if (!fs.existsSync(path.join(runRoot, 'run.json'))) fail('manage-marketing-os-run did not create run.json')
+
+    childProcess.execFileSync(process.execPath, [
+      path.join(root, 'scripts/manage-marketing-os-run.js'),
+      'resume',
+      '--target',
+      tempRoot,
+      '--run-id',
+      runResult.run_id,
+    ], { stdio: 'pipe' })
+
+    const exportPath = path.join(outputRoot, 'exports', runResult.run_id + '.md')
+    childProcess.execFileSync(process.execPath, [
+      path.join(root, 'scripts/manage-marketing-os-run.js'),
+      'export',
+      '--target',
+      tempRoot,
+      '--run-id',
+      runResult.run_id,
+      '--format',
+      'markdown',
+      '--output',
+      exportPath,
+    ], { stdio: 'pipe' })
+    if (!fs.existsSync(exportPath)) fail('manage-marketing-os-run did not export a Markdown run')
   } catch (error) {
     fail(`scripts/init-marketing-os.js failed smoke test: ${error.message}`)
   } finally {
@@ -474,6 +542,9 @@ function validateLocalLinks() {
     'docs/CLAUDE_CODE_TESTING.md',
     'docs/GETTING_STARTED.md',
     'docs/MARKETING_OS.md',
+    'docs/MARKETING_OS_CONTRACTS.md',
+    'docs/MARKETING_OS_EXECUTION_BLUEPRINT.md',
+    'docs/GEN_SYSTEM_BRIDGE.md',
     'docs/README.md',
     'docs/MARKETING_OS_DASHBOARD.md',
     'docs/MARKETING_OS_MANIFEST.json', 'docs/MARKETING_OS_OUTCOME_INDEX.md', 'docs/ROADMAP.md', 'docs/SHOWCASE.md',
@@ -531,7 +602,7 @@ function main() {
   validateIntegrationGuideSections(integrationFiles)
   validateCliReadme(cliFiles)
   validateCliSyntax(cliFiles)
-  validateNodeSyntax(['scripts/generate-marketing-os-dashboard.js', 'scripts/generate-marketing-os-index.js', 'scripts/init-marketing-os.js', 'scripts/print-marketing-os-summary.js', 'scripts/review-marketing-os-week.js', 'scripts/run-marketing-os-workflow.js', 'scripts/snapshot-marketing-os.js', 'scripts/status-marketing-os.js', 'scripts/test-claude-code-package.js'])
+  validateNodeSyntax(['scripts/generate-marketing-os-dashboard.js', 'scripts/generate-marketing-os-index.js', 'scripts/init-marketing-os.js', 'scripts/print-marketing-os-summary.js', 'scripts/review-marketing-os-week.js', 'scripts/run-marketing-os-workflow.js', 'scripts/snapshot-marketing-os.js', 'scripts/status-marketing-os.js', 'scripts/manage-marketing-os-run.js', 'scripts/validate-marketing-os-contracts.js', 'scripts/test-claude-code-package.js'])
   validateDocs(skillCount, integrationCount, cliCount)
   validateBranding()
   validateRequiredFiles()
@@ -540,6 +611,7 @@ function main() {
   validateMarketingOsInitializer()
   validateMarketingOsDashboard()
   validateMarketingOsOutcomeIndex()
+  validateMarketingOsContracts()
   validateClaudeCodeSmoke()
   validateNoArtifacts()
   validateLocalLinks()

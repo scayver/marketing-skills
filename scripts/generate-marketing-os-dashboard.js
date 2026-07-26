@@ -175,6 +175,17 @@ function generateMarkdown(context) {
     ].join(' | ') + ' |')
   }
   lines.push('')
+  lines.push('## Execution Controls')
+  lines.push('')
+  lines.push('| Command | Purpose |')
+  lines.push('|---------|---------|')
+  lines.push('| npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "..." --dry-run | Preview a structured run without writing files. |')
+  lines.push('| npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "..." | Create a portable run record. |')
+  lines.push('| npm run os:run-status -- --target ../my-project --run-id <run-id> | Inspect a run. |')
+  lines.push('| npm run os:resume -- --target ../my-project --run-id <run-id> | Resume a created, paused, or failed run. |')
+  lines.push('| npm run os:export -- --target ../my-project --run-id <run-id> --format markdown | Export a run for review or Gen System import. |')
+  lines.push('| npm run os:lineage -- --target ../my-project --run-id <run-id> | Trace the request to its planned metrics. |')
+  lines.push('')
   lines.push('## Outcome Routing By Stage')
   lines.push('')
   for (const [stage, workflows] of byStage(context.manifest.workflows)) {
@@ -245,6 +256,9 @@ function generateMarkdown(context) {
   lines.push('- [Local social posting kit](../examples/social-posts/README.md).')
   lines.push('- [Marketing Skills OS initializer templates](../templates/marketing-os/README.md).')
   lines.push('- [Outcome index](MARKETING_OS_OUTCOME_INDEX.md).')
+  lines.push('- [Execution contracts](MARKETING_OS_CONTRACTS.md).')
+  lines.push('- [Gen System bridge](GEN_SYSTEM_BRIDGE.md).')
+  lines.push('- [Execution blueprint](MARKETING_OS_EXECUTION_BLUEPRINT.md).')
   lines.push('')
   lines.push('Regenerate this dashboard with:')
   lines.push('')
@@ -357,6 +371,9 @@ function generateHtml(context) {
       <div class="command">npm run os:review -- --target ../my-project --date 2026-05-28 --force</div>
       <div class="command">npm run os:status -- --target ../my-project</div>
       <div class="command">npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force</div>
+      <div class="command">npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "..." --dry-run</div>
+      <div class="command">npm run os:run-status -- --target ../my-project --run-id &lt;run-id&gt;</div>
+      <div class="command">npm run os:export -- --target ../my-project --run-id &lt;run-id&gt; --format markdown</div>
       <div class="command">npm run os:dashboard</div>
     </div>
 
@@ -381,7 +398,7 @@ ${workflowCards}
     </div>
 
     <h2 style="margin-top:32px">Supporting Assets</h2>
-    <p><a href="../examples/social-posts/README.md">Social posting kit</a> · <a href="../examples/marketing-os-command-center.md">Command center template</a> · <a href="MARKETING_OS_OUTCOME_INDEX.md">Outcome index</a> · <a href="../templates/marketing-os/README.md">Workspace templates</a></p>
+    <p><a href="../examples/social-posts/README.md">Social posting kit</a> · <a href="../examples/marketing-os-command-center.md">Command center template</a> · <a href="MARKETING_OS_OUTCOME_INDEX.md">Outcome index</a> · <a href="MARKETING_OS_CONTRACTS.md">Execution contracts</a> · <a href="GEN_SYSTEM_BRIDGE.md">Gen System bridge</a> · <a href="../templates/marketing-os/README.md">Workspace templates</a></p>
   </main>
 </body>
 </html>

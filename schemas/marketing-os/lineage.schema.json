@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/lineage.schema.json",
+  "title": "Marketing OS Lineage",
+  "type": "object",
+  "required": ["schema_version", "lineage_id", "run_id", "nodes", "edges"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "lineage_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "nodes": { "type": "array" },
+    "edges": { "type": "array" },
+    "generated_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

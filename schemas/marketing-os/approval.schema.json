@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/approval.schema.json",
+  "title": "Marketing OS Approval",
+  "type": "object",
+  "required": ["schema_version", "approval_id", "run_id", "action_requested", "risk_level", "status", "requested_at"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "approval_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "action_requested": { "type": "string" },
+    "reason": { "type": "string" },
+    "risk_level": { "enum": ["low", "medium", "high", "critical"] },
+    "requested_approver": { "type": "string" },
+    "requested_at": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["pending", "approved", "rejected", "expired", "cancelled"] },
+    "response": { "type": "string" },
+    "responded_at": { "type": "string" },
+    "conditions": { "type": "array" },
+    "expires_at": { "type": "string" },
+    "related_decision": { "type": "string" },
+    "related_tool_operation": { "type": "string" }
+  },
+  "additionalProperties": true
+}

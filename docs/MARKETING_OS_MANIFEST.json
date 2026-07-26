@@ -1,10 +1,10 @@
 {
   "name": "Marketing Skills OS",
-  "version": "1.7.0-local",
+  "version": "1.8.0-local",
   "repo": "https://github.com/scayver/marketing-skills",
   "install": "npx skills add scayver/marketing-skills",
   "counts": {
-    "skills": 71,
+    "skills": 76,
     "integration_guides": 347,
     "cli_tools": 62
   },
@@ -18,7 +18,9 @@
         "market-research",
         "business-strategy",
         "brand-storytelling",
-        "brand-guidelines"
+        "brand-guidelines",
+        "brand-review",
+        "customer-story-builder"
       ]
     },
     {
@@ -32,7 +34,9 @@
         "env-secrets-manager",
         "competitor-profiling",
         "competitors",
-        "pricing"
+        "pricing",
+        "campaign-brief-generator",
+        "ecommerce-product-opportunity-researcher"
       ]
     },
     {
@@ -51,6 +55,7 @@
         "pr-communications",
         "yt-competitive-analysis",
         "ads",
+        "paid-ads-ops",
         "directory-submissions",
         "free-tools",
         "lead-magnets",
@@ -368,6 +373,7 @@
       "primary_skill": "ecommerce-content",
       "skills": [
         "ecommerce-content",
+        "ecommerce-product-opportunity-researcher",
         "email-marketing",
         "sms",
         "ads",

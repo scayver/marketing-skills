@@ -36,6 +36,24 @@ Persist the current state for future agent sessions:
 npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force
 ```
 
+Create an inspectable run record before execution:
+
+```bash
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan" --dry-run
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan"
+```
+
+Inspect, resume, export, or trace a run:
+
+```bash
+npm run os:run-status -- --target ../my-project --run-id <run-id>
+npm run os:resume -- --target ../my-project --run-id <run-id>
+npm run os:export -- --target ../my-project --run-id <run-id> --format markdown
+npm run os:lineage -- --target ../my-project --run-id <run-id>
+```
+
+Run records remain local and portable. Gen System can import them later through the documented bridge contract.
+
 ## Recommended weekly loop
 
 1. Complete `product-context.md` before running any workflow.

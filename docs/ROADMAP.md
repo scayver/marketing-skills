@@ -17,7 +17,7 @@ The project keeps the `scayver/marketing-skills` install path for compatibility.
 
 | Area | Status | What Exists Today |
 |------|--------|-------------------|
-| Skills | Shipped | 71 marketing and growth skills with structured activation and output standards |
+| Skills | Shipped | 76 marketing and growth skills with structured activation and output standards |
 | Integration guides | Shipped | 347 standalone platform references for APIs, webhooks, SDKs, auth, fields, and operations |
 | CLI helpers | Shipped | 62 zero-dependency JavaScript helpers for common marketing platforms |
 | Marketing OS skill | Shipped | `marketing-os` routes broad marketing goals into workflows, skills, tools, metrics, and next actions |
@@ -30,7 +30,7 @@ The project keeps the `scayver/marketing-skills` install path for compatibility.
 
 ## Recently Shipped
 
-The latest local work expanded the OS from 59 to 71 skills and improved dashboard visibility.
+The latest local work consolidated the canonical `Marketing Skills` folder at 76 skills and improved dashboard visibility.
 
 | Area | Shipped Update | Why It Matters |
 |------|----------------|----------------|
@@ -271,6 +271,40 @@ Goal: make it easy for contributors to improve the OS without breaking consisten
 - New files follow local conventions.
 - Validation catches common mistakes before review.
 
+## Phase 8: Gen System Execution Bridge
+
+Goal: connect the open-source Marketing OS to Gen System without making Gen System a requirement for local use.
+
+### Planned Implementation
+
+- Update the pinned Marketing OS asset pack in MCPOS after each approved release.
+- Validate the imported package against the Marketing OS contract schemas.
+- Import skills, templates, workflows, agent profiles, and evaluations as tenant-scoped draft assets.
+- Add governed asset types for integration guides, CLI tools, module manifests, and run packages.
+- Preserve source repository, source commit, source path, schema version, and stable IDs.
+- Import local run records into tenant-scoped execution history.
+- Map decisions to the decision ledger and approvals to the approval center.
+- Map artifacts to versioned workspace assets.
+- Map metrics to the measurement registry.
+- Build request-to-outcome lineage from context through workflow, skill, tool, artifact, and result.
+- Expose Marketing OS runs, tools, decisions, approvals, risks, artifacts, and metrics in the Gen System dashboard.
+- Support local-only, export-only, one-way, controlled two-way, and archived snapshot modes.
+- Reject incompatible schemas, missing provenance, invalid approval states, and unverified tool claims.
+
+### Hosted Execution Boundary
+
+Marketing Skills OS remains responsible for marketing-specific logic, workflow definitions, skill instructions, evaluations, and local execution. Gen System remains responsible for tenant persistence, identity, permissions, connector credentials, approval enforcement, audit history, billing, and cross-module visibility.
+
+The bridge must remain additive and idempotent. It must never overwrite a workspace-owned version without an explicit approval and migration path.
+
+### Success Criteria
+
+- MCPOS imports a validated Marketing OS package without undocumented file parsing.
+- Static Marketing OS assets remain draft-only until approved.
+- Run, decision, approval, artifact, metric, and lineage records remain tenant-scoped.
+- Humans can inspect why an agent selected a workflow, which tools it consulted, what it changed, and what should happen next.
+- Marketing Skills OS continues to work when Gen System is unavailable.
+
 ## Quality And Validation Roadmap
 
 Validation should become stricter over time without making contribution painful.
@@ -295,8 +329,8 @@ Validation should become stricter over time without making contribution painful.
 
 These are not priorities right now:
 
-- A hosted SaaS version.
-- Paid cloud sync.
+- A hosted SaaS version inside this open-source repository. Gen System bridge contracts remain planned and documented separately.
+- Paid cloud sync as a dependency of the open-source repository.
 - Heavy frontend framework dependencies.
 - A database-backed dashboard.
 - Renaming the package or install path.

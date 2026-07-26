@@ -45,11 +45,11 @@
       <p>A generated dashboard for browsing Marketing Skills OS by outcome, workflow, stage, skill, integration, CLI helper, and next action.</p>
       <pre>npx skills add scayver/marketing-skills</pre>
       <div class="stats">
-        <div class="stat"><strong>71</strong><span>Skills</span></div>
+        <div class="stat"><strong>76</strong><span>Skills</span></div>
         <div class="stat"><strong>347</strong><span>Integration guides</span></div>
         <div class="stat"><strong>62</strong><span>CLI tools</span></div>
         <div class="stat"><strong>7</strong><span>Workflows</span></div>
-        <div class="stat"><strong>480</strong><span>Social posts</span></div>
+        <div class="stat"><strong>485</strong><span>Social posts</span></div>
       </div>
     </div>
   </header>
@@ -61,6 +61,9 @@
       <div class="command">npm run os:review -- --target ../my-project --date 2026-05-28 --force</div>
       <div class="command">npm run os:status -- --target ../my-project</div>
       <div class="command">npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force</div>
+      <div class="command">npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "..." --dry-run</div>
+      <div class="command">npm run os:run-status -- --target ../my-project --run-id &lt;run-id&gt;</div>
+      <div class="command">npm run os:export -- --target ../my-project --run-id &lt;run-id&gt; --format markdown</div>
       <div class="command">npm run os:dashboard</div>
     </div>
 
@@ -114,19 +117,19 @@
         <tr>
           <td><code>context</code></td>
           <td>Define ICP, positioning, offer, category, and product story.</td>
-          <td><div class="chips"><span class="chip">product-marketing</span><span class="chip">customer-research</span><span class="chip">market-research</span><span class="chip">business-strategy</span><span class="chip">brand-storytelling</span><span class="chip">brand-guidelines</span></div></td>
+          <td><div class="chips"><span class="chip">product-marketing</span><span class="chip">customer-research</span><span class="chip">market-research</span><span class="chip">business-strategy</span><span class="chip">brand-storytelling</span><span class="chip">brand-guidelines</span><span class="chip">brand-review</span><span class="chip">customer-story-builder</span></div></td>
         </tr>
 
         <tr>
           <td><code>strategy</code></td>
           <td>Choose the growth motion and roadmap.</td>
-          <td><div class="chips"><span class="chip">marketing-os</span><span class="chip">marketing-ideas</span><span class="chip">marketing-psychology</span><span class="chip">skill-security-auditor</span><span class="chip">env-secrets-manager</span><span class="chip">competitor-profiling</span><span class="chip">competitors</span><span class="chip">pricing</span></div></td>
+          <td><div class="chips"><span class="chip">marketing-os</span><span class="chip">marketing-ideas</span><span class="chip">marketing-psychology</span><span class="chip">skill-security-auditor</span><span class="chip">env-secrets-manager</span><span class="chip">competitor-profiling</span><span class="chip">competitors</span><span class="chip">pricing</span><span class="chip">campaign-brief-generator</span><span class="chip">ecommerce-product-opportunity-researcher</span></div></td>
         </tr>
 
         <tr>
           <td><code>demand</code></td>
           <td>Create awareness and qualified demand.</td>
-          <td><div class="chips"><span class="chip">seo-content-strategy</span><span class="chip">seo-blog-writer</span><span class="chip">ai-seo</span><span class="chip">content-strategy</span><span class="chip">site-architecture</span><span class="chip">programmatic-seo</span><span class="chip">aso</span><span class="chip">social</span><span class="chip">linkedin-strategy</span><span class="chip">pr-communications</span><span class="chip">yt-competitive-analysis</span><span class="chip">ads</span><span class="chip">directory-submissions</span><span class="chip">free-tools</span><span class="chip">lead-magnets</span><span class="chip">co-marketing</span></div></td>
+          <td><div class="chips"><span class="chip">seo-content-strategy</span><span class="chip">seo-blog-writer</span><span class="chip">ai-seo</span><span class="chip">content-strategy</span><span class="chip">site-architecture</span><span class="chip">programmatic-seo</span><span class="chip">aso</span><span class="chip">social</span><span class="chip">linkedin-strategy</span><span class="chip">pr-communications</span><span class="chip">yt-competitive-analysis</span><span class="chip">ads</span><span class="chip">paid-ads-ops</span><span class="chip">directory-submissions</span><span class="chip">free-tools</span><span class="chip">lead-magnets</span><span class="chip">co-marketing</span></div></td>
         </tr>
 
         <tr>
@@ -269,7 +272,7 @@
         </div>
         <p>Improve product visibility, product page conversion, email revenue, paid ads, and repeat purchases.</p>
         <h3>Skills</h3>
-        <div class="chips"><span class="chip">ecommerce-content</span><span class="chip">email-marketing</span><span class="chip">sms</span><span class="chip">ads</span><span class="chip">ad-creative</span><span class="chip">pricing</span><span class="chip">analytics</span><span class="chip">customer-service</span></div>
+        <div class="chips"><span class="chip">ecommerce-content</span><span class="chip">ecommerce-product-opportunity-researcher</span><span class="chip">email-marketing</span><span class="chip">sms</span><span class="chip">ads</span><span class="chip">ad-creative</span><span class="chip">pricing</span><span class="chip">analytics</span><span class="chip">customer-service</span></div>
         <h3>Integrations</h3>
         <div class="chips"><span class="chip muted">woocommerce</span><span class="chip muted">easy-digital-downloads</span><span class="chip muted">klaviyo</span><span class="chip muted">mailchimp</span><span class="chip muted">meta-ads</span><span class="chip muted">google-ads</span><span class="chip muted">shopify</span></div>
         <h3>CLI Helpers</h3>
@@ -299,7 +302,7 @@
     </div>
 
     <h2 style="margin-top:32px">Supporting Assets</h2>
-    <p><a href="../examples/social-posts/README.md">Social posting kit</a> · <a href="../examples/marketing-os-command-center.md">Command center template</a> · <a href="MARKETING_OS_OUTCOME_INDEX.md">Outcome index</a> · <a href="../templates/marketing-os/README.md">Workspace templates</a></p>
+    <p><a href="../examples/social-posts/README.md">Social posting kit</a> · <a href="../examples/marketing-os-command-center.md">Command center template</a> · <a href="MARKETING_OS_OUTCOME_INDEX.md">Outcome index</a> · <a href="MARKETING_OS_CONTRACTS.md">Execution contracts</a> · <a href="GEN_SYSTEM_BRIDGE.md">Gen System bridge</a> · <a href="../templates/marketing-os/README.md">Workspace templates</a></p>
   </main>
 </body>
 </html>

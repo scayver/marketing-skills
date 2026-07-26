@@ -83,6 +83,32 @@ Outcome routing:
 
 The agent should read platform guides before making API recommendations. It should use CLI helpers when the task needs scriptable output.
 
+## Execution Records
+
+The OS now records work as a portable run package. This makes routing, context readiness, selected skills, consulted tools, warnings, metrics, and next actions inspectable before a host dashboard exists.
+
+Preview a planned run without writing files:
+
+~~~
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan" --dry-run
+~~~
+
+Create and inspect a run:
+
+~~~
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan"
+npm run os:run-status -- --target ../my-project --run-id <run-id>
+npm run os:lineage -- --target ../my-project --run-id <run-id>
+~~~
+
+Export a run for review or Gen System import:
+
+~~~
+npm run os:export -- --target ../my-project --run-id <run-id> --format markdown
+~~~
+
+The local manager records intent and evidence. It does not publish content, send campaigns, spend budget, delete records, or call external APIs.
+
 ### 5. Measurement
 
 The measurement layer decides what worked.
@@ -308,7 +334,7 @@ The repo becomes a true OS when every major workflow has these pieces:
 
 | Component | Status |
 |-----------|--------|
-| Skills | Strong base with 71 skills including `marketing-os` and the operating workflow assets |
+| Skills | Strong base with 75 skills including `marketing-os` and the operating workflow assets |
 | Integration guides | Strong base with 347 standalone platform references |
 | CLI tools | Strong base with 62 JavaScript helpers |
 | Validation | Local validator and GitHub Actions workflow exist |

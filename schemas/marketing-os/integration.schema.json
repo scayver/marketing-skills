@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/integration.schema.json",
+  "title": "Marketing OS Integration Guide",
+  "type": "object",
+  "required": ["schema_version", "id", "provider", "documentation_url", "authentication", "read_operations", "write_operations", "status"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "id": { "type": "string" },
+    "provider": { "type": "string" },
+    "documentation_url": { "type": "string", "format": "uri" },
+    "authentication": { "type": "object" },
+    "required_scopes": { "type": "array", "items": { "type": "string" } },
+    "environment_variables": { "type": "array", "items": { "type": "string" } },
+    "read_operations": { "type": "array" },
+    "write_operations": { "type": "array" },
+    "destructive_operations": { "type": "array" },
+    "rate_limits": { "type": "array" },
+    "retry_guidance": { "type": "array" },
+    "status": { "enum": ["tested", "reference-only", "deprecated", "blocked"] },
+    "last_tested": { "type": "string" },
+    "security_classification": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/cli-tool.schema.json",
+  "title": "Marketing OS CLI Tool",
+  "type": "object",
+  "required": ["schema_version", "id", "command", "version", "purpose", "inputs", "outputs", "exit_codes"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "id": { "type": "string" },
+    "command": { "type": "string" },
+    "version": { "type": "string" },
+    "purpose": { "type": "string" },
+    "inputs": { "type": "array" },
+    "outputs": { "type": "array" },
+    "environment_variables": { "type": "array", "items": { "type": "string" } },
+    "read_operations": { "type": "array" },
+    "write_operations": { "type": "array" },
+    "destructive": { "type": "boolean" },
+    "dry_run": { "type": "boolean" },
+    "json_output": { "type": "boolean" },
+    "exit_codes": { "type": "object" },
+    "maintainer": { "type": "string" }
+  },
+  "additionalProperties": true
+}

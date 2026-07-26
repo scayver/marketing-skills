@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/scayver/marketing-skills/schemas/marketing-os/scorecard.schema.json",
+  "title": "Marketing OS Scorecard",
+  "type": "object",
+  "required": ["schema_version", "scorecard_id", "run_id", "evaluation_type", "criteria", "weighted_total", "pass_threshold", "evaluated_at"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "scorecard_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "artifact_id": { "type": "string" },
+    "evaluation_type": { "type": "string" },
+    "criteria": { "type": "array" },
+    "scores": { "type": "object" },
+    "weighted_total": { "type": "number" },
+    "pass_threshold": { "type": "number" },
+    "evaluator": { "type": "string" },
+    "evidence": { "type": "array" },
+    "recommendations": { "type": "array" },
+    "evaluated_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

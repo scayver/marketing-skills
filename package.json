@@ -1,7 +1,7 @@
 {
   "name": "marketing-skills",
-  "version": "1.7.0",
-  "description": "Marketing Skills OS is an open-source Marketing OS for AI agents, with 71 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, validation, and a local execution loop.",
+  "version": "1.8.0",
+  "description": "Marketing Skills OS is an open-source Marketing OS for AI agents, with 76 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, validation, and a local execution loop.",
   "keywords": [
     "ads",
     "agent-skills",
@@ -50,6 +50,14 @@
     "os:dashboard:check": "node scripts/generate-marketing-os-dashboard.js --check",
     "os:index": "node scripts/generate-marketing-os-index.js",
     "os:index:check": "node scripts/generate-marketing-os-index.js --check",
-    "test:claude-code": "node scripts/test-claude-code-package.js"
+    "os:contracts:check": "node scripts/validate-marketing-os-contracts.js",
+    "os:run-record": "node scripts/manage-marketing-os-run.js",
+    "os:run-status": "node scripts/manage-marketing-os-run.js status",
+    "os:resume": "node scripts/manage-marketing-os-run.js resume",
+    "os:export": "node scripts/manage-marketing-os-run.js export",
+    "os:lineage": "node scripts/manage-marketing-os-run.js lineage",
+    "test:claude-code": "node scripts/test-claude-code-package.js",
+    "skills:sources": "node scripts/audit-skill-sources.js",
+    "skills:sources:check": "node scripts/audit-skill-sources.js --check"
   }
 }

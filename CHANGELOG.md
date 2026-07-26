@@ -28,10 +28,11 @@ This update makes **Marketing Skills OS** the canonical public brand while prese
 | [`skill-security-auditor`](skills/skill-security-auditor/SKILL.md) | Operating System | Safety audit workflow for imported skills, prompts, scripts, tools, permissions, dependencies, and repo policy fit. |
 | [`a11y-audit`](skills/a11y-audit/SKILL.md) | Conversion Rate Optimization | Accessibility audit workflow for websites, landing pages, forms, checkouts, dashboards, and UI components. |
 | [`env-secrets-manager`](skills/env-secrets-manager/SKILL.md) | Operating System | Environment variable inventory, `.env.example` planning, secret rotation, credential hygiene, and deployment config safety. |
+| [`ecommerce-product-opportunity-researcher`](skills/ecommerce-product-opportunity-researcher/SKILL.md) | Ecommerce and Revenue | Evidence-aware product discovery, opportunity scoring, unit economics, risk gates, customer review mining, and validation sprints. |
 
 **Counts**
 
-- 71 skills.
+- 76 skills.
 - 347 standalone integration guides.
 - 62 JavaScript CLI tools.
 
@@ -335,4 +336,4 @@ Compatible with Claude Code, OpenAI Codex, Cursor, Windsurf, and all agents that
 
 **Credits**
 
-Built by [ScayverGraphix](https://github.com/ScayverGraphix). Draws on the Agent Skills spec from [vercel-labs/skills](https://github.com/vercel-labs/skills) and the original [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) project.
+Built by [ScayverGraphix](https://github.com/ScayverGraphix). Uses the Agent Skills spec from [vercel-labs/skills](https://github.com/vercel-labs/skills) and maintains its own independent marketing workflows, tools, and operating system.

@@ -4,7 +4,9 @@ Marketing Skills OS is an open-source Marketing OS for AI agents.
 
 It gives Claude Code, OpenAI Codex, Cursor, Windsurf, and other Agent Skills-compatible tools a complete operating layer for marketing strategy, workflows, tool references, CLI helpers, scorecards, reviews, launch assets, and execution loops.
 
-The repo includes 71 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, and validation. You keep the open-source install path, then run marketing work through a structured local OS instead of scattered prompts.
+The repo includes 76 skills, 347 integration guides, 62 CLI tools, templates, workflows, dashboards, and validation. You keep the open-source install path, then run marketing work through a structured local OS instead of scattered prompts.
+
+The canonical public skill source is this repository's `skills/` directory. Private AIOS workflow notes and installed runtime copies serve different purposes and are not competing product sources. See [Skill Sources And Runtime Layers](docs/SKILL_SOURCES.md) before adding or syncing skills.
 
 ---
 
@@ -22,10 +24,10 @@ The repo includes 71 skills, 347 integration guides, 62 CLI tools, templates, wo
 
 Created and maintained by **[Alain Dorcelus](https://github.com/ScayverGraphix)** · [ScayverGraphix](https://github.com/ScayverGraphix)
 
-[![Version](https://img.shields.io/badge/version-1.7.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.0-blue)](CHANGELOG.md)
 [![Changelog](https://img.shields.io/badge/changelog-available-blue)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-71-orange)](skills/)
+[![Skills](https://img.shields.io/badge/skills-76-orange)](skills/)
 [![Tools](https://img.shields.io/badge/integration%20guides-347-purple)](tools/REGISTRY.md)
 [![Agent Skills Spec](https://img.shields.io/badge/Agent%20Skills%20Spec-compatible-brightgreen)](https://github.com/vercel-labs/skills)
 [![GitHub stars](https://img.shields.io/github/stars/scayver/marketing-skills?style=social)](https://github.com/scayver/marketing-skills/stargazers)
@@ -227,7 +229,7 @@ Skills install to `.agents/skills/` by default. Claude Code also reads from `.cl
 
 ## Install
 
-**Install Marketing Skills OS with all 71 skills:**
+**Install Marketing Skills OS with all 76 skills:**
 
 ```bash
 npx skills add scayver/marketing-skills
@@ -309,7 +311,7 @@ More examples live in [`examples/README.md`](examples/README.md).
 
 ---
 
-## All 71 skills
+## All 76 skills
 
 ### Operating system
 
@@ -414,6 +416,7 @@ More examples live in [`examples/README.md`](examples/README.md).
 | [`market-research`](skills/market-research/SKILL.md) | Market sizing, TAM SAM SOM, segmentation, category research, surveys, interviews, and demand validation |
 | [`competitive-teardown`](skills/competitive-teardown/SKILL.md) | Deep competitor teardowns across positioning, UX, pricing, reviews, SEO, content, hiring, and roadmap signals |
 | [`customer-research`](skills/customer-research/SKILL.md) | Customer interviews, JTBD, review mining, surveys, and research-to-messaging translation |
+| [`ecommerce-product-opportunity-researcher`](skills/ecommerce-product-opportunity-researcher/SKILL.md) | Evidence-aware product discovery, opportunity scoring, unit economics, risk gates, and validation sprints |
 | [`business-strategy`](skills/business-strategy/SKILL.md) | Business idea generation, full business plan development, and customer journey mapping across 7 stages |
 
 ### Brand, creator, and communications
@@ -486,6 +489,22 @@ Persist the current OS state for future agent sessions:
 ```bash
 npm run os:snapshot -- --target ../my-project --date 2026-05-28 --force
 ```
+
+Create an inspectable run record before execution:
+
+~~~
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan" --dry-run
+npm run os:run-record -- create --target ../my-project --workflow saas-launch --request "Prepare the launch plan"
+~~~
+
+Inspect, resume, export, or trace a run:
+
+~~~
+npm run os:run-status -- --target ../my-project --run-id <run-id>
+npm run os:resume -- --target ../my-project --run-id <run-id>
+npm run os:export -- --target ../my-project --run-id <run-id> --format markdown
+npm run os:lineage -- --target ../my-project --run-id <run-id>
+~~~
 
 Generate the dashboard:
 
@@ -569,7 +588,7 @@ Every section ends with a specific, actionable next step. No section closes with
 
 ## Changelog
 
-**Unreleased** — Added 12 new skills: prospecting, SMS, market research, competitive teardown, podcast pipeline, YouTube competitive analysis, brand guidelines, content humanizer, social media analyzer, skill security auditor, accessibility audit, and environment secrets manager. Updated counts to 71 skills and expanded dashboard coverage, roadmap, validation docs, and social post assets.
+**Unreleased** — Consolidated the canonical `Marketing Skills` folder and added five skills: brand review, campaign brief generator, customer story builder, paid ads operations, and ecommerce product opportunity research. The repository now contains 76 skills with one public source of truth and explicit runtime-layer documentation.
 
 **v1.7.0 (2026-05-28)** — Added Marketing OS workflow index, command-center template, machine-readable OS manifest, and `npm run os:summary`.
 
