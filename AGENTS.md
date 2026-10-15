@@ -300,3 +300,19 @@ All 76 skills enforce these rules on every word of output:
 - No filler closings: "in conclusion," "in summary," "in a world where" do not appear.
 - Every section ends with a specific, actionable next step.
 - Every deliverable ends with one customization note for the user.
+
+---
+
+## Cursor Cloud specific instructions
+
+This package has no runtime dependencies and no lockfile. `npm install` is the environment install step and is safe to run twice. GitHub Actions uses Node.js 20. Node.js 22 on the default image runs the same scripts. `npm install` may write an untracked `package-lock.json`; leave that file uncommitted.
+
+Do not start a dev server. The dashboard is the static file `docs/marketing-os-dashboard.html`. Confirm it with `npm run os:dashboard:check`, then open the file in a browser.
+
+Checks that prove the environment:
+
+- `npm run validate` is the CI check.
+- `npm run os:summary` prints the skill, integration guide, CLI, and workflow counts.
+- `npm run test:claude-code` creates a temporary project and runs all seven workflows.
+
+Validation and the local Marketing OS loop do not need API keys. CLI helpers under `tools/clis/` exit with a missing-credential JSON error until the platform token they read is present.
