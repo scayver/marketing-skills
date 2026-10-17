@@ -19,3 +19,6 @@ jobs:
 
       - name: Run repository validation
         run: npm run validate
+
+      - name: Run Marketing OS platform tests
+        run: npm run test:platform

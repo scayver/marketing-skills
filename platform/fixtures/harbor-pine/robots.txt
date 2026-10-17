@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /fixtures/harbor-pine/private.html
+
+Sitemap: /fixtures/harbor-pine/sitemap.xml

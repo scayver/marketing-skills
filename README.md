@@ -109,6 +109,16 @@ This is the dependency that makes the whole OS coherent.
 
 For the shortest path from install to first workflow, read [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md).
 
+## Scayver Marketing OS platform
+
+Phase 1 is a local website intelligence workspace. You enter a URL. The app crawls public pages on that host, separates verified findings from assumptions, and opens an audit you can assign to named agents.
+
+```bash
+npm run os:platform
+```
+
+Open the printed local URL. Use "Scan the sample business" to audit Harbor Pine Dental without leaving your machine. Approving a prepared change stores your decision. It does not edit the live website.
+
 ---
 
 ## Skill map

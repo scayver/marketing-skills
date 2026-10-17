@@ -8,6 +8,13 @@ This file is the canonical public changelog and full release history for the rep
 
 ## Unreleased
 
+**Scayver Marketing OS Phase 1.**
+
+- Added a local website intelligence workspace at `npm run os:platform`.
+- A URL scan builds a shared business profile, a measured audit, agent assignments, and approval previews.
+- The Harbor Pine Dental fixture is the sample business. Approving a preview does not publish to a live site.
+- `npm run test:platform` covers the audit, the private-page crawl rule, and the approval flow.
+
 **Marketing Skills OS rebrand.**
 
 This update makes **Marketing Skills OS** the canonical public brand while preserving the `scayver/marketing-skills` repo, package name, install path, `marketing-os` skill slug, `.marketing-os` workspace folder, and `os:*` commands for compatibility.

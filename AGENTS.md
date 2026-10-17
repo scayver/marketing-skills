@@ -307,7 +307,16 @@ All 76 skills enforce these rules on every word of output:
 
 This package has no runtime dependencies and no lockfile. `npm install` is the environment install step and is safe to run twice. GitHub Actions uses Node.js 20. Node.js 22 on the default image runs the same scripts. `npm install` may write an untracked `package-lock.json`; leave that file uncommitted.
 
-Do not start a dev server. The dashboard is the static file `docs/marketing-os-dashboard.html`. Confirm it with `npm run os:dashboard:check`, then open the file in a browser.
+The skills dashboard at `docs/marketing-os-dashboard.html` is a static file. Confirm it with `npm run os:dashboard:check`. Do not start a server only to view that file.
+
+Scayver Marketing OS Phase 1 is a local workspace:
+
+```bash
+npm run os:platform
+npm run test:platform
+```
+
+`npm run os:platform` listens on `http://127.0.0.1:8787`. Use "Scan the sample business" to audit the Harbor Pine Dental fixture. Approving a preview does not edit a live website.
 
 Checks that prove the environment:
 
